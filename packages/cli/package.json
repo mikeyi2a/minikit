@@ -1,0 +1,26 @@
+{
+  "name": "minikit",
+  "version": "0.1.0",
+  "description": "CLI to add Minikit components to your project",
+  "license": "MIT",
+  "type": "module",
+  "bin": "./dist/index.js",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "commander": "^13.1.0",
+    "fs-extra": "^11.3.0"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^22.15.21",
+    "tsup": "^8.5.0",
+    "typescript": "~5.8.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

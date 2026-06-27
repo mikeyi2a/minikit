@@ -1,0 +1,53 @@
+/* Minikit theme — import in your app layout */
+/* ── Minikit theme tokens (override these to rebrand) ── */
+:root {
+  --mk-bg: #ffffff;
+  --mk-surface: #f5f5f5;
+  --mk-surface-raised: #ebebeb;
+  --mk-border: #e0e0e0;
+  --mk-text: #111111;
+  --mk-text-muted: #666666;
+  --mk-text-faint: #999999;
+  --mk-accent: #0066ff;
+  --mk-accent-muted: color-mix(in srgb, var(--mk-accent) 20%, transparent);
+  --mk-radius: 8px;
+  --mk-radius-sm: 6px;
+  --mk-font: system-ui, -apple-system, sans-serif;
+  --mk-font-mono: ui-monospace, "SF Mono", "Cascadia Code", monospace;
+  --mk-control-height: 32px;
+  --mk-transition: 150ms ease;
+}
+
+/* Default tool aesthetic — dark terminal panel */
+[data-theme="tool-dark"] {
+  --mk-bg: #0a0a0b;
+  --mk-surface: #0e0e10;
+  --mk-surface-raised: #161618;
+  --mk-border: rgba(255, 255, 255, 0.08);
+  --mk-text: rgba(255, 255, 255, 0.92);
+  --mk-text-muted: rgba(255, 255, 255, 0.55);
+  --mk-text-faint: rgba(255, 255, 255, 0.35);
+  --mk-accent: #ffffff;
+  --mk-accent-muted: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] {
+  --mk-bg: #0f0f0f;
+  --mk-surface: #1a1a1a;
+  --mk-surface-raised: #222222;
+  --mk-border: #2a2a2a;
+  --mk-text: #f0f0f0;
+  --mk-text-muted: #888888;
+  --mk-text-faint: #555555;
+  --mk-accent: #0066ff;
+  --mk-accent-muted: color-mix(in srgb, var(--mk-accent) 20%, transparent);
+}
+
+@keyframes indeterminate {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}

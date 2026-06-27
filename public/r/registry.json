@@ -1,0 +1,838 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "minikit",
+  "homepage": "https://minikit.vercel.app",
+  "items": [
+    {
+      "name": "segmented-control",
+      "type": "registry:ui",
+      "title": "SegmentedControl",
+      "description": "Compact mode switcher / tab bar.",
+      "files": [
+        {
+          "path": "ui/segmented-control.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "slider",
+      "type": "registry:ui",
+      "title": "Slider",
+      "description": "Value slider with label, hint, ticks, readout.",
+      "files": [
+        {
+          "path": "ui/slider.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "lib/slider-ticks.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "dual-slider",
+      "type": "registry:ui",
+      "title": "DualSlider",
+      "description": "Two-handle range slider.",
+      "files": [
+        {
+          "path": "ui/dual-slider.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "number-stepper",
+      "type": "registry:ui",
+      "title": "NumberStepper",
+      "description": "+/− numeric input with keyboard support.",
+      "files": [
+        {
+          "path": "ui/number-stepper.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "color-picker",
+      "type": "registry:ui",
+      "title": "ColorPicker",
+      "description": "Swatches, hex input, eyedropper.",
+      "files": [
+        {
+          "path": "ui/color-picker.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "badge",
+      "type": "registry:ui",
+      "title": "Badge",
+      "description": "Hint chip or status label.",
+      "files": [
+        {
+          "path": "ui/badge.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "sidebar",
+      "type": "registry:ui",
+      "title": "Sidebar",
+      "description": "Docked collapsible control column.",
+      "files": [
+        {
+          "path": "ui/sidebar.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "tooltip",
+      "type": "registry:ui",
+      "title": "Tooltip",
+      "description": "Shortcut-aware hover tooltip.",
+      "files": [
+        {
+          "path": "ui/tooltip.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "@radix-ui/react-tooltip",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "toggle",
+      "type": "registry:ui",
+      "title": "Toggle",
+      "description": "On/off switch for tool options.",
+      "files": [
+        {
+          "path": "ui/toggle.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "lib/mk-styles.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "@radix-ui/react-switch",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "select",
+      "type": "registry:ui",
+      "title": "Select",
+      "description": "Dropdown for formats, presets, modes.",
+      "files": [
+        {
+          "path": "ui/select.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "lib/mk-styles.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "@radix-ui/react-select",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "button",
+      "type": "registry:ui",
+      "title": "Button",
+      "description": "Primary, secondary, ghost, danger + IconButton.",
+      "files": [
+        {
+          "path": "ui/button.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "lib/mk-styles.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "text-input",
+      "type": "registry:ui",
+      "title": "TextInput",
+      "description": "Single-line text field.",
+      "files": [
+        {
+          "path": "ui/text-input.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "lib/mk-styles.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "checkbox",
+      "type": "registry:ui",
+      "title": "Checkbox",
+      "description": "Multi-option toggles.",
+      "files": [
+        {
+          "path": "ui/checkbox.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "lib/mk-styles.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "@radix-ui/react-checkbox",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "radio-group",
+      "type": "registry:ui",
+      "title": "RadioGroup",
+      "description": "Single choice from a list.",
+      "files": [
+        {
+          "path": "ui/radio-group.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "lib/mk-styles.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "@radix-ui/react-radio-group",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "coordinate-input",
+      "type": "registry:ui",
+      "title": "CoordinateInput",
+      "description": "X/Y position pair.",
+      "files": [
+        {
+          "path": "ui/coordinate-input.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "lib/mk-styles.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "preset-picker",
+      "type": "registry:ui",
+      "title": "PresetPicker",
+      "description": "Preset chip grid with add slot.",
+      "files": [
+        {
+          "path": "ui/preset-picker.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "lib/mk-styles.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "field-group",
+      "type": "registry:ui",
+      "title": "FieldGroup",
+      "description": "Label + control layout wrapper.",
+      "files": [
+        {
+          "path": "ui/field-group.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "lib/mk-styles.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "panel",
+      "type": "registry:ui",
+      "title": "Panel",
+      "description": "Docked or floating draggable panel.",
+      "files": [
+        {
+          "path": "ui/panel.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "lib/mk-styles.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "drawer",
+      "type": "registry:ui",
+      "title": "Drawer",
+      "description": "Slide-over panel from edge.",
+      "files": [
+        {
+          "path": "ui/drawer.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "lib/mk-styles.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "split-view",
+      "type": "registry:ui",
+      "title": "SplitView",
+      "description": "Resizable before/after split.",
+      "files": [
+        {
+          "path": "ui/split-view.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "tabs",
+      "type": "registry:ui",
+      "title": "Tabs",
+      "description": "Horizontal tabbed sections.",
+      "files": [
+        {
+          "path": "ui/tabs.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "lib/mk-styles.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "@radix-ui/react-tabs",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "accordion",
+      "type": "registry:ui",
+      "title": "Accordion",
+      "description": "Collapsible control sections.",
+      "files": [
+        {
+          "path": "ui/accordion.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "lib/mk-styles.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "@radix-ui/react-accordion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "toolbar",
+      "type": "registry:ui",
+      "title": "Toolbar",
+      "description": "Tool-mode icon strip — select, draw, annotate.",
+      "files": [
+        {
+          "path": "ui/toolbar.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": [
+        "tooltip"
+      ]
+    },
+    {
+      "name": "dropzone",
+      "type": "registry:ui",
+      "title": "Dropzone",
+      "description": "File drop with preview.",
+      "files": [
+        {
+          "path": "ui/dropzone.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "compare-slider",
+      "type": "registry:ui",
+      "title": "CompareSlider",
+      "description": "Before/after image compare.",
+      "files": [
+        {
+          "path": "ui/compare-slider.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "canvas-frame",
+      "type": "registry:ui",
+      "title": "CanvasFrame",
+      "description": "Output preview with zoom + bg.",
+      "files": [
+        {
+          "path": "ui/canvas-frame.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "export-button",
+      "type": "registry:ui",
+      "title": "ExportButton",
+      "description": "Export with loading states.",
+      "files": [
+        {
+          "path": "ui/export-button.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "layer-list",
+      "type": "registry:ui",
+      "title": "LayerList",
+      "description": "Layer stack with visibility + reorder.",
+      "files": [
+        {
+          "path": "ui/layer-list.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "lib/mk-styles.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "timeline",
+      "type": "registry:ui",
+      "title": "Timeline",
+      "description": "Animation timeline with keyframes, shots, and playback.",
+      "files": [
+        {
+          "path": "ui/timeline.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "dialog",
+      "type": "registry:ui",
+      "title": "Dialog",
+      "description": "Modal for settings or confirmations.",
+      "files": [
+        {
+          "path": "ui/dialog.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "lib/mk-styles.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "@radix-ui/react-dialog",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "popover",
+      "type": "registry:ui",
+      "title": "Popover",
+      "description": "Anchored contextual panel.",
+      "files": [
+        {
+          "path": "ui/popover.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "lib/mk-styles.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "@radix-ui/react-popover",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "empty-state",
+      "type": "registry:ui",
+      "title": "EmptyState",
+      "description": "Placeholder when nothing loaded.",
+      "files": [
+        {
+          "path": "ui/empty-state.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "lib/mk-styles.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "progress-bar",
+      "type": "registry:ui",
+      "title": "ProgressBar",
+      "description": "Determinate or indeterminate progress.",
+      "files": [
+        {
+          "path": "ui/progress-bar.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "lib/mk-styles.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "@radix-ui/react-progress",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "status-bar",
+      "type": "registry:ui",
+      "title": "StatusBar",
+      "description": "Bottom info strip (dims, zoom, status).",
+      "files": [
+        {
+          "path": "ui/status-bar.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "lib/mk-styles.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": []
+    },
+    {
+      "name": "toast",
+      "type": "registry:ui",
+      "title": "Toast",
+      "description": "Ephemeral success/error message.",
+      "files": [
+        {
+          "path": "ui/toast.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "lib/mk-styles.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": []
+    }
+  ]
+}

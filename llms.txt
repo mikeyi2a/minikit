@@ -1,0 +1,139 @@
+# Minikit
+
+> Copy-paste component registry for mini creative tools (dither editors, annotators, color pickers, export utilities).
+> shadcn is for apps. Minikit is for tools.
+
+## Stack
+
+- React 19 + TypeScript
+- Tailwind CSS 4
+- CSS variables (`--mk-*`) for theming — set `data-theme="tool-dark"` on `<html>`
+- Radix UI for accessible primitives (Dialog, Select, Tabs, etc.)
+- All components are `"use client"` — copy from docs code panel into `src/components/`
+
+## Required setup
+
+### npm package
+
+```bash
+npm install @minikit/ui
+```
+
+```tsx
+import "@minikit/ui/styles.css";
+import { Slider } from "@minikit/ui";
+```
+
+### CLI
+
+```bash
+npx minikit init
+npx minikit add slider
+```
+
+Registry: `/r/registry.json` on the deployed docs site.
+
+### Manual
+
+1. Copy theme tokens from `src/app/globals.css` (or `registry/theme.css`)
+2. Copy `src/lib/utils.ts` (`cn` helper)
+3. Copy component source from docs (e.g. `/slider` → Show code)
+4. Install peer deps listed in component imports (@radix-ui/* as needed)
+
+## Theming
+
+Override CSS variables to rebrand without editing components:
+
+- `--mk-bg`, `--mk-surface`, `--mk-surface-raised`, `--mk-border`
+- `--mk-text`, `--mk-text-muted`, `--mk-text-faint`
+- `--mk-accent`, `--mk-radius`, `--mk-font-mono`, `--mk-control-height`
+
+Presets: `data-theme="tool-dark"` (default), `"light"`, `"dark"`
+
+## Components
+
+### Core
+- SegmentedControl — compact mode switcher (Manual/Presets, tool modes)
+- Slider — numeric parameter control with label, hint chip, ticks, inline readout
+- DualSlider — two-handle range (levels, exposure min/max)
+- NumberStepper — +/- numeric input
+- ColorPicker — swatches, hex input, eyedropper
+- Badge — hint chips (Drag, Scroll) or status labels
+- Tooltip — hover labels with optional keyboard shortcut
+
+### Input
+- Toggle — on/off tool options
+- Select — dropdown (format, blend mode, preset category)
+- Button / IconButton — primary, secondary, ghost, danger actions
+- TextInput — single-line text field
+- Checkbox — multi-option toggles
+- RadioGroup — single choice from list
+- CoordinateInput — X/Y position pair
+- PresetPicker — preset chip grid with add slot
+- FieldGroup — label + control layout wrapper
+
+### Layout
+- Sidebar — docked collapsible control column
+- Panel — docked or floating draggable control surface
+- Drawer — slide-over panel from edge
+- SplitView — resizable before/after split
+- Tabs — horizontal tabbed sections
+- Accordion — collapsible control sections
+
+### Tool / Canvas
+- Toolbar — tool-mode icon strip (select, draw, annotate)
+- Dropzone — file drop with preview (entry point for file-based tools)
+- CompareSlider — before/after image comparison
+- CanvasFrame — output preview with zoom + background
+- ExportButton — PNG/JPG/SVG export or copy with loading states
+- LayerList — layer stack with visibility + reorder
+- Timeline — animation timeline with keyframes, shots, and playback controls
+
+### Feedback
+- Dialog — modal confirmations and settings
+- Popover — anchored contextual panel
+- EmptyState — placeholder when nothing loaded
+- ProgressBar — determinate or indeterminate progress
+- StatusBar — bottom info strip (dims, zoom, status)
+- Toast — ephemeral success/error message
+
+## Composition recipes
+
+### Image tool (sidebar layout)
+Sidebar + Dropzone + Slider(s) + CanvasFrame + ExportButton + StatusBar
+Live demo: /image-tool
+
+```
+┌─────────────┬──────────────────┐
+│  Sidebar    │   CanvasFrame    │
+│  Dropzone   │   (preview)      │
+│  Sliders    │                  │
+│  ExportBtn  │                  │
+└─────────────┴──────────────────┘
+│           StatusBar            │
+└────────────────────────────────┘
+```
+
+### Floating overlay tool
+Panel mode="floating" + PresetPicker + Slider + StatusBar + Toast
+Live demo: /floating-tool
+
+### Camera controls panel
+Panel mode="docked" + SegmentedControl + Slider + Toggle + FieldGroup
+Live demo: /panel-preview
+
+## Rules for AI agents
+
+1. Always wire controlled state — never `onValueChange={() => {}}` with fixed values
+2. Use `data-theme="tool-dark"` unless user specifies otherwise
+3. Compose tools from layout + input + tool + feedback categories
+4. Copy component source + utils.ts; do not invent API shapes — read props from docs
+5. For file-based tools, start with Dropzone; for output, use CanvasFrame + ExportButton
+
+## Docs
+
+- Introduction: /docs/introduction
+- Getting started: /docs/getting-started
+- Theming: /docs/theming
+- Composing a tool: /docs/composing-a-tool
+- Component pages: /{component-id} (e.g. /slider, /dropzone)
