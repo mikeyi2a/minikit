@@ -1,11 +1,11 @@
-# @minikit/ui
+# @mikeyi2a/minikit-ui
 
 React components for mini creative tools — sliders, panels, dropzones, timelines, and more.
 
 ## Install
 
 ```bash
-npm install @minikit/ui
+npm install @mikeyi2a/minikit-ui
 ```
 
 Peer dependencies: React 19+, Tailwind CSS 4+, and Radix UI packages as needed per component.
@@ -14,7 +14,7 @@ Peer dependencies: React 19+, Tailwind CSS 4+, and Radix UI packages as needed p
 
 ```tsx
 // app/layout.tsx
-import "@minikit/ui/styles.css";
+import "@mikeyi2a/minikit-ui/styles.css";
 
 export default function RootLayout({ children }) {
   return (
@@ -26,7 +26,7 @@ export default function RootLayout({ children }) {
 ```
 
 ```tsx
-import { Slider } from "@minikit/ui";
+import { Slider } from "@mikeyi2a/minikit-ui";
 
 <Slider label="Opacity" value={80} onValueChange={setOpacity} min={0} max={100} />
 ```

@@ -1,5 +1,5 @@
 {
-  "name": "minikit",
+  "name": "@mikeyi2a/minikit-cli",
   "version": "0.1.0",
   "description": "CLI to add Minikit components to your project",
   "license": "MIT",

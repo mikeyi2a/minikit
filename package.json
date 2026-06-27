@@ -11,8 +11,8 @@
     "start": "next start -p 3005",
     "sync:registry": "tsx scripts/sync-registry.ts",
     "sync:all": "tsx scripts/sync-registry.ts",
-    "build:ui": "npm run build -w @minikit/ui",
-    "build:cli": "npm run build -w minikit",
+    "build:ui": "npm run build -w @mikeyi2a/minikit-ui",
+    "build:cli": "npm run build -w @mikeyi2a/minikit-cli",
     "build:all": "npm run sync:all && npm run build && npm run build:ui && npm run build:cli"
   },
   "dependencies": {

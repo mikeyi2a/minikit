@@ -18,19 +18,19 @@ Open [http://localhost:3005](http://localhost:3005) → redirects to `/docs/intr
 ### npm package
 
 ```bash
-npm install @minikit/ui
+npm install @mikeyi2a/minikit-ui
 ```
 
 ```tsx
-import "@minikit/ui/styles.css";
-import { Slider } from "@minikit/ui";
+import "@mikeyi2a/minikit-ui/styles.css";
+import { Slider } from "@mikeyi2a/minikit-ui";
 ```
 
 ### CLI (copy-paste)
 
 ```bash
-npx minikit init
-npx minikit add slider
+npx @mikeyi2a/minikit-cli init
+npx @mikeyi2a/minikit-cli add slider
 ```
 
 ### Manual

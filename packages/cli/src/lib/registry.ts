@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url";
 import fs from "fs-extra";
 
 export const DEFAULT_REGISTRY_URL =
-  process.env.MINIKIT_REGISTRY_URL ?? "https://minikit.vercel.app/r/registry.json";
+  process.env.MINIKIT_REGISTRY_URL ?? "https://minikit-flax.vercel.app/r/registry.json";
 
 export interface RegistryFile {
   path: string;

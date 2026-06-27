@@ -7,7 +7,7 @@ import { Command } from "commander";
 import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs-extra";
-var DEFAULT_REGISTRY_URL = process.env.MINIKIT_REGISTRY_URL ?? "https://minikit.vercel.app/r/registry.json";
+var DEFAULT_REGISTRY_URL = process.env.MINIKIT_REGISTRY_URL ?? "https://minikit-flax.vercel.app/r/registry.json";
 function isLocalRegistry(url) {
   return url.startsWith("file:") || !url.startsWith("http") && path.isAbsolute(url);
 }

@@ -234,7 +234,7 @@ function sync() {
   const registry = {
     $schema: "https://ui.shadcn.com/schema/registry.json",
     name: "minikit",
-    homepage: process.env.MINIKIT_REGISTRY_URL ?? "https://minikit.vercel.app",
+    homepage: process.env.MINIKIT_REGISTRY_URL ?? "https://minikit-flax.vercel.app",
     items,
   };
 

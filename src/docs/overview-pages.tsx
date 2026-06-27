@@ -137,12 +137,12 @@ function Installation() {
 
       <DocSection>
         <DocHeading>npm package</DocHeading>
-        <DocPre>{`npm install @minikit/ui`}</DocPre>
+        <DocPre>{`npm install @mikeyi2a/minikit-ui`}</DocPre>
         <DocPre>{`// app/layout.tsx
-import "@minikit/ui/styles.css";
+import "@mikeyi2a/minikit-ui/styles.css";
 
 // page.tsx
-import { Slider } from "@minikit/ui";
+import { Slider } from "@mikeyi2a/minikit-ui";
 
 <Slider label="Opacity" value={80} onValueChange={setOpacity} />`}</DocPre>
         <DocParagraph>
@@ -153,7 +153,7 @@ import { Slider } from "@minikit/ui";
 
       <DocSection>
         <DocHeading>CLI</DocHeading>
-        <DocPre>{`npx minikit init\nnpx minikit add slider`}</DocPre>
+        <DocPre>{`npx @mikeyi2a/minikit-cli init\nnpx @mikeyi2a/minikit-cli add slider`}</DocPre>
         <DocParagraph>
           Fetches components from the hosted registry at <DocInlineCode>/r/registry.json</DocInlineCode>. Resolves
           transitive dependencies (e.g. <DocInlineCode>toolbar</DocInlineCode> also installs{" "}

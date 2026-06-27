@@ -1,7 +1,8 @@
 # Minikit — Project Plan
 
 > Registry-first component kit for mini creative tools.  
-> Status: **v1 complete** · **V2 packages shipped** (`@minikit/ui` + `minikit` CLI).
+> Status: **v1 complete** · **V2 packages shipped** (`@mikeyi2a/minikit-ui` + `@mikeyi2a/minikit-cli`).
+> Live docs + registry: https://minikit-flax.vercel.app · Repo: https://github.com/mikeyi2a/minikit
 
 ---
 
@@ -33,21 +34,21 @@ Ship a shadcn-style, copy-paste component registry with:
 | `llms.txt` | ✅ |
 | Registry JSON manifest (35 installable components) | ✅ |
 | `registry/ui/` + `public/r/` synced sources | ✅ |
-| `npx minikit init` / `npx minikit add <component>` CLI | ✅ |
-| `@minikit/ui` npm package | ✅ |
+| `npx @mikeyi2a/minikit-cli init` / `add <component>` CLI | ✅ |
+| `@mikeyi2a/minikit-ui` npm package | ✅ |
 
 ---
 
 ## V2 — packages (done)
 
-### `@minikit/ui`
-- `npm install @minikit/ui` + `import { Slider } from "@minikit/ui"`
-- Theme CSS: `import "@minikit/ui/styles.css"`
+### `@mikeyi2a/minikit-ui`
+- `npm install @mikeyi2a/minikit-ui` + `import { Slider } from "@mikeyi2a/minikit-ui"`
+- Theme CSS: `import "@mikeyi2a/minikit-ui/styles.css"`
 - Built with tsup from synced `packages/ui/src/`
 
 ### `minikit` CLI
-- `npx minikit init` — writes `components.json`, copies utils + theme
-- `npx minikit add slider` — fetches from `/r/registry.json`, resolves deps, rewrites imports
+- `npx @mikeyi2a/minikit-cli init` — writes `components.json`, copies utils + theme
+- `npx @mikeyi2a/minikit-cli add slider` — fetches from `/r/registry.json`, resolves deps, rewrites imports
 
 ### Sync script
 - `npm run sync:all` → `registry/`, `public/r/`, `packages/ui/src/`
@@ -76,7 +77,7 @@ Ship a shadcn-style, copy-paste component registry with:
 npm run dev          # docs site
 npm run sync:all     # sync registry + ui package sources
 npm run build        # docs site
-npm run build:ui     # @minikit/ui package
+npm run build:ui     # @mikeyi2a/minikit-ui package
 npm run build:cli    # minikit CLI
 npm run build:all    # full pipeline
 ```

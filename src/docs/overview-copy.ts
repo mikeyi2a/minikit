@@ -123,43 +123,66 @@ See [Composing a tool](/docs/composing-a-tool) or the [Image Tool](/image-tool) 
   installation: {
     plainText: `Installation
 
-Minikit is registry-first. Install components by copying source files (CLI coming soon).
+Three ways to use Minikit: npm package, CLI copy-paste, or manual copy from the docs.
+
+npm package
+npm install @mikeyi2a/minikit-ui
+// app/layout.tsx
+import "@mikeyi2a/minikit-ui/styles.css";
+// page.tsx
+import { Slider } from "@mikeyi2a/minikit-ui";
+Requires React 19+, Tailwind 4+, and data-theme="tool-dark" on <html>.
+
+CLI
+npx @mikeyi2a/minikit-cli init
+npx @mikeyi2a/minikit-cli add slider
+Fetches from the hosted registry and resolves transitive dependencies (e.g. toolbar also installs tooltip).
 
 Manual install
 1. Add Tailwind CSS 4+ to your React / Next.js project
-2. Copy theme tokens from globals.css
+2. Copy theme tokens from globals.css (or registry/theme.css)
 3. Copy src/lib/utils.ts
 4. Copy the component file from the docs code panel
 5. Install peer deps if needed (Radix packages listed in source imports)
-
-CLI (planned)
-npx minikit init
-npx minikit add slider
-
-Registry manifest lives in registry/registry.json. Compatible with shadcn CLI format.
 
 Dependencies
 Core: React 19, Tailwind 4, clsx, tailwind-merge. Some components use Radix UI primitives for accessibility.`,
     markdown: `# Installation
 
-Minikit is registry-first. Install components by copying source files (CLI coming soon).
+Three ways to use Minikit: npm package, CLI copy-paste, or manual copy from the docs.
+
+## npm package
+
+\`\`\`bash
+npm install @mikeyi2a/minikit-ui
+\`\`\`
+
+\`\`\`tsx
+// app/layout.tsx
+import "@mikeyi2a/minikit-ui/styles.css";
+
+// page.tsx
+import { Slider } from "@mikeyi2a/minikit-ui";
+\`\`\`
+
+Requires React 19+, Tailwind 4+, and \`data-theme="tool-dark"\` on \`<html>\`.
+
+## CLI
+
+\`\`\`bash
+npx @mikeyi2a/minikit-cli init
+npx @mikeyi2a/minikit-cli add slider
+\`\`\`
+
+Fetches from the hosted registry and resolves transitive dependencies (e.g. \`toolbar\` also installs \`tooltip\`).
 
 ## Manual install
 
 1. Add Tailwind CSS 4+ to your React / Next.js project
-2. Copy theme tokens from \`globals.css\`
+2. Copy theme tokens from \`globals.css\` (or \`registry/theme.css\`)
 3. Copy \`src/lib/utils.ts\`
 4. Copy the component file from the docs code panel
 5. Install peer deps if needed (Radix packages listed in source imports)
-
-## CLI (planned)
-
-\`\`\`bash
-npx minikit init
-npx minikit add slider
-\`\`\`
-
-Registry manifest lives in \`registry/registry.json\`. Compatible with shadcn CLI format.
 
 ## Dependencies
 

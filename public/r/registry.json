@@ -1,7 +1,7 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "minikit",
-  "homepage": "https://minikit.vercel.app",
+  "homepage": "https://minikit-flax.vercel.app",
   "items": [
     {
       "name": "segmented-control",
