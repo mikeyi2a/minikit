@@ -15,7 +15,7 @@ export interface DualSliderProps {
   disabled?: boolean;
 }
 
-type ActiveHandle = "start" | "end" | null;
+type ActiveHandle = "start" | "end";
 
 export function DualSlider({
   label,
@@ -28,9 +28,10 @@ export function DualSlider({
   className,
   disabled = false,
 }: DualSliderProps) {
-  const [activeHandle, setActiveHandle] = React.useState<ActiveHandle>(null);
+  const [activeHandle, setActiveHandle] = React.useState<ActiveHandle | null>(null);
   const [liveRange, setLiveRange] = React.useState<{ start: number; end: number } | null>(null);
   const draggingRef = React.useRef(false);
+  const activeHandleRef = React.useRef<ActiveHandle | null>(null);
   const trackRef = React.useRef<HTMLDivElement>(null);
 
   const startPct = liveRange ? liveRange.start : ((start - min) / (max - min)) * 100;
@@ -47,65 +48,78 @@ export function DualSlider({
     [min, max, step],
   );
 
-  const pickHandle = (clientX: number): ActiveHandle => {
-    const val = valueFromClientX(clientX);
-    const distStart = Math.abs(val - start);
-    const distEnd = Math.abs(val - end);
-    return distStart <= distEnd ? "start" : "end";
-  };
+  const pickHandle = React.useCallback(
+    (clientX: number): ActiveHandle => {
+      const val = valueFromClientX(clientX);
+      const distStart = Math.abs(val - start);
+      const distEnd = Math.abs(val - end);
+      return distStart <= distEnd ? "start" : "end";
+    },
+    [valueFromClientX, start, end],
+  );
 
-  const pctFromClientX = (clientX: number) => {
+  const pctFromClientX = React.useCallback((clientX: number) => {
     if (!trackRef.current) return 0;
     const rect = trackRef.current.getBoundingClientRect();
     const x = clamp(clientX - rect.left, 0, rect.width);
     return (x / rect.width) * 100;
-  };
+  }, []);
 
-  const updateHandle = (handle: ActiveHandle, clientX: number) => {
-    if (!handle || disabled) return;
-    const pct = pctFromClientX(clientX);
-    const next = valueFromClientX(clientX);
-    const baseStartPct = ((start - min) / (max - min)) * 100;
-    const baseEndPct = ((end - min) / (max - min)) * 100;
+  const updateHandle = React.useCallback(
+    (handle: ActiveHandle, clientX: number) => {
+      if (disabled) return;
+      const pct = pctFromClientX(clientX);
+      const next = valueFromClientX(clientX);
+      const baseStartPct = ((start - min) / (max - min)) * 100;
+      const baseEndPct = ((end - min) / (max - min)) * 100;
 
-    if (draggingRef.current) {
-      setLiveRange((prev) => ({
-        start: handle === "start" ? pct : (prev?.start ?? baseStartPct),
-        end: handle === "end" ? pct : (prev?.end ?? baseEndPct),
-      }));
-    }
+      if (draggingRef.current) {
+        setLiveRange((prev) => ({
+          start: handle === "start" ? pct : (prev?.start ?? baseStartPct),
+          end: handle === "end" ? pct : (prev?.end ?? baseEndPct),
+        }));
+      }
 
-    if (handle === "start") {
-      onValueChange([Math.min(next, end), end]);
-    } else {
-      onValueChange([start, Math.max(next, start)]);
-    }
-  };
+      if (handle === "start") {
+        onValueChange([Math.min(next, end), end]);
+      } else {
+        onValueChange([start, Math.max(next, start)]);
+      }
+    },
+    [disabled, pctFromClientX, valueFromClientX, start, end, min, max, onValueChange],
+  );
 
-  const endDrag = () => {
+  const endDrag = React.useCallback(() => {
     draggingRef.current = false;
+    activeHandleRef.current = null;
     setActiveHandle(null);
     setLiveRange(null);
-  };
+  }, []);
 
-  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>, handle?: ActiveHandle) => {
-    if (disabled || e.button !== 0) return;
-    e.preventDefault();
-    e.currentTarget.setPointerCapture(e.pointerId);
-    draggingRef.current = true;
-    const active = handle ?? pickHandle(e.clientX);
-    setActiveHandle(active);
-    updateHandle(active, e.clientX);
-  };
+  const beginDrag = React.useCallback(
+    (e: React.PointerEvent, handle?: ActiveHandle) => {
+      if (disabled || e.button !== 0 || !trackRef.current) return;
+      e.preventDefault();
+      trackRef.current.setPointerCapture(e.pointerId);
+      draggingRef.current = true;
+      const active = handle ?? pickHandle(e.clientX);
+      activeHandleRef.current = active;
+      setActiveHandle(active);
+      updateHandle(active, e.clientX);
+    },
+    [disabled, pickHandle, updateHandle],
+  );
 
   const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!e.currentTarget.hasPointerCapture(e.pointerId) || !activeHandle) return;
-    updateHandle(activeHandle, e.clientX);
+    if (!trackRef.current?.hasPointerCapture(e.pointerId)) return;
+    const handle = activeHandleRef.current;
+    if (!handle) return;
+    updateHandle(handle, e.clientX);
   };
 
   const onPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!e.currentTarget.hasPointerCapture(e.pointerId)) return;
-    e.currentTarget.releasePointerCapture(e.pointerId);
+    if (!trackRef.current?.hasPointerCapture(e.pointerId)) return;
+    trackRef.current.releasePointerCapture(e.pointerId);
     endDrag();
   };
 
@@ -143,7 +157,7 @@ export function DualSlider({
             height: "var(--mk-control-height)",
             background: "color-mix(in srgb, var(--mk-text) 5%, transparent)",
           }}
-          onPointerDown={(e) => onPointerDown(e)}
+          onPointerDown={(e) => beginDrag(e)}
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
           onPointerCancel={onPointerUp}
@@ -165,7 +179,8 @@ export function DualSlider({
             aria-valuemax={end}
             aria-valuenow={start}
             aria-label={label ? `${label} minimum` : "Range minimum"}
-            className="absolute top-1/2 w-1 rounded-full cursor-ew-resize"
+            tabIndex={disabled ? -1 : 0}
+            className="absolute top-1/2 w-1 rounded-full cursor-ew-resize touch-none"
             style={{
               left: `${startPct}%`,
               height: "calc(var(--mk-control-height) - 10px)",
@@ -175,7 +190,7 @@ export function DualSlider({
             }}
             onPointerDown={(e) => {
               e.stopPropagation();
-              onPointerDown(e, "start");
+              beginDrag(e, "start");
             }}
           />
 
@@ -186,7 +201,8 @@ export function DualSlider({
             aria-valuemax={max}
             aria-valuenow={end}
             aria-label={label ? `${label} maximum` : "Range maximum"}
-            className="absolute top-1/2 w-1 rounded-full cursor-ew-resize"
+            tabIndex={disabled ? -1 : 0}
+            className="absolute top-1/2 w-1 rounded-full cursor-ew-resize touch-none"
             style={{
               left: `${endPct}%`,
               height: "calc(var(--mk-control-height) - 10px)",
@@ -196,7 +212,7 @@ export function DualSlider({
             }}
             onPointerDown={(e) => {
               e.stopPropagation();
-              onPointerDown(e, "end");
+              beginDrag(e, "end");
             }}
           />
         </div>
