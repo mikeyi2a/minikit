@@ -34,14 +34,11 @@ export function Toggle({ label, checked, onCheckedChange, disabled, className }:
         disabled={disabled}
         className={cn(
           "relative h-5 w-9 shrink-0 rounded-full border transition-colors duration-150 cursor-pointer",
-          "data-[state=unchecked]:border-[var(--mk-border)]",
+          "data-[state=unchecked]:border-[var(--mk-border)] data-[state=unchecked]:bg-[color-mix(in_srgb,var(--mk-text)_8%,transparent)]",
           "data-[state=checked]:border-[var(--mk-accent)] data-[state=checked]:bg-[var(--mk-accent)]",
           "focus-visible:outline focus-visible:outline-offset-2",
         )}
-        style={{
-          outlineColor: "var(--mk-text-muted)",
-          background: checked ? undefined : "color-mix(in srgb, var(--mk-text) 8%, transparent)",
-        }}
+        style={{ outlineColor: "var(--mk-text-muted)" }}
       >
         <Switch.Thumb
           className={cn(
