@@ -1,4 +1,9 @@
 import { cn } from "@/lib/utils";
+import {
+  PAGE_SECTION_CLASS,
+  PAGE_STACK_CLASS,
+  PAGE_SUBSECTION_CLASS,
+} from "@/components/docs/doc-layout";
 
 const LABEL_CLASS = "text-[10px] font-mono uppercase tracking-wider m-0";
 const LABEL_STYLE = { color: "var(--mk-text-faint)", fontFamily: "var(--mk-font-mono)" } as const;
@@ -13,7 +18,7 @@ export function PageSection({
   className?: string;
 }) {
   return (
-    <section className={cn("space-y-4", className)}>
+    <section className={cn(PAGE_SECTION_CLASS, className)}>
       <h3 className={LABEL_CLASS} style={LABEL_STYLE}>
         {title}
       </h3>
@@ -35,10 +40,10 @@ export function PageSubsection({
 }) {
   return (
     <div
-      className={cn("space-y-4 pt-5 border-t", className)}
+      className={cn(PAGE_SUBSECTION_CLASS, className)}
       style={{ borderColor: "var(--mk-border)" }}
     >
-      <div className="space-y-2">
+      <div className="flex flex-col gap-2">
         <h4 className={LABEL_CLASS} style={LABEL_STYLE}>
           {title}
         </h4>
@@ -54,5 +59,5 @@ export function PageSubsection({
 }
 
 export function PageStack({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <div className={cn("space-y-10", className)}>{children}</div>;
+  return <div className={cn(PAGE_STACK_CLASS, className)}>{children}</div>;
 }

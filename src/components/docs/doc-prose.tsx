@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { DOC_SECTION_CLASS } from "@/components/docs/doc-layout";
 
 /** Top-level page content wrapper. */
 export function DocArticle({ children, className }: { children: React.ReactNode; className?: string }) {
@@ -61,10 +62,7 @@ export function DocParagraph({ children }: { children: React.ReactNode }) {
 export function DocSection({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
     <section
-      className={cn(
-        "flex flex-col gap-8 pt-12 border-t max-w-[42rem] [&:first-of-type]:pt-0 [&:first-of-type]:border-t-0",
-        className,
-      )}
+      className={cn(DOC_SECTION_CLASS, className)}
       style={{ borderColor: "var(--mk-border)" }}
     >
       {children}

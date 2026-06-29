@@ -50,7 +50,7 @@ export function ComponentPageContent({ activeId, source, utilsSource }: Componen
 
       {source && (
         <PageSection title="Source">
-          <div className="space-y-5">
+          <div className="flex flex-col gap-6">
             <CodePanel code={source} filename={filename} />
             {utilsSource && (
               <PageSubsection

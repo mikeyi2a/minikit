@@ -476,7 +476,7 @@ function ComponentCatalog({ includePreview = false }: { includePreview?: boolean
   );
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-8">
       {categories.map((category) => {
         const items = COMPONENT_META.filter(
           (c) => c.category === category && c.id !== "overview",
