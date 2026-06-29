@@ -107,6 +107,7 @@
         }
       ],
       "dependencies": [
+        "@radix-ui/react-popover",
         "clsx",
         "tailwind-merge"
       ],
