@@ -14,6 +14,15 @@ Minikit is a copy-paste component registry for building mini creative tools — 
 
 shadcn is for apps. Minikit is for tools. The component set, default aesthetic, and docs are calibrated for someone building a focused little tool for a specific creative task — not a dashboard or marketing site.
 
+Built on
+- React 19 + TypeScript — "use client" controlled components
+- Tailwind CSS 4 — utility-first layout and sizing
+- Radix UI — accessible primitives (Dialog, Select, Popover, Tabs, etc.)
+- CSS variables (--mk-*) — rebrand via tokens, not source edits
+- shadcn-style registry — CLI copy-paste or @mikeyi2a/minikit-ui npm import
+
+The docs site runs on Next.js 15. Your app can be Next.js, Vite, or any React + Tailwind 4 project.
+
 What you get
 - 38 components across core controls, inputs, layout, canvas, and feedback
 - CSS variable theming (--mk-* tokens)
@@ -31,6 +40,18 @@ Usage guidelines
 Minikit is a copy-paste component registry for building mini creative tools — dither editors, screenshot annotators, colour pickers, mockup makers, export utilities.
 
 **shadcn is for apps.** Minikit is for tools. The component set, default aesthetic, and docs are calibrated for someone building a focused little tool for a specific creative task — not a dashboard or marketing site.
+
+## Built on
+
+Minikit is a curated component layer on a small modern stack:
+
+- **React 19 + TypeScript** — \`"use client"\` controlled components
+- **Tailwind CSS 4** — utility-first layout and sizing
+- **Radix UI** — accessible primitives (Dialog, Select, Popover, Tabs, etc.)
+- **CSS variables (\`--mk-*\`)** — rebrand via tokens, not source edits
+- **shadcn-style registry** — CLI copy-paste or \`@mikeyi2a/minikit-ui\` npm import
+
+The docs site runs on Next.js 15. Your app can be Next.js, Vite, or any React + Tailwind 4 project.
 
 ## What you get
 

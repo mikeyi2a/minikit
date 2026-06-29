@@ -49,6 +49,36 @@ function Introduction() {
       </DocIntro>
 
       <DocSection>
+        <DocHeading>Built on</DocHeading>
+        <DocParagraph>
+          Minikit is not a from-scratch UI framework. It is a curated component layer on top of a small, modern stack — the same foundations most React tool apps already use.
+        </DocParagraph>
+        <DocList>
+          <DocListItem>
+            <DocStrong>React 19 + TypeScript</DocStrong> — all components are{" "}
+            <DocInlineCode>&quot;use client&quot;</DocInlineCode> and controlled. You own the state; Minikit renders the control surface.
+          </DocListItem>
+          <DocListItem>
+            <DocStrong>Tailwind CSS 4</DocStrong> — utility classes for layout and sizing. No separate component CSS files to import beyond theme tokens.
+          </DocListItem>
+          <DocListItem>
+            <DocStrong>Radix UI</DocStrong> — accessible primitives where it matters (Dialog, Select, Tabs, Popover, Checkbox, and others). Radix handles focus traps and keyboard behaviour; Minikit styles them to match the tool aesthetic.
+          </DocListItem>
+          <DocListItem>
+            <DocStrong>CSS variables (<DocInlineCode>--mk-*</DocInlineCode>)</DocStrong> — all colour, spacing, and typography flow through tokens. Rebrand without editing component source. See{" "}
+            <DocLink href="/docs/theming">Theming</DocLink>.
+          </DocListItem>
+          <DocListItem>
+            <DocStrong>shadcn-style registry</DocStrong> — copy-paste source, a JSON manifest, and a CLI (<DocInlineCode>@mikeyi2a/minikit-cli</DocInlineCode>) that pulls files into your project. Or skip the copy step and import via{" "}
+            <DocInlineCode>@mikeyi2a/minikit-ui</DocInlineCode>.
+          </DocListItem>
+        </DocList>
+        <DocParagraph>
+          The docs site itself is Next.js 15 (App Router). Your app can be Next.js, Vite, or any React setup — you only need React, Tailwind 4, and the theme CSS.
+        </DocParagraph>
+      </DocSection>
+
+      <DocSection>
         <DocHeading>What you get</DocHeading>
         <DocList>
           <DocListItem>38 components across core controls, inputs, layout, canvas, and feedback</DocListItem>
