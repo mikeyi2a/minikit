@@ -20,12 +20,11 @@ What you get
 - Live demos + copy-paste source for every component
 - llms.txt so AI agents know how to compose tools
 
-vs shadcn
-shadcn ships DataTable, Nav, Dialog for apps. Minikit ships Slider, Dropzone, CanvasFrame, CompareSlider, Panel — the primitives you need when someone is vibe-coding a one-purpose creative tool.
+Live docs: https://minikit-flax.vercel.app
 
 Usage guidelines
 - Use for focused creative tools: Minikit components are designed for single-purpose tools — image editors, annotators, export utilities — not full application shells.
-- Copy, don't npm install: Components are copy-paste source files. Copy the component and lib/utils.ts into your project.
+- Three install paths: npm package (@mikeyi2a/minikit-ui), CLI (@mikeyi2a/minikit-cli), or manual copy from the docs.
 - Theme with CSS variables: Override --mk-* tokens to rebrand. Set data-theme="tool-dark" on <html> for the default aesthetic.`,
     markdown: `# Introduction
 
@@ -40,10 +39,12 @@ Minikit is a copy-paste component registry for building mini creative tools — 
 - Live demos + copy-paste source for every component
 - \`llms.txt\` so AI agents know how to compose tools
 
+**Live docs:** https://minikit-flax.vercel.app
+
 ## Usage guidelines
 
 - **Use for focused creative tools:** Minikit components are designed for single-purpose tools — image editors, annotators, export utilities — not full application shells.
-- **Copy, don't npm install:** Components are copy-paste source files. Copy the component and \`lib/utils.ts\` into your project.
+- **Three install paths:** npm package (\`@mikeyi2a/minikit-ui\`), CLI (\`@mikeyi2a/minikit-cli\`), or manual copy from the docs.
 - **Theme with CSS variables:** Override \`--mk-*\` tokens to rebrand. Set \`data-theme="tool-dark"\` on \`<html>\` for the default aesthetic.
 
 ## vs shadcn

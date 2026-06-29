@@ -3,6 +3,10 @@
 > Copy-paste component registry for mini creative tools (dither editors, annotators, color pickers, export utilities).
 > shadcn is for apps. Minikit is for tools.
 
+**Live docs:** https://minikit-flax.vercel.app  
+**GitHub:** https://github.com/mikeyi2a/minikit  
+**Registry:** https://minikit-flax.vercel.app/r/registry.json
+
 ## Stack
 
 - React 19 + TypeScript
@@ -132,8 +136,10 @@ Live demo: /panel-preview
 
 ## Docs
 
+- Live site: https://minikit-flax.vercel.app
 - Introduction: /docs/introduction
 - Getting started: /docs/getting-started
+- Installation: /docs/installation
 - Theming: /docs/theming
 - Composing a tool: /docs/composing-a-tool
 - Component pages: /{component-id} (e.g. /slider, /dropzone)

@@ -1,4 +1,5 @@
 import type { DocSlug } from "@/docs/nav";
+import { COMPONENT_META, type ComponentCategory } from "@/demos/registry-meta";
 import {
   DocArticle,
   DocGuideline,
@@ -62,13 +63,58 @@ function Introduction() {
       </DocSection>
 
       <DocSection>
+        <DocHeading>Documentation</DocHeading>
+        <DocList>
+          <DocListItem>
+            Live site:{" "}
+            <a
+              href="https://minikit-flax.vercel.app"
+              className="underline underline-offset-[3px]"
+              style={{ color: "var(--mk-text)" }}
+              target="_blank"
+              rel="noreferrer"
+            >
+              minikit-flax.vercel.app
+            </a>
+          </DocListItem>
+          <DocListItem>
+            npm:{" "}
+            <DocInlineCode>@mikeyi2a/minikit-ui</DocInlineCode> (import) ·{" "}
+            <DocInlineCode>@mikeyi2a/minikit-cli</DocInlineCode> (copy-paste)
+          </DocListItem>
+          <DocListItem>
+            Registry JSON:{" "}
+            <a
+              href="https://minikit-flax.vercel.app/r/registry.json"
+              className="underline underline-offset-[3px]"
+              style={{ color: "var(--mk-text)" }}
+              target="_blank"
+              rel="noreferrer"
+            >
+              /r/registry.json
+            </a>
+          </DocListItem>
+        </DocList>
+      </DocSection>
+
+      <DocSection>
+        <DocHeading>Components</DocHeading>
+        <DocParagraph>
+          38 components with live demos and props tables.{" "}
+          <DocLink href="/segmented-control">Browse all →</DocLink>
+        </DocParagraph>
+        <ComponentCatalog />
+      </DocSection>
+
+      <DocSection>
         <DocHeading>Usage guidelines</DocHeading>
         <DocList>
           <DocGuideline title="Use for focused creative tools">
             Minikit components are designed for single-purpose tools — image editors, annotators, export utilities — not full application shells.
           </DocGuideline>
-          <DocGuideline title="Copy, don't npm install">
-            Components are copy-paste source files. Copy the component and <DocInlineCode>lib/utils.ts</DocInlineCode> into your project.
+          <DocGuideline title="Three install paths">
+            <DocLink href="/docs/installation">npm package</DocLink> (fastest),{" "}
+            <DocLink href="/docs/installation">CLI</DocLink> (own the source), or manual copy from any component page.
           </DocGuideline>
           <DocGuideline title="Theme with CSS variables">
             Override <DocInlineCode>--mk-*</DocInlineCode> tokens to rebrand. Set <DocInlineCode>data-theme=&quot;tool-dark&quot;</DocInlineCode> on <DocInlineCode>&lt;html&gt;</DocInlineCode> for the default aesthetic.
@@ -87,38 +133,54 @@ function GettingStarted() {
       </DocIntro>
 
       <DocSection>
-        <DocHeading>1. Clone or browse</DocHeading>
-        <DocParagraph>Run the docs site locally:</DocParagraph>
-        <DocPre>
-          {`git clone <repo> minikit\ncd minikit\nnpm install\nnpm run dev`}
-        </DocPre>
-      </DocSection>
+        <DocHeading>Fast path — npm package</DocHeading>
+        <DocPre>{`npm install @mikeyi2a/minikit-ui`}</DocPre>
+        <DocPre>{`// app/layout.tsx
+import "@mikeyi2a/minikit-ui/styles.css";
 
-      <DocSection>
-        <DocHeading>2. Add theme CSS</DocHeading>
+// page.tsx
+"use client";
+import { useState } from "react";
+import { Slider } from "@mikeyi2a/minikit-ui";
+
+export function MyTool() {
+  const [v, setV] = useState(50);
+  return <Slider label="Amount" value={v} onValueChange={setV} />;
+}`}</DocPre>
         <DocParagraph>
-          Copy <DocInlineCode>src/app/globals.css</DocInlineCode> theme tokens into your project, or import them. Set{" "}
-          <DocInlineCode>data-theme=&quot;tool-dark&quot;</DocInlineCode> on <DocInlineCode>&lt;html&gt;</DocInlineCode>.
+          Set <DocInlineCode>data-theme=&quot;tool-dark&quot;</DocInlineCode> on <DocInlineCode>&lt;html&gt;</DocInlineCode>. See{" "}
+          <DocLink href="/docs/installation">Installation</DocLink> for CLI and manual options.
         </DocParagraph>
       </DocSection>
 
       <DocSection>
-        <DocHeading>3. Copy a component</DocHeading>
+        <DocHeading>Or browse the live docs</DocHeading>
         <DocParagraph>
-          Open any component page (e.g. <DocLink href="/slider">Slider</DocLink>), click <DocStrong>Show code</DocStrong>, and copy into{" "}
-          <DocInlineCode>src/components/</DocInlineCode>. Also copy <DocInlineCode>src/lib/utils.ts</DocInlineCode>.
+          Every component has a demo, props table, and copy-paste source at{" "}
+          <a
+            href="https://minikit-flax.vercel.app"
+            className="underline underline-offset-[3px]"
+            style={{ color: "var(--mk-text)" }}
+            target="_blank"
+            rel="noreferrer"
+          >
+            minikit-flax.vercel.app
+          </a>
+          . Open e.g. <DocLink href="/slider">Slider</DocLink>, click <DocStrong>Show code</DocStrong>, copy into{" "}
+          <DocInlineCode>src/components/</DocInlineCode>.
         </DocParagraph>
       </DocSection>
 
       <DocSection>
-        <DocHeading>4. Use it</DocHeading>
+        <DocHeading>Run this repo locally</DocHeading>
+        <DocParagraph>Fork or clone to hack on Minikit itself:</DocParagraph>
         <DocPre>
-          {`"use client";\nimport { useState } from "react";\nimport { Slider } from "@/components/slider";\n\nexport function MyTool() {\n  const [v, setV] = useState(50);\n  return <Slider label="Amount" value={v} onValueChange={setV} />;\n}`}
+          {`git clone https://github.com/mikeyi2a/minikit\ncd minikit\nnpm install\nnpm run dev`}
         </DocPre>
       </DocSection>
 
       <DocSection>
-        <DocHeading>5. Compose</DocHeading>
+        <DocHeading>Compose a tool</DocHeading>
         <DocParagraph>
           See <DocLink href="/docs/composing-a-tool">Composing a tool</DocLink> or the{" "}
           <DocLink href="/image-tool">Image Tool</DocLink> example.
@@ -155,9 +217,28 @@ import { Slider } from "@mikeyi2a/minikit-ui";
         <DocHeading>CLI</DocHeading>
         <DocPre>{`npx @mikeyi2a/minikit-cli init\nnpx @mikeyi2a/minikit-cli add slider`}</DocPre>
         <DocParagraph>
-          Fetches components from the hosted registry at <DocInlineCode>/r/registry.json</DocInlineCode>. Resolves
-          transitive dependencies (e.g. <DocInlineCode>toolbar</DocInlineCode> also installs{" "}
-          <DocInlineCode>tooltip</DocInlineCode>).
+          Fetches from{" "}
+          <a
+            href="https://minikit-flax.vercel.app/r/registry.json"
+            className="underline underline-offset-[3px]"
+            style={{ color: "var(--mk-text)" }}
+            target="_blank"
+            rel="noreferrer"
+          >
+            minikit-flax.vercel.app/r/registry.json
+          </a>
+          . Resolves transitive dependencies (e.g. <DocInlineCode>toolbar</DocInlineCode> also installs{" "}
+          <DocInlineCode>tooltip</DocInlineCode>). See the{" "}
+          <a
+            href="https://www.npmjs.com/package/@mikeyi2a/minikit-cli"
+            className="underline underline-offset-[3px]"
+            style={{ color: "var(--mk-text)" }}
+            target="_blank"
+            rel="noreferrer"
+          >
+            CLI readme on npm
+          </a>
+          .
         </DocParagraph>
       </DocSection>
 
@@ -187,6 +268,12 @@ import { Slider } from "@mikeyi2a/minikit-ui";
             Radix UI primitives for accessible Dialog, Select, Tabs, and other overlay components
           </DocGuideline>
         </DocList>
+      </DocSection>
+
+      <DocSection>
+        <DocHeading>All components</DocHeading>
+        <DocParagraph>35 installable via CLI · 38 total including composed demos.</DocParagraph>
+        <ComponentCatalog includePreview />
       </DocSection>
     </DocArticle>
   );
@@ -339,6 +426,51 @@ function LlmsTxtDoc() {
         <DocPre>Image tool → Sidebar + Dropzone + Slider + CanvasFrame + ExportButton</DocPre>
       </DocSection>
     </DocArticle>
+  );
+}
+
+const CATEGORY_LABELS: Record<ComponentCategory, string> = {
+  core: "Core",
+  input: "Input",
+  layout: "Layout",
+  tool: "Tool / Canvas",
+  feedback: "Feedback",
+  preview: "Composed examples",
+};
+
+function ComponentCatalog({ includePreview = false }: { includePreview?: boolean }) {
+  const categories = (["core", "input", "layout", "tool", "feedback", "preview"] as ComponentCategory[]).filter(
+    (c) => includePreview || c !== "preview",
+  );
+
+  return (
+    <div className="space-y-4">
+      {categories.map((category) => {
+        const items = COMPONENT_META.filter(
+          (c) => c.category === category && c.id !== "overview",
+        );
+        if (items.length === 0) return null;
+        return (
+          <div key={category}>
+            <p
+              className="font-mono text-[10px] font-medium uppercase tracking-[0.08em] mb-2"
+              style={{ color: "var(--mk-text-muted)" }}
+            >
+              {CATEGORY_LABELS[category]}
+            </p>
+            <DocList>
+              {items.map((item) => (
+                <DocListItem key={item.id}>
+                  <DocLink href={`/${item.id}`}>{item.name}</DocLink>
+                  {" — "}
+                  {item.description}
+                </DocListItem>
+              ))}
+            </DocList>
+          </div>
+        );
+      })}
+    </div>
   );
 }
 

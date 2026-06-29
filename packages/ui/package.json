@@ -1,6 +1,6 @@
 {
   "name": "@mikeyi2a/minikit-ui",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Minikit UI components for mini creative tools",
   "license": "MIT",
   "type": "module",
@@ -16,7 +16,13 @@
     "./styles.css": "./styles/theme.css"
   },
   "sideEffects": ["*.css"],
-  "files": ["dist", "styles"],
+  "files": ["dist", "styles", "README.md"],
+  "homepage": "https://minikit-flax.vercel.app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mikeyi2a/minikit.git",
+    "directory": "packages/ui"
+  },
   "scripts": {
     "build": "tsup",
     "prepublishOnly": "npm run build"
