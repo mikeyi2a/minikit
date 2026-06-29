@@ -164,8 +164,9 @@ function GettingStarted() {
 
       <DocSection>
         <DocHeading>Fast path — npm package</DocHeading>
-        <DocPre>{`npm install @mikeyi2a/minikit-ui`}</DocPre>
-        <DocPre>{`// app/layout.tsx
+        <DocPre>{`npm install @mikeyi2a/minikit-ui
+
+// app/layout.tsx
 import "@mikeyi2a/minikit-ui/styles.css";
 
 // page.tsx
@@ -229,8 +230,9 @@ function Installation() {
 
       <DocSection>
         <DocHeading>npm package</DocHeading>
-        <DocPre>{`npm install @mikeyi2a/minikit-ui`}</DocPre>
-        <DocPre>{`// app/layout.tsx
+        <DocPre>{`npm install @mikeyi2a/minikit-ui
+
+// app/layout.tsx
 import "@mikeyi2a/minikit-ui/styles.css";
 
 // page.tsx

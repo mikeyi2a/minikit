@@ -62,7 +62,7 @@ export function DocSection({ children, className }: { children: React.ReactNode;
   return (
     <section
       className={cn(
-        "space-y-4 pt-10 border-t max-w-[42rem] [&:first-of-type]:pt-0 [&:first-of-type]:border-t-0",
+        "flex flex-col gap-8 pt-12 border-t max-w-[42rem] [&:first-of-type]:pt-0 [&:first-of-type]:border-t-0",
         className,
       )}
       style={{ borderColor: "var(--mk-border)" }}
@@ -76,7 +76,7 @@ export function DocHeading({ children, id }: { children: React.ReactNode; id?: s
   return (
     <h2
       id={id}
-      className="text-base font-semibold m-0 tracking-[-0.01em] scroll-mt-24"
+      className="text-[17px] font-semibold m-0 tracking-[-0.01em] scroll-mt-24 leading-snug"
       style={{ color: "var(--mk-text)" }}
     >
       {children}
@@ -149,7 +149,7 @@ export function DocInlineCode({ children }: { children: React.ReactNode }) {
 export function DocPre({ children }: { children: React.ReactNode }) {
   return (
     <pre
-      className="m-0 p-4 rounded-xl text-[13px] overflow-x-auto leading-[1.65] border"
+      className="m-0 px-5 py-5 rounded-xl text-[13px] overflow-x-auto leading-[1.75] border"
       style={{
         background: "var(--mk-surface)",
         borderColor: "var(--mk-border)",
@@ -160,6 +160,11 @@ export function DocPre({ children }: { children: React.ReactNode }) {
       {children}
     </pre>
   );
+}
+
+/** Stack related code blocks with tighter internal rhythm. */
+export function DocCodeGroup({ children, className }: { children: React.ReactNode; className?: string }) {
+  return <div className={cn("flex flex-col gap-3.5", className)}>{children}</div>;
 }
 
 export function DocLink({ href, children }: { href: string; children: React.ReactNode }) {
