@@ -17,6 +17,11 @@
   --mk-font-mono: ui-monospace, "SF Mono", "Cascadia Code", monospace;
   --mk-control-height: 32px;
   --mk-transition: 150ms ease;
+  /* Ring elevation (1px halos — no blur shadows) */
+  --mk-ring: 0 0 0 1px var(--mk-border);
+  --mk-ring-elevated: 0 0 0 1px var(--mk-border), 0 0 0 1px color-mix(in srgb, var(--mk-text) 12%, transparent);
+  --mk-ring-float: 0 0 0 1px var(--mk-border), 0 0 0 1px color-mix(in srgb, var(--mk-text) 16%, transparent), 0 0 0 3px color-mix(in srgb, var(--mk-bg) 50%, transparent);
+  --mk-ring-inset: inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 14%, transparent);
 }
 
 /* Default tool aesthetic — dark terminal panel */
@@ -68,6 +73,23 @@ body {
 
 ::selection {
   background: var(--mk-accent-muted);
+}
+
+/* Ring-based elevation — use instead of blur shadows on dark surfaces */
+.mk-ring {
+  box-shadow: var(--mk-ring);
+}
+
+.mk-ring-elevated {
+  box-shadow: var(--mk-ring-elevated);
+}
+
+.mk-ring-float {
+  box-shadow: var(--mk-ring-float);
+}
+
+.mk-ring-inset {
+  box-shadow: var(--mk-ring-inset);
 }
 
 @keyframes indeterminate {

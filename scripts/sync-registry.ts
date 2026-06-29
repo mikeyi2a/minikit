@@ -143,10 +143,19 @@ function extractThemeCss(globals: string): string {
   const start = globals.indexOf(marker);
   const end = globals.indexOf("* {", start);
   const tokens = start >= 0 ? globals.slice(start, end).trim() : "";
+
+  const ringMarker = "/* Ring-based elevation";
+  let ringUtils = "";
+  if (globals.includes(ringMarker)) {
+    const ringStart = globals.indexOf(ringMarker);
+    const ringEnd = globals.indexOf("@keyframes indeterminate", ringStart);
+    ringUtils = globals.slice(ringStart, ringEnd).trim();
+  }
+
   const keyframes = globals.includes("@keyframes indeterminate")
     ? globals.slice(globals.indexOf("@keyframes indeterminate")).trim()
     : "";
-  return `/* Minikit theme — import in your app layout */\n${tokens}\n\n${keyframes}\n`;
+  return `/* Minikit theme — import in your app layout */\n${tokens}\n\n${ringUtils}\n\n${keyframes}\n`;
 }
 
 function parseExports(source: string): string[] {

@@ -19,7 +19,7 @@ export function Dialog({ open, onOpenChange, title, description, children, foote
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/60" />
         <DialogPrimitive.Content
-          className="fixed left-1/2 top-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-xl border p-4 shadow-2xl"
+          className="fixed left-1/2 top-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-xl border p-4 mk-ring-float"
           style={{ background: "var(--mk-surface)", borderColor: "var(--mk-border)" }}
         >
           <DialogPrimitive.Title className="font-mono text-sm font-semibold m-0" style={mk.mono}>

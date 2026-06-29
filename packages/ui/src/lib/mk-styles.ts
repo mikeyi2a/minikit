@@ -14,4 +14,9 @@ export const mk = {
     fontFamily: "var(--mk-font-mono)",
     color: "var(--mk-text-faint)",
   } as CSSProperties,
+  /** CSS classes — ring halos instead of blur shadows (see theme.css) */
+  ring: "mk-ring",
+  ringElevated: "mk-ring-elevated",
+  ringFloat: "mk-ring-float",
+  ringInset: "mk-ring-inset",
 };

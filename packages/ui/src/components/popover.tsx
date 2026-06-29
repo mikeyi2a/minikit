@@ -21,7 +21,7 @@ export function Popover({ trigger, children, side = "bottom", align = "start", w
           side={side}
           align={align}
           sideOffset={6}
-          className="z-50 rounded-xl border p-2 shadow-xl"
+          className="z-50 rounded-xl border p-2 mk-ring-elevated"
           style={{
             width,
             background: "var(--mk-surface-raised)",

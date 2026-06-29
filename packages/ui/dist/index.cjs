@@ -49,7 +49,7 @@ __export(index_exports, {
   LayerList: () => LayerList,
   NumberStepper: () => NumberStepper,
   Panel: () => Panel,
-  Popover: () => Popover,
+  Popover: () => Popover2,
   PopoverLabel: () => PopoverLabel,
   PresetPicker: () => PresetPicker,
   ProgressBar: () => ProgressBar,
@@ -466,6 +466,7 @@ function DualSlider({
   const [activeHandle, setActiveHandle] = React2.useState(null);
   const [liveRange, setLiveRange] = React2.useState(null);
   const draggingRef = React2.useRef(false);
+  const activeHandleRef = React2.useRef(null);
   const trackRef = React2.useRef(null);
   const startPct = liveRange ? liveRange.start : (start - min) / (max - min) * 100;
   const endPct = liveRange ? liveRange.end : (end - min) / (max - min) * 100;
@@ -479,57 +480,70 @@ function DualSlider({
     },
     [min, max, step]
   );
-  const pickHandle = (clientX) => {
-    const val = valueFromClientX(clientX);
-    const distStart = Math.abs(val - start);
-    const distEnd = Math.abs(val - end);
-    return distStart <= distEnd ? "start" : "end";
-  };
-  const pctFromClientX = (clientX) => {
+  const pickHandle = React2.useCallback(
+    (clientX) => {
+      const val = valueFromClientX(clientX);
+      const distStart = Math.abs(val - start);
+      const distEnd = Math.abs(val - end);
+      return distStart <= distEnd ? "start" : "end";
+    },
+    [valueFromClientX, start, end]
+  );
+  const pctFromClientX = React2.useCallback((clientX) => {
     if (!trackRef.current) return 0;
     const rect = trackRef.current.getBoundingClientRect();
     const x = clamp(clientX - rect.left, 0, rect.width);
     return x / rect.width * 100;
-  };
-  const updateHandle = (handle, clientX) => {
-    if (!handle || disabled) return;
-    const pct = pctFromClientX(clientX);
-    const next = valueFromClientX(clientX);
-    const baseStartPct = (start - min) / (max - min) * 100;
-    const baseEndPct = (end - min) / (max - min) * 100;
-    if (draggingRef.current) {
-      setLiveRange((prev) => ({
-        start: handle === "start" ? pct : prev?.start ?? baseStartPct,
-        end: handle === "end" ? pct : prev?.end ?? baseEndPct
-      }));
-    }
-    if (handle === "start") {
-      onValueChange([Math.min(next, end), end]);
-    } else {
-      onValueChange([start, Math.max(next, start)]);
-    }
-  };
-  const endDrag = () => {
+  }, []);
+  const updateHandle = React2.useCallback(
+    (handle, clientX) => {
+      if (disabled) return;
+      const pct = pctFromClientX(clientX);
+      const next = valueFromClientX(clientX);
+      const baseStartPct = (start - min) / (max - min) * 100;
+      const baseEndPct = (end - min) / (max - min) * 100;
+      if (draggingRef.current) {
+        setLiveRange((prev) => ({
+          start: handle === "start" ? pct : prev?.start ?? baseStartPct,
+          end: handle === "end" ? pct : prev?.end ?? baseEndPct
+        }));
+      }
+      if (handle === "start") {
+        onValueChange([Math.min(next, end), end]);
+      } else {
+        onValueChange([start, Math.max(next, start)]);
+      }
+    },
+    [disabled, pctFromClientX, valueFromClientX, start, end, min, max, onValueChange]
+  );
+  const endDrag = React2.useCallback(() => {
     draggingRef.current = false;
+    activeHandleRef.current = null;
     setActiveHandle(null);
     setLiveRange(null);
-  };
-  const onPointerDown = (e, handle) => {
-    if (disabled || e.button !== 0) return;
-    e.preventDefault();
-    e.currentTarget.setPointerCapture(e.pointerId);
-    draggingRef.current = true;
-    const active = handle ?? pickHandle(e.clientX);
-    setActiveHandle(active);
-    updateHandle(active, e.clientX);
-  };
+  }, []);
+  const beginDrag = React2.useCallback(
+    (e, handle) => {
+      if (disabled || e.button !== 0 || !trackRef.current) return;
+      e.preventDefault();
+      trackRef.current.setPointerCapture(e.pointerId);
+      draggingRef.current = true;
+      const active = handle ?? pickHandle(e.clientX);
+      activeHandleRef.current = active;
+      setActiveHandle(active);
+      updateHandle(active, e.clientX);
+    },
+    [disabled, pickHandle, updateHandle]
+  );
   const onPointerMove = (e) => {
-    if (!e.currentTarget.hasPointerCapture(e.pointerId) || !activeHandle) return;
-    updateHandle(activeHandle, e.clientX);
+    if (!trackRef.current?.hasPointerCapture(e.pointerId)) return;
+    const handle = activeHandleRef.current;
+    if (!handle) return;
+    updateHandle(handle, e.clientX);
   };
   const onPointerUp = (e) => {
-    if (!e.currentTarget.hasPointerCapture(e.pointerId)) return;
-    e.currentTarget.releasePointerCapture(e.pointerId);
+    if (!trackRef.current?.hasPointerCapture(e.pointerId)) return;
+    trackRef.current.releasePointerCapture(e.pointerId);
     endDrag();
   };
   return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
@@ -567,7 +581,7 @@ function DualSlider({
                 height: "var(--mk-control-height)",
                 background: "color-mix(in srgb, var(--mk-text) 5%, transparent)"
               },
-              onPointerDown: (e) => onPointerDown(e),
+              onPointerDown: (e) => beginDrag(e),
               onPointerMove,
               onPointerUp,
               onPointerCancel: onPointerUp,
@@ -591,7 +605,8 @@ function DualSlider({
                     "aria-valuemax": end,
                     "aria-valuenow": start,
                     "aria-label": label ? `${label} minimum` : "Range minimum",
-                    className: "absolute top-1/2 w-1 rounded-full cursor-ew-resize",
+                    tabIndex: disabled ? -1 : 0,
+                    className: "absolute top-1/2 w-1 rounded-full cursor-ew-resize touch-none",
                     style: {
                       left: `${startPct}%`,
                       height: "calc(var(--mk-control-height) - 10px)",
@@ -601,7 +616,7 @@ function DualSlider({
                     },
                     onPointerDown: (e) => {
                       e.stopPropagation();
-                      onPointerDown(e, "start");
+                      beginDrag(e, "start");
                     }
                   }
                 ),
@@ -613,7 +628,8 @@ function DualSlider({
                     "aria-valuemax": max,
                     "aria-valuenow": end,
                     "aria-label": label ? `${label} maximum` : "Range maximum",
-                    className: "absolute top-1/2 w-1 rounded-full cursor-ew-resize",
+                    tabIndex: disabled ? -1 : 0,
+                    className: "absolute top-1/2 w-1 rounded-full cursor-ew-resize touch-none",
                     style: {
                       left: `${endPct}%`,
                       height: "calc(var(--mk-control-height) - 10px)",
@@ -623,7 +639,7 @@ function DualSlider({
                     },
                     onPointerDown: (e) => {
                       e.stopPropagation();
-                      onPointerDown(e, "end");
+                      beginDrag(e, "end");
                     }
                   }
                 )
@@ -744,6 +760,7 @@ function NumberStepper({
 
 // src/components/color-picker.tsx
 var React3 = __toESM(require("react"), 1);
+var Popover = __toESM(require("@radix-ui/react-popover"), 1);
 var import_jsx_runtime5 = require("react/jsx-runtime");
 var DEFAULT_SWATCHES = [
   "#0066FF",
@@ -769,6 +786,190 @@ function normalizeHex(input) {
   }
   return null;
 }
+function hexToRgb(hex) {
+  const normalized = normalizeHex(hex);
+  if (!normalized) return null;
+  const n = parseInt(normalized.slice(1), 16);
+  return { r: n >> 16 & 255, g: n >> 8 & 255, b: n & 255 };
+}
+function rgbToHex(r, g, b) {
+  return `#${[r, g, b].map((c) => Math.round(clamp(c, 0, 255)).toString(16).padStart(2, "0")).join("").toUpperCase()}`;
+}
+function rgbToHsv(r, g, b) {
+  const rn = r / 255;
+  const gn = g / 255;
+  const bn = b / 255;
+  const max = Math.max(rn, gn, bn);
+  const min = Math.min(rn, gn, bn);
+  const d = max - min;
+  let h = 0;
+  if (d !== 0) {
+    if (max === rn) h = (gn - bn) / d % 6;
+    else if (max === gn) h = (bn - rn) / d + 2;
+    else h = (rn - gn) / d + 4;
+    h *= 60;
+    if (h < 0) h += 360;
+  }
+  const s = max === 0 ? 0 : d / max;
+  return { h, s: s * 100, v: max * 100 };
+}
+function hsvToRgb(h, s, v) {
+  const sn = clamp(s, 0, 100) / 100;
+  const vn = clamp(v, 0, 100) / 100;
+  const c = vn * sn;
+  const x = c * (1 - Math.abs(h / 60 % 2 - 1));
+  const m = vn - c;
+  let rn = 0;
+  let gn = 0;
+  let bn = 0;
+  if (h < 60) [rn, gn, bn] = [c, x, 0];
+  else if (h < 120) [rn, gn, bn] = [x, c, 0];
+  else if (h < 180) [rn, gn, bn] = [0, c, x];
+  else if (h < 240) [rn, gn, bn] = [0, x, c];
+  else if (h < 300) [rn, gn, bn] = [x, 0, c];
+  else [rn, gn, bn] = [c, 0, x];
+  return {
+    r: (rn + m) * 255,
+    g: (gn + m) * 255,
+    b: (bn + m) * 255
+  };
+}
+function hsvToHex(h, s, v) {
+  const { r, g, b } = hsvToRgb(h, s, v);
+  return rgbToHex(r, g, b);
+}
+function hueColor(h) {
+  return hsvToHex(h, 100, 100);
+}
+function ColorPanel({
+  h,
+  s,
+  v,
+  swatches,
+  value,
+  onChange
+}) {
+  const svRef = React3.useRef(null);
+  const draggingSv = React3.useRef(false);
+  const updateSv = React3.useCallback(
+    (clientX, clientY) => {
+      if (!svRef.current) return;
+      const rect = svRef.current.getBoundingClientRect();
+      const x = clamp((clientX - rect.left) / rect.width, 0, 1);
+      const y = clamp((clientY - rect.top) / rect.height, 0, 1);
+      onChange(hsvToHex(h, x * 100, (1 - y) * 100));
+    },
+    [h, onChange]
+  );
+  const onSvPointerDown = (e) => {
+    if (e.button !== 0) return;
+    e.preventDefault();
+    e.currentTarget.setPointerCapture(e.pointerId);
+    draggingSv.current = true;
+    updateSv(e.clientX, e.clientY);
+  };
+  const onSvPointerMove = (e) => {
+    if (!draggingSv.current || !e.currentTarget.hasPointerCapture(e.pointerId)) return;
+    updateSv(e.clientX, e.clientY);
+  };
+  const onSvPointerUp = (e) => {
+    if (!e.currentTarget.hasPointerCapture(e.pointerId)) return;
+    e.currentTarget.releasePointerCapture(e.pointerId);
+    draggingSv.current = false;
+  };
+  return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "flex flex-col gap-2.5", children: [
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(
+      "div",
+      {
+        ref: svRef,
+        className: "relative h-28 w-full rounded-lg cursor-crosshair touch-none select-none overflow-hidden",
+        style: { background: hueColor(h) },
+        onPointerDown: onSvPointerDown,
+        onPointerMove: onSvPointerMove,
+        onPointerUp: onSvPointerUp,
+        onPointerCancel: onSvPointerUp,
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "absolute inset-0", style: { background: "linear-gradient(to right, #fff, transparent)" } }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "absolute inset-0", style: { background: "linear-gradient(to top, #000, transparent)" } }),
+          /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+            "div",
+            {
+              className: "absolute w-3 h-3 rounded-full border-2 pointer-events-none",
+              style: {
+                left: `${s}%`,
+                top: `${100 - v}%`,
+                transform: "translate(-50%, -50%)",
+                borderColor: v > 55 ? "#111" : "#fff",
+                boxShadow: "0 0 0 1px rgba(0,0,0,0.25)"
+              }
+            }
+          )
+        ]
+      }
+    ),
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+      "div",
+      {
+        className: "relative h-2.5 w-full rounded-full cursor-pointer touch-none select-none",
+        style: {
+          background: "linear-gradient(to right, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00)"
+        },
+        onPointerDown: (e) => {
+          if (e.button !== 0) return;
+          e.preventDefault();
+          const el = e.currentTarget;
+          el.setPointerCapture(e.pointerId);
+          const pick = (clientX) => {
+            const rect = el.getBoundingClientRect();
+            const pct = clamp((clientX - rect.left) / rect.width, 0, 1);
+            onChange(hsvToHex(pct * 360, s, v));
+          };
+          pick(e.clientX);
+          const onMove = (ev) => {
+            if (!el.hasPointerCapture(ev.pointerId)) return;
+            pick(ev.clientX);
+          };
+          const onUp = (ev) => {
+            el.releasePointerCapture(ev.pointerId);
+            el.removeEventListener("pointermove", onMove);
+            el.removeEventListener("pointerup", onUp);
+          };
+          el.addEventListener("pointermove", onMove);
+          el.addEventListener("pointerup", onUp);
+        },
+        children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+          "div",
+          {
+            className: "absolute top-1/2 w-3 h-3 rounded-full border-2 pointer-events-none",
+            style: {
+              left: `${h / 360 * 100}%`,
+              transform: "translate(-50%, -50%)",
+              background: hueColor(h),
+              borderColor: "#fff",
+              boxShadow: "0 0 0 1px rgba(0,0,0,0.35)"
+            }
+          }
+        )
+      }
+    ),
+    /* @__PURE__ */ (0, import_jsx_runtime5.jsx)("div", { className: "grid grid-cols-6 gap-1", children: swatches.slice(0, 12).map((color) => /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+      "button",
+      {
+        type: "button",
+        "aria-label": `Select ${color}`,
+        "aria-pressed": value.toUpperCase() === color.toUpperCase(),
+        onClick: () => onChange(color),
+        className: "aspect-square rounded-md cursor-pointer transition-transform hover:scale-105 focus-visible:outline focus-visible:outline-offset-1",
+        style: {
+          background: color,
+          outlineColor: "var(--mk-text-muted)",
+          boxShadow: value.toUpperCase() === color.toUpperCase() ? `0 0 0 1px var(--mk-bg), 0 0 0 2px var(--mk-text-muted)` : void 0
+        }
+      },
+      color
+    )) })
+  ] });
+}
 function ColorPicker({
   value,
   onValueChange,
@@ -778,7 +979,10 @@ function ColorPicker({
   className
 }) {
   const [hexInput, setHexInput] = React3.useState(value);
+  const [open, setOpen] = React3.useState(false);
   const eyedropperSupported = typeof window !== "undefined" && "EyeDropper" in window;
+  const rgb = hexToRgb(value) ?? { r: 17, g: 17, b: 17 };
+  const hsv = rgbToHsv(rgb.r, rgb.g, rgb.b);
   React3.useEffect(() => {
     setHexInput(value);
   }, [value]);
@@ -801,6 +1005,10 @@ function ColorPicker({
     } catch {
     }
   };
+  const applyColor = (hex) => {
+    onValueChange(hex);
+    setHexInput(hex);
+  };
   return /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: cn("mk-color-picker flex flex-col gap-2", className), children: [
     label && /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
       "span",
@@ -816,7 +1024,7 @@ function ColorPicker({
         type: "button",
         "aria-label": `Select ${color}`,
         "aria-pressed": value.toUpperCase() === color.toUpperCase(),
-        onClick: () => onValueChange(color),
+        onClick: () => applyColor(color),
         className: "aspect-square rounded-md cursor-pointer transition-transform hover:scale-105 focus-visible:outline focus-visible:outline-offset-2",
         style: {
           background: color,
@@ -827,16 +1035,45 @@ function ColorPicker({
       color
     )) }),
     /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)("div", { className: "flex items-center gap-1.5", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
-        "div",
-        {
-          className: "w-8 h-8 rounded-lg shrink-0 border",
-          style: {
-            background: value,
-            borderColor: "var(--mk-border)"
+      /* @__PURE__ */ (0, import_jsx_runtime5.jsxs)(Popover.Root, { open, onOpenChange: setOpen, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Popover.Trigger, { asChild: true, children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+          "button",
+          {
+            type: "button",
+            "aria-label": "Open color picker",
+            className: "w-8 h-8 rounded-lg shrink-0 border cursor-pointer transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-offset-2",
+            style: {
+              background: value,
+              borderColor: "var(--mk-border)",
+              outlineColor: "var(--mk-text-muted)"
+            }
           }
-        }
-      ),
+        ) }),
+        /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(Popover.Portal, { children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+          Popover.Content,
+          {
+            side: "bottom",
+            align: "start",
+            sideOffset: 6,
+            className: "z-50 w-52 rounded-xl border p-2.5 shadow-xl",
+            style: {
+              background: "var(--mk-surface-raised)",
+              borderColor: "var(--mk-border)"
+            },
+            children: /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+              ColorPanel,
+              {
+                h: hsv.h,
+                s: hsv.s,
+                v: hsv.v,
+                swatches,
+                value,
+                onChange: applyColor
+              }
+            )
+          }
+        ) })
+      ] }),
       /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
         "input",
         {
@@ -2707,7 +2944,7 @@ function Dialog({ open, onOpenChange, title, description, children, footer }) {
 // src/components/popover.tsx
 var PopoverPrimitive = __toESM(require("@radix-ui/react-popover"), 1);
 var import_jsx_runtime31 = require("react/jsx-runtime");
-function Popover({ trigger, children, side = "bottom", align = "start", width = 200 }) {
+function Popover2({ trigger, children, side = "bottom", align = "start", width = 200 }) {
   return /* @__PURE__ */ (0, import_jsx_runtime31.jsxs)(PopoverPrimitive.Root, { children: [
     /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(PopoverPrimitive.Trigger, { asChild: true, children: trigger }),
     /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(PopoverPrimitive.Portal, { children: /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(

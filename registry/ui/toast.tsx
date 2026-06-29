@@ -27,7 +27,7 @@ export function Toast({ message, variant = "default", visible, onDismiss, classN
   return (
     <div
       className={cn(
-        "mk-toast fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-3 h-9 rounded-lg border shadow-lg",
+        "mk-toast fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-3 h-9 rounded-lg border mk-ring-elevated",
         className,
       )}
       style={{

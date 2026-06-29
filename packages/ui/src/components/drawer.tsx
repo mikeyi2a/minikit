@@ -46,7 +46,7 @@ export function Drawer({
       />
       <aside
         className={cn(
-          "mk-drawer fixed z-50 flex flex-col border shadow-2xl",
+          "mk-drawer fixed z-50 flex flex-col border mk-ring-float",
           side === "bottom" ? "rounded-t-xl border-b-0" : "",
         )}
         style={{

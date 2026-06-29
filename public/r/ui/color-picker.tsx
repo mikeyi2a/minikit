@@ -342,7 +342,7 @@ export function ColorPicker({
               side="bottom"
               align="start"
               sideOffset={6}
-              className="z-50 w-52 rounded-xl border p-2.5 shadow-xl"
+              className="z-50 w-52 rounded-xl border p-2.5 mk-ring-elevated"
               style={{
                 background: "var(--mk-surface-raised)",
                 borderColor: "var(--mk-border)",

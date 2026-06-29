@@ -45,7 +45,7 @@ export function SegmentedControl<T extends string = string>({
               "mk-segmented-control-item flex-1 font-mono font-medium uppercase tracking-[0.06em] transition-all cursor-pointer whitespace-nowrap rounded-lg",
               size === "sm" ? "h-[26px] text-[10px] px-1" : "h-8 text-xs px-2",
               isActive
-                ? "shadow-sm"
+                ? "mk-ring-inset"
                 : "hover:opacity-80 disabled:opacity-40 disabled:cursor-not-allowed",
             )}
             style={{

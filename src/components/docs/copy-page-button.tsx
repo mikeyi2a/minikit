@@ -80,7 +80,7 @@ export function CopyPageButton({ plainText, markdown, className }: CopyPageButto
 
       {open && (
         <div
-          className="absolute right-0 top-full mt-1 min-w-[11rem] rounded-lg border py-1 z-20 shadow-lg"
+          className="absolute right-0 top-full mt-1 min-w-[11rem] rounded-lg border py-1 z-20 mk-ring-elevated"
           style={{
             background: "var(--mk-surface-raised)",
             borderColor: "var(--mk-border)",

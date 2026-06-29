@@ -104,7 +104,7 @@ export function Panel({
   if (mode === "floating") {
     return (
       <aside
-        className={cn("mk-panel fixed z-40 flex flex-col rounded-xl border shadow-2xl", className)}
+        className={cn("mk-panel fixed z-40 flex flex-col rounded-xl border mk-ring-float", className)}
         style={{
           left: pos.x,
           top: pos.y,

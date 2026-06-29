@@ -47,7 +47,7 @@ export function Select({
         </SelectPrimitive.Trigger>
         <SelectPrimitive.Portal>
           <SelectPrimitive.Content
-            className="z-50 overflow-hidden rounded-lg border shadow-lg"
+            className="z-50 overflow-hidden rounded-lg border mk-ring-elevated"
             style={{
               background: "var(--mk-surface-raised)",
               borderColor: "var(--mk-border)",
