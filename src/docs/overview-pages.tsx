@@ -13,9 +13,11 @@ import {
   DocListItem,
   DocParagraph,
   DocPre,
+  DocCodeGroup,
   DocSection,
   DocStrong,
 } from "@/components/docs/doc-prose";
+import { DocCopyPre } from "@/components/docs/doc-copy-pre";
 
 export function OverviewContent({ slug }: { slug: DocSlug }) {
   switch (slug) {
@@ -164,9 +166,10 @@ function GettingStarted() {
 
       <DocSection>
         <DocHeading>Fast path — npm package</DocHeading>
-        <DocPre>{`npm install @mikeyi2a/minikit-ui
-
-// app/layout.tsx
+        <DocCodeGroup>
+          <DocCopyPre code="npm install @mikeyi2a/minikit-ui" />
+          <DocCopyPre
+            code={`// app/layout.tsx
 import "@mikeyi2a/minikit-ui/styles.css";
 
 // page.tsx
@@ -177,7 +180,9 @@ import { Slider } from "@mikeyi2a/minikit-ui";
 export function MyTool() {
   const [v, setV] = useState(50);
   return <Slider label="Amount" value={v} onValueChange={setV} />;
-}`}</DocPre>
+}`}
+          />
+        </DocCodeGroup>
         <DocParagraph>
           Set <DocInlineCode>data-theme=&quot;tool-dark&quot;</DocInlineCode> on <DocInlineCode>&lt;html&gt;</DocInlineCode>. See{" "}
           <DocLink href="/docs/installation">Installation</DocLink> for CLI and manual options.
@@ -205,9 +210,12 @@ export function MyTool() {
       <DocSection>
         <DocHeading>Run this repo locally</DocHeading>
         <DocParagraph>Fork or clone to hack on Minikit itself:</DocParagraph>
-        <DocPre>
-          {`git clone https://github.com/mikeyi2a/minikit\ncd minikit\nnpm install\nnpm run dev`}
-        </DocPre>
+        <DocCodeGroup>
+          <DocCopyPre code="git clone https://github.com/mikeyi2a/minikit" />
+          <DocCopyPre code="cd minikit" />
+          <DocCopyPre code="npm install" />
+          <DocCopyPre code="npm run dev" />
+        </DocCodeGroup>
       </DocSection>
 
       <DocSection>
@@ -230,15 +238,18 @@ function Installation() {
 
       <DocSection>
         <DocHeading>npm package</DocHeading>
-        <DocPre>{`npm install @mikeyi2a/minikit-ui
-
-// app/layout.tsx
+        <DocCodeGroup>
+          <DocCopyPre code="npm install @mikeyi2a/minikit-ui" />
+          <DocCopyPre
+            code={`// app/layout.tsx
 import "@mikeyi2a/minikit-ui/styles.css";
 
 // page.tsx
 import { Slider } from "@mikeyi2a/minikit-ui";
 
-<Slider label="Opacity" value={80} onValueChange={setOpacity} />`}</DocPre>
+<Slider label="Opacity" value={80} onValueChange={setOpacity} />`}
+          />
+        </DocCodeGroup>
         <DocParagraph>
           Requires React 19+, Tailwind 4+, and <DocInlineCode>data-theme="tool-dark"</DocInlineCode> on{" "}
           <DocInlineCode>&lt;html&gt;</DocInlineCode>.
@@ -247,7 +258,10 @@ import { Slider } from "@mikeyi2a/minikit-ui";
 
       <DocSection>
         <DocHeading>CLI</DocHeading>
-        <DocPre>{`npx @mikeyi2a/minikit-cli init\nnpx @mikeyi2a/minikit-cli add slider`}</DocPre>
+        <DocCodeGroup>
+          <DocCopyPre code="npx @mikeyi2a/minikit-cli init" />
+          <DocCopyPre code="npx @mikeyi2a/minikit-cli add slider" />
+        </DocCodeGroup>
         <DocParagraph>
           Fetches from{" "}
           <a
