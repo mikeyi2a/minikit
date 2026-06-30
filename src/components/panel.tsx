@@ -3,6 +3,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { mk } from "@/lib/mk-styles";
+import { ChromeIconButton } from "@/components/chrome-icon-button";
 
 export type PanelMode = "docked" | "floating";
 
@@ -58,32 +59,31 @@ export function Panel({
     <>
       <div
         className={cn(
-          "flex items-center justify-between gap-2 px-2 shrink-0 border-b",
+          "flex items-center justify-between gap-1 px-1 shrink-0 border-b min-h-10",
           mode === "floating" && "cursor-grab active:cursor-grabbing touch-none",
         )}
-        style={{ borderColor: "var(--mk-border)", height: "var(--mk-control-height)" }}
+        style={{ borderColor: "var(--mk-border)" }}
         onPointerDown={startDrag}
         onPointerMove={onDrag}
         onPointerUp={endDrag}
       >
-        <span className="font-mono text-[10px] font-medium uppercase tracking-[0.08em] truncate" style={mk.faint}>
+        <span className="font-mono text-[10px] font-medium uppercase tracking-[0.08em] truncate pl-1" style={mk.faint}>
           {title}
         </span>
-        <div className="flex items-center gap-1 shrink-0">
+        <div className="flex items-center shrink-0">
           {mode === "floating" && (
-            <span className="text-[9px] opacity-30" style={mk.mono}>
+            <span className="flex h-9 w-7 items-center justify-center text-[11px] opacity-30 select-none" style={mk.mono}>
               ⠿
             </span>
           )}
           {collapsible && (
-            <button
-              type="button"
+            <ChromeIconButton
+              stopPropagation
               onClick={() => setCollapsed((c) => !c)}
-              className="text-[10px] opacity-50 hover:opacity-80 cursor-pointer px-1"
-              style={mk.mono}
+              aria-label={collapsed ? "Expand panel" : "Collapse panel"}
             >
               {collapsed ? "+" : "−"}
-            </button>
+            </ChromeIconButton>
           )}
         </div>
       </div>

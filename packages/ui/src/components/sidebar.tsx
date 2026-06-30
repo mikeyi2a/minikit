@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { cn } from "../lib/utils";
+import { ChromeIconButton } from "./chrome-icon-button";
 
 export interface SidebarProps {
   title?: string;
@@ -39,15 +40,13 @@ export function Sidebar({
           borderLeft: side === "right" ? "1px solid var(--mk-border)" : undefined,
         }}
       >
-        <button
-          type="button"
+        <ChromeIconButton
           onClick={() => setCollapsed(false)}
           aria-label="Expand sidebar"
-          className="h-9 flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
-          style={{ color: "var(--mk-text-faint)" }}
+          className="w-full rounded-none"
         >
           {side === "left" ? "›" : "‹"}
-        </button>
+        </ChromeIconButton>
       </aside>
     );
   }
@@ -77,15 +76,12 @@ export function Sidebar({
               ))}
           </div>
           {collapsible && (
-            <button
-              type="button"
+            <ChromeIconButton
               onClick={() => setCollapsed(true)}
               aria-label="Collapse sidebar"
-              className="text-[10px] cursor-pointer hover:opacity-80 transition-opacity shrink-0"
-              style={{ color: "var(--mk-text-faint)", fontFamily: "var(--mk-font-mono)" }}
             >
               {side === "left" ? "‹" : "›"}
-            </button>
+            </ChromeIconButton>
           )}
         </div>
       )}

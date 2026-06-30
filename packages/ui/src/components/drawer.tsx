@@ -3,6 +3,7 @@
 import * as React from "react";
 import { cn } from "../lib/utils";
 import { mk } from "../lib/mk-styles";
+import { ChromeIconButton } from "./chrome-icon-button";
 
 export interface DrawerProps {
   open: boolean;
@@ -56,22 +57,21 @@ export function Drawer({
         }}
       >
         <div
-          className="flex items-center justify-between px-3 shrink-0 border-b"
-          style={{ borderColor: "var(--mk-border)", height: "var(--mk-control-height)" }}
+          className="flex items-center justify-between gap-2 px-2 shrink-0 border-b min-h-10"
+          style={{ borderColor: "var(--mk-border)" }}
         >
           {title && (
-            <span className="font-mono text-[10px] uppercase tracking-[0.08em]" style={mk.faint}>
+            <span className="font-mono text-[10px] uppercase tracking-[0.08em] pl-1" style={mk.faint}>
               {title}
             </span>
           )}
-          <button
-            type="button"
+          <ChromeIconButton
+            className={title ? undefined : "ml-auto"}
             onClick={() => onOpenChange(false)}
-            className="ml-auto text-[10px] opacity-50 hover:opacity-80 cursor-pointer"
-            style={mk.mono}
+            aria-label="Close drawer"
           >
             ✕
-          </button>
+          </ChromeIconButton>
         </div>
         <div className="flex-1 overflow-y-auto p-3">{children}</div>
       </aside>

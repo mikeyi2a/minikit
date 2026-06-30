@@ -44,6 +44,7 @@ const COMPONENT_SOURCE_FILES: Record<string, string> = {
   "progress-bar": "progress-bar.tsx",
   "status-bar": "status-bar.tsx",
   toast: "toast.tsx",
+  "chrome-icon-button": "chrome-icon-button.tsx",
 };
 
 const COMPONENT_META: { id: string; name: string; description: string }[] = [
@@ -88,7 +89,10 @@ const SHARED_LIB = ["utils.ts", "mk-styles.ts", "slider-ticks.ts"] as const;
 
 const EXTRA_REGISTRY_DEPS: Record<string, string[]> = {
   toolbar: ["tooltip"],
-  slider: [],
+  panel: ["chrome-icon-button"],
+  drawer: ["chrome-icon-button"],
+  sidebar: ["chrome-icon-button"],
+  dialog: ["chrome-icon-button"],
 };
 
 function ensureDir(dir: string) {
@@ -108,7 +112,8 @@ function rewriteForPackage(source: string): string {
   return source
     .replace(/from "@\/lib\/utils"/g, 'from "../lib/utils"')
     .replace(/from "@\/lib\/mk-styles"/g, 'from "../lib/mk-styles"')
-    .replace(/from "@\/lib\/slider-ticks"/g, 'from "../lib/slider-ticks"');
+    .replace(/from "@\/lib\/slider-ticks"/g, 'from "../lib/slider-ticks"')
+    .replace(/from "@\/components\/chrome-icon-button"/g, 'from "./chrome-icon-button"');
 }
 
 function parseNpmDeps(source: string): string[] {
@@ -194,6 +199,16 @@ function sync() {
     writeFile(path.join(dirs.registryLib, libFile), content);
     writeFile(path.join(dirs.publicLib, libFile), content);
     writeFile(path.join(dirs.pkgLib, libFile), content);
+  }
+
+  const supportComponents = ["chrome-icon-button"] as const;
+  for (const supportId of supportComponents) {
+    const supportFile = COMPONENT_SOURCE_FILES[supportId];
+    if (!supportFile) continue;
+    const supportSource = readSrc(`components/${supportFile}`);
+    writeFile(path.join(dirs.registryUi, supportFile), supportSource);
+    writeFile(path.join(dirs.publicUi, supportFile), supportSource);
+    writeFile(path.join(dirs.pkgComponents, supportFile), rewriteForPackage(supportSource));
   }
 
   const exportLines: string[] = [
