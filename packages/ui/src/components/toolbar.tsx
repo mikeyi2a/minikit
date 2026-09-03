@@ -2,15 +2,7 @@
 
 import * as React from "react";
 import { cn } from "../lib/utils";
-// Local Tooltip shim until packages/ui/src/components/tooltip.tsx is implemented.
-// The real component (Radix-based) will be re-imported here once that file lands.
-type TooltipShimProps = {
-  content?: React.ReactNode;
-  shortcut?: string;
-  side?: "top" | "bottom" | "left" | "right";
-  children: React.ReactNode;
-};
-const Tooltip = ({ children }: TooltipShimProps) => <>{children}</>;
+import { Tooltip } from "./tooltip";
 
 export interface ToolbarItem {
   id: string;
