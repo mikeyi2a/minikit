@@ -1,0 +1,24 @@
+/* Minikit UI — Tailwind v4 source registration.
+ *
+ * Why this file exists:
+ * minikit-ui ships components that use Tailwind utility classes
+ * (h-8, w-8, h-[26px], text-[10px], tracking-[0.06em], etc.) but
+ * does not bundle the generated CSS for them. Tailwind v4's
+ * auto-detection does not scan node_modules by default, so without
+ * an explicit @source, every consumer sees components render with
+ * their inline-style fallback only — no sizing, no centering, no
+ * flex layout.
+ *
+ * Usage in a consumer app's globals.css:
+ *
+ *   @import "tailwindcss";
+ *   @import "@mikeyi2a/minikit-ui/tailwind.css";
+ *
+ * That's it. No manual @source path math, no editor config required.
+ *
+ * The @source paths below are relative to THIS file's location
+ * (packages/ui/styles/tailwind.css), so `../dist/index.js` points
+ * at packages/ui/dist/index.js after publish.
+ */
+@source "../dist/index.js";
+@source "../dist/index.d.ts";

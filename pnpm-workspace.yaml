@@ -1,0 +1,6 @@
+packages:
+  - "packages/*"
+  - "verify-consumer"
+
+onlyBuiltDependencies:
+  - esbuild
