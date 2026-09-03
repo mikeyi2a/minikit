@@ -13,6 +13,11 @@ declare const mk: {
     mono: CSSProperties;
     label: CSSProperties;
     faint: CSSProperties;
+    /** CSS classes — ring halos instead of blur shadows (see theme.css) */
+    ring: string;
+    ringElevated: string;
+    ringFloat: string;
+    ringInset: string;
 };
 
 interface SegmentedControlItem<T extends string = string> {
@@ -29,8 +34,8 @@ interface SegmentedControlProps<T extends string = string> {
 }
 declare function SegmentedControl<T extends string = string>({ items, value, onValueChange, className, size, }: SegmentedControlProps<T>): React.JSX.Element;
 
-interface SliderProps {
-    label?: string;
+declare function Slider({ label, hint, value, onValueChange, min, max, step, showValue, tickCount, snapToTicks, className, disabled, }: {
+    label: string;
     hint?: string;
     value: number;
     onValueChange: (value: number) => void;
@@ -42,10 +47,9 @@ interface SliderProps {
     snapToTicks?: boolean;
     className?: string;
     disabled?: boolean;
-}
-declare function Slider({ label, hint, value, onValueChange, min, max, step, showValue, tickCount, snapToTicks, className, disabled, }: SliderProps): React.JSX.Element;
+}): React.JSX.Element;
 
-interface DualSliderProps {
+declare function DualSlider({ label, value: [start, end], onValueChange, min, max, step, showValues, className, disabled, }: {
     label?: string;
     value: [number, number];
     onValueChange: (value: [number, number]) => void;
@@ -55,8 +59,7 @@ interface DualSliderProps {
     showValues?: boolean;
     className?: string;
     disabled?: boolean;
-}
-declare function DualSlider({ label, value: [start, end], onValueChange, min, max, step, showValues, className, disabled, }: DualSliderProps): React.JSX.Element;
+}): React.JSX.Element;
 
 interface NumberStepperProps {
     label?: string;
@@ -148,9 +151,14 @@ declare function IconButton({ label, active, size, className, children, ...props
 
 interface TextInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
     label?: string;
+    hint?: string;
+    error?: string;
+    leadingAddon?: React.ReactNode;
+    trailingAddon?: React.ReactNode;
     size?: "sm" | "md";
+    className?: string;
 }
-declare function TextInput({ label, size, className, ...props }: TextInputProps): React.JSX.Element;
+declare const TextInput: React.ForwardRefExoticComponent<TextInputProps & React.RefAttributes<HTMLInputElement>>;
 
 interface CheckboxProps {
     label: string;

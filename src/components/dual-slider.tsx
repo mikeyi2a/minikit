@@ -126,7 +126,7 @@ export function DualSlider({
   return (
     <div
       className={cn(
-        "mk-dual-slider flex flex-col gap-1.5",
+        "mk-dual-slider flex flex-col gap-1.5 w-full",
         disabled && "opacity-50 pointer-events-none",
         className,
       )}
@@ -140,7 +140,7 @@ export function DualSlider({
         </span>
       )}
 
-      <div className="flex items-center gap-1.5">
+      <div className="flex items-center gap-1.5 w-full">
         {showValues && (
           <span
             className="w-8 text-right font-mono text-[10px]"
@@ -155,7 +155,7 @@ export function DualSlider({
           className="relative flex-1 rounded-lg cursor-pointer touch-none select-none"
           style={{
             height: "var(--mk-control-height)",
-            background: "color-mix(in srgb, var(--mk-text) 5%, transparent)",
+            background: "color-mix(in srgb, var(--mk-text) 14%, transparent)",
           }}
           onPointerDown={(e) => beginDrag(e)}
           onPointerMove={onPointerMove}
@@ -168,7 +168,7 @@ export function DualSlider({
             style={{
               left: `${startPct}%`,
               width: `${endPct - startPct}%`,
-              background: "color-mix(in srgb, var(--mk-text) 12%, transparent)",
+              background: "color-mix(in srgb, var(--mk-text) 55%, transparent)",
             }}
           />
 
@@ -180,13 +180,13 @@ export function DualSlider({
             aria-valuenow={start}
             aria-label={label ? `${label} minimum` : "Range minimum"}
             tabIndex={disabled ? -1 : 0}
-            className="absolute top-1/2 w-1 rounded-full cursor-ew-resize touch-none"
+            className="absolute top-1/2 w-1.5 rounded-full cursor-ew-resize touch-none"
             style={{
               left: `${startPct}%`,
-              height: "calc(var(--mk-control-height) - 10px)",
+              height: "calc(var(--mk-control-height) - 8px)",
               transform: "translate(-50%, -50%)",
               background: "var(--mk-text)",
-              opacity: activeHandle === "start" ? 1 : 0.7,
+              opacity: 1,
             }}
             onPointerDown={(e) => {
               e.stopPropagation();
@@ -202,13 +202,13 @@ export function DualSlider({
             aria-valuenow={end}
             aria-label={label ? `${label} maximum` : "Range maximum"}
             tabIndex={disabled ? -1 : 0}
-            className="absolute top-1/2 w-1 rounded-full cursor-ew-resize touch-none"
+            className="absolute top-1/2 w-1.5 rounded-full cursor-ew-resize touch-none"
             style={{
               left: `${endPct}%`,
-              height: "calc(var(--mk-control-height) - 10px)",
+              height: "calc(var(--mk-control-height) - 8px)",
               transform: "translate(-50%, -50%)",
               background: "var(--mk-text)",
-              opacity: activeHandle === "end" ? 1 : 0.7,
+              opacity: 1,
             }}
             onPointerDown={(e) => {
               e.stopPropagation();

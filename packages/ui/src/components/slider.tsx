@@ -173,7 +173,7 @@ export function Slider({
   return (
     <div
       className={cn(
-        "mk-slider relative flex items-center gap-1.5 group",
+        "mk-slider relative flex items-center gap-1.5 group w-full",
         disabled && "opacity-50 pointer-events-none",
         className
       )}
@@ -207,7 +207,9 @@ export function Slider({
         className="relative flex-1 overflow-hidden rounded-lg cursor-pointer touch-none select-none focus-visible:outline focus-visible:outline-offset-[-1px]"
         style={{
           height: "var(--mk-control-height)",
-          background: "color-mix(in srgb, var(--mk-text) 5%, transparent)",
+          // 14% so the track is clearly readable on dark surfaces
+          // (5% was invisible against the page background).
+          background: "color-mix(in srgb, var(--mk-text) 14%, transparent)",
           outlineColor: "var(--mk-text-muted)",
         }}
       >
@@ -221,7 +223,7 @@ export function Slider({
                   left: `${left}%`,
                   transform: "translate(-50%, -50%)",
                   background:
-                    "color-mix(in srgb, var(--mk-text) 12%, transparent)",
+                    "color-mix(in srgb, var(--mk-text) 22%, transparent)",
                 }}
               />
             ))}
@@ -231,35 +233,26 @@ export function Slider({
           className="absolute inset-y-0 left-0 pointer-events-none"
           style={{
             width: `${displayPct}%`,
-            // FIX: bumped from 10% → 25% so the filled portion is clearly
-            // visible on dark surfaces without washing out the 12% tick
-            // marks. At 10% the 5%-track vs 10%-fill delta is imperceptible
-            // against var(--mk-text) at 0.92 alpha. At 35% the fill is
-            // brighter than the ticks, so the ticks disappear in the
-            // filled region. 25% splits the difference: clearly visible
-            // against the 5% track, but dimmer than the 12% ticks so
-            // the tick marks read as small light dashes inside the fill.
+            // 55% so the fill is unambiguously distinct from the 14% track.
             background:
-              "color-mix(in srgb, var(--mk-text) 25%, transparent)",
+              "color-mix(in srgb, var(--mk-text) 55%, transparent)",
             transition: isDragging ? "none" : undefined,
           }}
         />
         <div
           className={cn(
-            // FIX: bumped from w-0.5 to w-1 (4px → grabbable), resting
-            // opacity from 0 → 0.5, hover opacity from 60% → 100%. The
-            // thumb must be visible at rest, not only on hover.
-            "absolute top-1/2 w-1 rounded-full pointer-events-none transition-opacity",
-            isDragging
-              ? "opacity-100"
-              : "opacity-50 group-hover:opacity-100"
+            // 6px wide, 100% opacity at rest. The thumb is the
+            // primary affordance — never fade it out.
+            "absolute top-1/2 w-1.5 rounded-full pointer-events-none",
+            isDragging && "shadow-[0_0_0_4px_color-mix(in_srgb,var(--mk-text)_15%,transparent)]"
           )}
           style={{
             left: `${displayPct}%`,
-            height: "calc(var(--mk-control-height) - 12px)",
+            height: "calc(var(--mk-control-height) - 10px)",
             transform: "translate(-50%, -50%)",
             background: "var(--mk-text)",
-            transition: isDragging ? "opacity 150ms ease" : undefined,
+            opacity: 1,
+            transition: isDragging ? "none" : undefined,
           }}
         />
         {label && (

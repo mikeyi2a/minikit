@@ -32,7 +32,12 @@ var mk = {
   faint: {
     fontFamily: "var(--mk-font-mono)",
     color: "var(--mk-text-faint)"
-  }
+  },
+  /** CSS classes — ring halos instead of blur shadows (see theme.css) */
+  ring: "mk-ring",
+  ringElevated: "mk-ring-elevated",
+  ringFloat: "mk-ring-float",
+  ringInset: "mk-ring-inset"
 };
 
 // src/components/segmented-control.tsx
@@ -65,7 +70,7 @@ function SegmentedControl({
             className: cn(
               "mk-segmented-control-item flex-1 font-mono font-medium uppercase tracking-[0.06em] transition-all cursor-pointer whitespace-nowrap rounded-lg",
               size === "sm" ? "h-[26px] text-[10px] px-1" : "h-8 text-xs px-2",
-              isActive ? "shadow-sm" : "hover:opacity-80 disabled:opacity-40 disabled:cursor-not-allowed"
+              isActive ? "mk-ring-inset" : "hover:opacity-80 disabled:opacity-40 disabled:cursor-not-allowed"
             ),
             style: {
               fontFamily: "var(--mk-font-mono)",
@@ -116,7 +121,7 @@ function valueToPct(value, min, max) {
 import { jsx as jsx2, jsxs } from "react/jsx-runtime";
 function Slider({
   label,
-  hint,
+  hint = void 0,
   value,
   onValueChange,
   min = 0,
@@ -134,7 +139,10 @@ function Slider({
   const draggingRef = React.useRef(false);
   const trackRef = React.useRef(null);
   const lastValueRef = React.useRef(value);
-  const tickValues = React.useMemo(() => getTickValues(min, max, tickCount), [min, max, tickCount]);
+  const tickValues = React.useMemo(
+    () => getTickValues(min, max, tickCount),
+    [min, max, tickCount]
+  );
   const ticks = React.useMemo(() => getTickPcts(tickCount), [tickCount]);
   const percentage = valueToPct(value, min, max);
   const displayPct = livePct ?? percentage;
@@ -235,7 +243,7 @@ function Slider({
     "div",
     {
       className: cn(
-        "mk-slider relative flex items-center gap-1.5 group",
+        "mk-slider relative flex items-center gap-1.5 group w-full",
         disabled && "opacity-50 pointer-events-none",
         className
       ),
@@ -266,7 +274,9 @@ function Slider({
             className: "relative flex-1 overflow-hidden rounded-lg cursor-pointer touch-none select-none focus-visible:outline focus-visible:outline-offset-[-1px]",
             style: {
               height: "var(--mk-control-height)",
-              background: "color-mix(in srgb, var(--mk-text) 5%, transparent)",
+              // 14% so the track is clearly readable on dark surfaces
+              // (5% was invisible against the page background).
+              background: "color-mix(in srgb, var(--mk-text) 14%, transparent)",
               outlineColor: "var(--mk-text-muted)"
             },
             children: [
@@ -277,7 +287,7 @@ function Slider({
                   style: {
                     left: `${left}%`,
                     transform: "translate(-50%, -50%)",
-                    background: "color-mix(in srgb, var(--mk-text) 12%, transparent)"
+                    background: "color-mix(in srgb, var(--mk-text) 22%, transparent)"
                   }
                 },
                 left
@@ -288,7 +298,8 @@ function Slider({
                   className: "absolute inset-y-0 left-0 pointer-events-none",
                   style: {
                     width: `${displayPct}%`,
-                    background: "color-mix(in srgb, var(--mk-text) 10%, transparent)",
+                    // 55% so the fill is unambiguously distinct from the 14% track.
+                    background: "color-mix(in srgb, var(--mk-text) 55%, transparent)",
                     transition: isDragging ? "none" : void 0
                   }
                 }
@@ -297,15 +308,18 @@ function Slider({
                 "div",
                 {
                   className: cn(
-                    "absolute top-1/2 w-0.5 rounded-full pointer-events-none transition-opacity",
-                    isDragging ? "opacity-100" : "opacity-0 group-hover:opacity-60"
+                    // 6px wide, 100% opacity at rest. The thumb is the
+                    // primary affordance — never fade it out.
+                    "absolute top-1/2 w-1.5 rounded-full pointer-events-none",
+                    isDragging && "shadow-[0_0_0_4px_color-mix(in_srgb,var(--mk-text)_15%,transparent)]"
                   ),
                   style: {
                     left: `${displayPct}%`,
-                    height: "calc(var(--mk-control-height) - 12px)",
+                    height: "calc(var(--mk-control-height) - 10px)",
                     transform: "translate(-50%, -50%)",
                     background: "var(--mk-text)",
-                    transition: isDragging ? "opacity 150ms ease" : void 0
+                    opacity: 1,
+                    transition: isDragging ? "none" : void 0
                   }
                 }
               ),
@@ -313,7 +327,10 @@ function Slider({
                 "span",
                 {
                   className: "font-mono text-[10px] font-medium uppercase tracking-[0.06em] flex items-center",
-                  style: { color: "var(--mk-text-muted)", fontFamily: "var(--mk-font-mono)" },
+                  style: {
+                    color: "var(--mk-text-muted)",
+                    fontFamily: "var(--mk-font-mono)"
+                  },
                   children: [
                     label,
                     hint && /* @__PURE__ */ jsx2(
@@ -437,7 +454,16 @@ function DualSlider({
         onValueChange([start, Math.max(next, start)]);
       }
     },
-    [disabled, pctFromClientX, valueFromClientX, start, end, min, max, onValueChange]
+    [
+      disabled,
+      pctFromClientX,
+      valueFromClientX,
+      start,
+      end,
+      min,
+      max,
+      onValueChange
+    ]
   );
   const endDrag = React2.useCallback(() => {
     draggingRef.current = false;
@@ -473,7 +499,7 @@ function DualSlider({
     "div",
     {
       className: cn(
-        "mk-dual-slider flex flex-col gap-1.5",
+        "mk-dual-slider flex flex-col gap-1.5 w-full",
         disabled && "opacity-50 pointer-events-none",
         className
       ),
@@ -482,16 +508,22 @@ function DualSlider({
           "span",
           {
             className: "font-mono text-[10px] font-medium uppercase tracking-[0.06em]",
-            style: { color: "var(--mk-text-muted)", fontFamily: "var(--mk-font-mono)" },
+            style: {
+              color: "var(--mk-text-muted)",
+              fontFamily: "var(--mk-font-mono)"
+            },
             children: label
           }
         ),
-        /* @__PURE__ */ jsxs2("div", { className: "flex items-center gap-1.5", children: [
+        /* @__PURE__ */ jsxs2("div", { className: "flex items-center gap-1.5 w-full", children: [
           showValues && /* @__PURE__ */ jsx3(
             "span",
             {
               className: "w-8 text-right font-mono text-[10px]",
-              style: { color: "var(--mk-text-faint)", fontFamily: "var(--mk-font-mono)" },
+              style: {
+                color: "var(--mk-text-faint)",
+                fontFamily: "var(--mk-font-mono)"
+              },
               children: formatValue(start, step)
             }
           ),
@@ -502,7 +534,8 @@ function DualSlider({
               className: "relative flex-1 rounded-lg cursor-pointer touch-none select-none",
               style: {
                 height: "var(--mk-control-height)",
-                background: "color-mix(in srgb, var(--mk-text) 5%, transparent)"
+                // 14% track for visible contrast on dark.
+                background: "color-mix(in srgb, var(--mk-text) 14%, transparent)"
               },
               onPointerDown: (e) => beginDrag(e),
               onPointerMove,
@@ -516,7 +549,8 @@ function DualSlider({
                     style: {
                       left: `${startPct}%`,
                       width: `${endPct - startPct}%`,
-                      background: "color-mix(in srgb, var(--mk-text) 12%, transparent)"
+                      // 55% fill so the selected range is unambiguous.
+                      background: "color-mix(in srgb, var(--mk-text) 55%, transparent)"
                     }
                   }
                 ),
@@ -529,13 +563,13 @@ function DualSlider({
                     "aria-valuenow": start,
                     "aria-label": label ? `${label} minimum` : "Range minimum",
                     tabIndex: disabled ? -1 : 0,
-                    className: "absolute top-1/2 w-1 rounded-full cursor-ew-resize touch-none",
+                    className: "absolute top-1/2 w-1.5 rounded-full cursor-ew-resize touch-none",
                     style: {
                       left: `${startPct}%`,
-                      height: "calc(var(--mk-control-height) - 10px)",
+                      height: "calc(var(--mk-control-height) - 8px)",
                       transform: "translate(-50%, -50%)",
                       background: "var(--mk-text)",
-                      opacity: activeHandle === "start" ? 1 : 0.7
+                      opacity: 1
                     },
                     onPointerDown: (e) => {
                       e.stopPropagation();
@@ -552,13 +586,13 @@ function DualSlider({
                     "aria-valuenow": end,
                     "aria-label": label ? `${label} maximum` : "Range maximum",
                     tabIndex: disabled ? -1 : 0,
-                    className: "absolute top-1/2 w-1 rounded-full cursor-ew-resize touch-none",
+                    className: "absolute top-1/2 w-1.5 rounded-full cursor-ew-resize touch-none",
                     style: {
                       left: `${endPct}%`,
-                      height: "calc(var(--mk-control-height) - 10px)",
+                      height: "calc(var(--mk-control-height) - 8px)",
                       transform: "translate(-50%, -50%)",
                       background: "var(--mk-text)",
-                      opacity: activeHandle === "end" ? 1 : 0.7
+                      opacity: 1
                     },
                     onPointerDown: (e) => {
                       e.stopPropagation();
@@ -573,7 +607,10 @@ function DualSlider({
             "span",
             {
               className: "w-8 font-mono text-[10px]",
-              style: { color: "var(--mk-text-faint)", fontFamily: "var(--mk-font-mono)" },
+              style: {
+                color: "var(--mk-text-faint)",
+                fontFamily: "var(--mk-font-mono)"
+              },
               children: formatValue(end, step)
             }
           )
@@ -978,7 +1015,7 @@ function ColorPicker({
             side: "bottom",
             align: "start",
             sideOffset: 6,
-            className: "z-50 w-52 rounded-xl border p-2.5 shadow-xl",
+            className: "z-50 w-52 rounded-xl border p-2.5 mk-ring-elevated",
             style: {
               background: "var(--mk-surface-raised)",
               borderColor: "var(--mk-border)"
@@ -1081,7 +1118,46 @@ function Badge({
 
 // src/components/sidebar.tsx
 import * as React4 from "react";
-import { jsx as jsx7, jsxs as jsxs5 } from "react/jsx-runtime";
+
+// src/components/chrome-icon-button.tsx
+import { jsx as jsx7 } from "react/jsx-runtime";
+function ChromeIconButton({
+  className,
+  children,
+  stopPropagation = false,
+  onPointerDown,
+  style,
+  ...props
+}) {
+  return /* @__PURE__ */ jsx7(
+    "button",
+    {
+      type: "button",
+      ...props,
+      onPointerDown: (e) => {
+        if (stopPropagation) e.stopPropagation();
+        onPointerDown?.(e);
+      },
+      className: cn(
+        "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg cursor-pointer transition-colors",
+        "hover:bg-[color-mix(in_srgb,var(--mk-text)_10%,transparent)]",
+        "active:bg-[color-mix(in_srgb,var(--mk-text)_14%,transparent)]",
+        "focus-visible:outline focus-visible:outline-offset-1",
+        className
+      ),
+      style: {
+        color: "var(--mk-text-muted)",
+        fontFamily: "var(--mk-font-mono)",
+        outlineColor: "var(--mk-text-muted)",
+        ...style
+      },
+      children: /* @__PURE__ */ jsx7("span", { className: "text-[15px] leading-none select-none", children })
+    }
+  );
+}
+
+// src/components/sidebar.tsx
+import { jsx as jsx8, jsxs as jsxs5 } from "react/jsx-runtime";
 function Sidebar({
   title,
   side = "left",
@@ -1095,7 +1171,7 @@ function Sidebar({
 }) {
   const [collapsed, setCollapsed] = React4.useState(defaultCollapsed);
   if (collapsed && collapsible) {
-    return /* @__PURE__ */ jsx7(
+    return /* @__PURE__ */ jsx8(
       "aside",
       {
         className: cn("mk-sidebar flex flex-col shrink-0", className),
@@ -1105,14 +1181,12 @@ function Sidebar({
           borderRight: side === "left" ? "1px solid var(--mk-border)" : void 0,
           borderLeft: side === "right" ? "1px solid var(--mk-border)" : void 0
         },
-        children: /* @__PURE__ */ jsx7(
-          "button",
+        children: /* @__PURE__ */ jsx8(
+          ChromeIconButton,
           {
-            type: "button",
             onClick: () => setCollapsed(false),
             "aria-label": "Expand sidebar",
-            className: "h-9 flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity",
-            style: { color: "var(--mk-text-faint)" },
+            className: "w-full rounded-none",
             children: side === "left" ? "\u203A" : "\u2039"
           }
         )
@@ -1132,7 +1206,7 @@ function Sidebar({
       },
       children: [
         (title || header || collapsible) && /* @__PURE__ */ jsxs5("div", { className: "flex items-center justify-between mb-2 gap-2", children: [
-          /* @__PURE__ */ jsx7("div", { className: "flex-1 min-w-0", children: header ?? (title && /* @__PURE__ */ jsx7(
+          /* @__PURE__ */ jsx8("div", { className: "flex-1 min-w-0", children: header ?? (title && /* @__PURE__ */ jsx8(
             "span",
             {
               className: "font-mono text-[10px] font-medium uppercase tracking-[0.08em]",
@@ -1140,20 +1214,17 @@ function Sidebar({
               children: title
             }
           )) }),
-          collapsible && /* @__PURE__ */ jsx7(
-            "button",
+          collapsible && /* @__PURE__ */ jsx8(
+            ChromeIconButton,
             {
-              type: "button",
               onClick: () => setCollapsed(true),
               "aria-label": "Collapse sidebar",
-              className: "text-[10px] cursor-pointer hover:opacity-80 transition-opacity shrink-0",
-              style: { color: "var(--mk-text-faint)", fontFamily: "var(--mk-font-mono)" },
               children: side === "left" ? "\u2039" : "\u203A"
             }
           )
         ] }),
-        /* @__PURE__ */ jsx7("div", { className: "flex-1 flex flex-col gap-1.5 min-h-0 overflow-y-auto", children }),
-        footer && /* @__PURE__ */ jsx7(
+        /* @__PURE__ */ jsx8("div", { className: "flex-1 flex flex-col gap-1.5 min-h-0 overflow-y-auto", children }),
+        footer && /* @__PURE__ */ jsx8(
           "div",
           {
             className: "mt-2 pt-2",
@@ -1168,7 +1239,7 @@ function Sidebar({
 
 // src/components/tooltip.tsx
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
-import { jsx as jsx8, jsxs as jsxs6 } from "react/jsx-runtime";
+import { jsx as jsx9, jsxs as jsxs6 } from "react/jsx-runtime";
 function Tooltip({
   content,
   shortcut,
@@ -1177,9 +1248,9 @@ function Tooltip({
   delayDuration = 300,
   className
 }) {
-  return /* @__PURE__ */ jsx8(TooltipPrimitive.Provider, { delayDuration, children: /* @__PURE__ */ jsxs6(TooltipPrimitive.Root, { children: [
-    /* @__PURE__ */ jsx8(TooltipPrimitive.Trigger, { asChild: true, children }),
-    /* @__PURE__ */ jsx8(TooltipPrimitive.Portal, { children: /* @__PURE__ */ jsxs6(
+  return /* @__PURE__ */ jsx9(TooltipPrimitive.Provider, { delayDuration, children: /* @__PURE__ */ jsxs6(TooltipPrimitive.Root, { children: [
+    /* @__PURE__ */ jsx9(TooltipPrimitive.Trigger, { asChild: true, children }),
+    /* @__PURE__ */ jsx9(TooltipPrimitive.Portal, { children: /* @__PURE__ */ jsxs6(
       TooltipPrimitive.Content,
       {
         side,
@@ -1197,8 +1268,8 @@ function Tooltip({
         },
         children: [
           /* @__PURE__ */ jsxs6("span", { className: "flex items-center gap-2", children: [
-            /* @__PURE__ */ jsx8("span", { children: content }),
-            shortcut && /* @__PURE__ */ jsx8(
+            /* @__PURE__ */ jsx9("span", { children: content }),
+            shortcut && /* @__PURE__ */ jsx9(
               "kbd",
               {
                 className: "px-1 py-0.5 rounded text-[9px] leading-none",
@@ -1210,7 +1281,7 @@ function Tooltip({
               }
             )
           ] }),
-          /* @__PURE__ */ jsx8(
+          /* @__PURE__ */ jsx9(
             TooltipPrimitive.Arrow,
             {
               style: {
@@ -1226,7 +1297,7 @@ function Tooltip({
 
 // src/components/toggle.tsx
 import * as Switch from "@radix-ui/react-switch";
-import { jsx as jsx9, jsxs as jsxs7 } from "react/jsx-runtime";
+import { jsx as jsx10, jsxs as jsxs7 } from "react/jsx-runtime";
 function Toggle({ label, checked, onCheckedChange, disabled, className }) {
   return /* @__PURE__ */ jsxs7(
     "label",
@@ -1238,16 +1309,31 @@ function Toggle({ label, checked, onCheckedChange, disabled, className }) {
         className
       ),
       children: [
-        label ? /* @__PURE__ */ jsx9("span", { className: "font-mono text-[10px] font-medium uppercase tracking-[0.06em]", style: mk.label, children: label }) : null,
-        /* @__PURE__ */ jsx9(
+        label ? /* @__PURE__ */ jsx10("span", { className: "font-mono text-[10px] font-medium uppercase tracking-[0.06em]", style: mk.label, children: label }) : null,
+        /* @__PURE__ */ jsx10(
           Switch.Root,
           {
             checked,
             onCheckedChange,
             disabled,
-            className: "relative h-5 w-9 shrink-0 rounded-full transition-colors cursor-pointer data-[state=checked]:bg-white/20 focus-visible:outline focus-visible:outline-offset-2",
-            style: { ...mk.surface(8), outlineColor: "var(--mk-text-muted)" },
-            children: /* @__PURE__ */ jsx9(Switch.Thumb, { className: "block h-3.5 w-3.5 rounded-full bg-white/90 transition-transform translate-x-0.5 data-[state=checked]:translate-x-[18px] pointer-events-none" })
+            className: cn(
+              "relative h-5 w-9 shrink-0 rounded-full border transition-colors duration-150 cursor-pointer",
+              "data-[state=unchecked]:border-[var(--mk-border)] data-[state=unchecked]:bg-[color-mix(in_srgb,var(--mk-text)_8%,transparent)]",
+              "data-[state=checked]:border-[var(--mk-accent)] data-[state=checked]:bg-[var(--mk-accent)]",
+              "focus-visible:outline focus-visible:outline-offset-2"
+            ),
+            style: { outlineColor: "var(--mk-text-muted)" },
+            children: /* @__PURE__ */ jsx10(
+              Switch.Thumb,
+              {
+                className: cn(
+                  "block h-3.5 w-3.5 rounded-full transition-[transform,background-color] duration-150",
+                  "translate-x-0.5 pointer-events-none",
+                  "data-[state=unchecked]:bg-[var(--mk-text-muted)]",
+                  "data-[state=checked]:translate-x-[18px] data-[state=checked]:bg-[var(--mk-bg)]"
+                )
+              }
+            )
           }
         )
       ]
@@ -1257,7 +1343,7 @@ function Toggle({ label, checked, onCheckedChange, disabled, className }) {
 
 // src/components/select.tsx
 import * as SelectPrimitive from "@radix-ui/react-select";
-import { jsx as jsx10, jsxs as jsxs8 } from "react/jsx-runtime";
+import { jsx as jsx11, jsxs as jsxs8 } from "react/jsx-runtime";
 function Select({
   label,
   value,
@@ -1268,7 +1354,7 @@ function Select({
   disabled
 }) {
   return /* @__PURE__ */ jsxs8("div", { className: cn("mk-select flex flex-col gap-1.5", className), children: [
-    label && /* @__PURE__ */ jsx10("span", { className: "font-mono text-[10px] font-medium uppercase tracking-[0.06em]", style: mk.label, children: label }),
+    label && /* @__PURE__ */ jsx11("span", { className: "font-mono text-[10px] font-medium uppercase tracking-[0.06em]", style: mk.label, children: label }),
     /* @__PURE__ */ jsxs8(SelectPrimitive.Root, { value, onValueChange, disabled, children: [
       /* @__PURE__ */ jsxs8(
         SelectPrimitive.Trigger,
@@ -1276,29 +1362,29 @@ function Select({
           className: "flex h-8 w-full items-center justify-between rounded-lg px-2.5 font-mono text-[10px] uppercase tracking-wide cursor-pointer focus:outline focus:outline-offset-[-1px]",
           style: { ...mk.mono, ...mk.surface(5), color: "var(--mk-text-muted)", outlineColor: "var(--mk-text-muted)" },
           children: [
-            /* @__PURE__ */ jsx10(SelectPrimitive.Value, { placeholder }),
-            /* @__PURE__ */ jsx10(SelectPrimitive.Icon, { className: "opacity-50", children: "\u25BE" })
+            /* @__PURE__ */ jsx11(SelectPrimitive.Value, { placeholder }),
+            /* @__PURE__ */ jsx11(SelectPrimitive.Icon, { className: "opacity-50", children: "\u25BE" })
           ]
         }
       ),
-      /* @__PURE__ */ jsx10(SelectPrimitive.Portal, { children: /* @__PURE__ */ jsx10(
+      /* @__PURE__ */ jsx11(SelectPrimitive.Portal, { children: /* @__PURE__ */ jsx11(
         SelectPrimitive.Content,
         {
-          className: "z-50 overflow-hidden rounded-lg border shadow-lg",
+          className: "z-50 overflow-hidden rounded-lg border mk-ring-elevated",
           style: {
             background: "var(--mk-surface-raised)",
             borderColor: "var(--mk-border)"
           },
           position: "popper",
           sideOffset: 4,
-          children: /* @__PURE__ */ jsx10(SelectPrimitive.Viewport, { className: "p-1", children: options.map((opt) => /* @__PURE__ */ jsx10(
+          children: /* @__PURE__ */ jsx11(SelectPrimitive.Viewport, { className: "p-1", children: options.map((opt) => /* @__PURE__ */ jsx11(
             SelectPrimitive.Item,
             {
               value: opt.value,
               disabled: opt.disabled,
               className: "flex h-8 items-center rounded-md px-2 font-mono text-[10px] uppercase tracking-wide cursor-pointer outline-none data-[highlighted]:opacity-100 opacity-70",
               style: { ...mk.mono, color: "var(--mk-text-muted)" },
-              children: /* @__PURE__ */ jsx10(SelectPrimitive.ItemText, { children: opt.label })
+              children: /* @__PURE__ */ jsx11(SelectPrimitive.ItemText, { children: opt.label })
             },
             opt.value
           )) })
@@ -1309,7 +1395,7 @@ function Select({
 }
 
 // src/components/button.tsx
-import { jsx as jsx11 } from "react/jsx-runtime";
+import { jsx as jsx12 } from "react/jsx-runtime";
 function Button({
   variant = "secondary",
   size = "sm",
@@ -1323,7 +1409,7 @@ function Button({
     ghost: { background: "transparent", color: "var(--mk-text-muted)" },
     danger: { background: "color-mix(in srgb, #ff3366 15%, transparent)", color: "#ff6688" }
   };
-  return /* @__PURE__ */ jsx11(
+  return /* @__PURE__ */ jsx12(
     "button",
     {
       type: "button",
@@ -1346,7 +1432,7 @@ function IconButton({
   children,
   ...props
 }) {
-  return /* @__PURE__ */ jsx11(
+  return /* @__PURE__ */ jsx12(
     "button",
     {
       type: "button",
@@ -1369,32 +1455,109 @@ function IconButton({
 }
 
 // src/components/text-input.tsx
-import { jsx as jsx12, jsxs as jsxs9 } from "react/jsx-runtime";
-function TextInput({ label, size = "sm", className, ...props }) {
-  return /* @__PURE__ */ jsxs9("div", { className: cn("mk-text-input flex flex-col gap-1.5", className), children: [
-    label && /* @__PURE__ */ jsx12("span", { className: "font-mono text-[10px] font-medium uppercase tracking-[0.06em]", style: mk.label, children: label }),
-    /* @__PURE__ */ jsx12(
-      "input",
-      {
-        className: cn(
-          "w-full rounded-lg px-2.5 font-mono focus:outline focus:outline-offset-[-1px]",
-          size === "sm" ? "h-8 text-[10px]" : "h-9 text-xs"
+import * as React5 from "react";
+import { jsx as jsx13, jsxs as jsxs9 } from "react/jsx-runtime";
+var TextInput = React5.forwardRef(function TextInput2({ label, hint, error, leadingAddon, trailingAddon, size = "md", className, ...props }, ref) {
+  return /* @__PURE__ */ jsxs9(
+    "label",
+    {
+      className: cn("mk-text-input flex flex-col gap-1.5 group", className),
+      style: { color: "var(--mk-text)" },
+      children: [
+        label && /* @__PURE__ */ jsxs9(
+          "span",
+          {
+            className: "font-mono text-[10px] font-medium uppercase tracking-[0.06em]",
+            style: { color: "var(--mk-text-muted)", fontFamily: "var(--mk-font-mono)" },
+            children: [
+              label,
+              hint && /* @__PURE__ */ jsx13(
+                "span",
+                {
+                  className: "ml-1.5 px-1 py-0.5 rounded text-[9px] font-medium tracking-normal leading-none align-middle",
+                  style: {
+                    background: "color-mix(in srgb, var(--mk-text) 10%, transparent)",
+                    color: "var(--mk-text-faint)"
+                  },
+                  children: hint
+                }
+              )
+            ]
+          }
         ),
-        style: {
-          ...mk.mono,
-          ...mk.surface(5),
-          color: "var(--mk-text-muted)",
-          outlineColor: "var(--mk-text-muted)"
-        },
-        ...props
-      }
-    )
-  ] });
-}
+        /* @__PURE__ */ jsxs9(
+          "div",
+          {
+            className: cn(
+              "flex items-center rounded-lg overflow-hidden transition-colors",
+              size === "sm" ? "h-7" : "h-9"
+            ),
+            style: {
+              background: "color-mix(in srgb, var(--mk-text) 5%, transparent)",
+              border: "1px solid var(--mk-border)"
+            },
+            children: [
+              leadingAddon && /* @__PURE__ */ jsx13(
+                "span",
+                {
+                  className: "px-2 font-mono text-[10px] uppercase tracking-wider shrink-0",
+                  style: {
+                    color: "var(--mk-text-faint)",
+                    fontFamily: "var(--mk-font-mono)",
+                    background: "color-mix(in srgb, var(--mk-text) 3%, transparent)",
+                    height: "100%",
+                    display: "inline-flex",
+                    alignItems: "center"
+                  },
+                  children: leadingAddon
+                }
+              ),
+              /* @__PURE__ */ jsx13(
+                "input",
+                {
+                  ref,
+                  ...props,
+                  className: "flex-1 bg-transparent px-2.5 font-mono text-[11px] outline-none placeholder:opacity-40 min-w-0",
+                  style: {
+                    color: "var(--mk-text)",
+                    fontFamily: "var(--mk-font-mono)",
+                    ...error ? { boxShadow: "inset 0 0 0 1px #ff3366" } : null
+                  }
+                }
+              ),
+              trailingAddon && /* @__PURE__ */ jsx13(
+                "span",
+                {
+                  className: "px-2 font-mono text-[10px] uppercase tracking-wider shrink-0",
+                  style: {
+                    color: "var(--mk-text-faint)",
+                    fontFamily: "var(--mk-font-mono)",
+                    height: "100%",
+                    display: "inline-flex",
+                    alignItems: "center"
+                  },
+                  children: trailingAddon
+                }
+              )
+            ]
+          }
+        ),
+        error && /* @__PURE__ */ jsx13(
+          "span",
+          {
+            className: "font-mono text-[9px] uppercase tracking-wider",
+            style: { color: "#ff3366", fontFamily: "var(--mk-font-mono)" },
+            children: error
+          }
+        )
+      ]
+    }
+  );
+});
 
 // src/components/checkbox.tsx
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
-import { jsx as jsx13, jsxs as jsxs10 } from "react/jsx-runtime";
+import { jsx as jsx14, jsxs as jsxs10 } from "react/jsx-runtime";
 function Checkbox({ label, checked, onCheckedChange, disabled, className }) {
   return /* @__PURE__ */ jsxs10(
     "label",
@@ -1405,7 +1568,7 @@ function Checkbox({ label, checked, onCheckedChange, disabled, className }) {
         className
       ),
       children: [
-        /* @__PURE__ */ jsx13(
+        /* @__PURE__ */ jsx14(
           CheckboxPrimitive.Root,
           {
             checked,
@@ -1413,10 +1576,10 @@ function Checkbox({ label, checked, onCheckedChange, disabled, className }) {
             disabled,
             className: "flex h-4 w-4 items-center justify-center rounded border transition-colors",
             style: { borderColor: "var(--mk-border)", ...mk.surface(5) },
-            children: /* @__PURE__ */ jsx13(CheckboxPrimitive.Indicator, { className: "text-[10px]", style: { color: "var(--mk-text)" }, children: "\u2713" })
+            children: /* @__PURE__ */ jsx14(CheckboxPrimitive.Indicator, { className: "text-[10px]", style: { color: "var(--mk-text)" }, children: "\u2713" })
           }
         ),
-        /* @__PURE__ */ jsx13("span", { className: "font-mono text-[10px] uppercase tracking-[0.06em]", style: mk.label, children: label })
+        /* @__PURE__ */ jsx14("span", { className: "font-mono text-[10px] uppercase tracking-[0.06em]", style: mk.label, children: label })
       ]
     }
   );
@@ -1424,7 +1587,7 @@ function Checkbox({ label, checked, onCheckedChange, disabled, className }) {
 
 // src/components/radio-group.tsx
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
-import { jsx as jsx14, jsxs as jsxs11 } from "react/jsx-runtime";
+import { jsx as jsx15, jsxs as jsxs11 } from "react/jsx-runtime";
 function RadioGroup({
   label,
   value,
@@ -1434,25 +1597,25 @@ function RadioGroup({
   className
 }) {
   return /* @__PURE__ */ jsxs11("div", { className: cn("mk-radio-group flex flex-col gap-2", className), children: [
-    label && /* @__PURE__ */ jsx14("span", { className: "font-mono text-[10px] font-medium uppercase tracking-[0.06em]", style: mk.label, children: label }),
-    /* @__PURE__ */ jsx14(
+    label && /* @__PURE__ */ jsx15("span", { className: "font-mono text-[10px] font-medium uppercase tracking-[0.06em]", style: mk.label, children: label }),
+    /* @__PURE__ */ jsx15(
       RadioGroupPrimitive.Root,
       {
         value,
         onValueChange,
         className: cn("flex gap-2", orientation === "vertical" ? "flex-col" : "flex-row flex-wrap"),
         children: options.map((opt) => /* @__PURE__ */ jsxs11("label", { className: "flex items-center gap-2 cursor-pointer", children: [
-          /* @__PURE__ */ jsx14(
+          /* @__PURE__ */ jsx15(
             RadioGroupPrimitive.Item,
             {
               value: opt.value,
               disabled: opt.disabled,
               className: "h-3.5 w-3.5 rounded-full border flex items-center justify-center",
               style: { borderColor: "var(--mk-border)" },
-              children: /* @__PURE__ */ jsx14(RadioGroupPrimitive.Indicator, { className: "h-1.5 w-1.5 rounded-full", style: { background: "var(--mk-text)" } })
+              children: /* @__PURE__ */ jsx15(RadioGroupPrimitive.Indicator, { className: "h-1.5 w-1.5 rounded-full", style: { background: "var(--mk-text)" } })
             }
           ),
-          /* @__PURE__ */ jsx14("span", { className: "font-mono text-[10px] uppercase tracking-[0.06em]", style: mk.label, children: opt.label })
+          /* @__PURE__ */ jsx15("span", { className: "font-mono text-[10px] uppercase tracking-[0.06em]", style: mk.label, children: opt.label })
         ] }, opt.value))
       }
     )
@@ -1460,7 +1623,7 @@ function RadioGroup({
 }
 
 // src/components/coordinate-input.tsx
-import { jsx as jsx15, jsxs as jsxs12 } from "react/jsx-runtime";
+import { jsx as jsx16, jsxs as jsxs12 } from "react/jsx-runtime";
 function CoordinateInput({
   label,
   x,
@@ -1472,8 +1635,8 @@ function CoordinateInput({
   className
 }) {
   const field = (axis, value) => /* @__PURE__ */ jsxs12("div", { className: "flex items-center gap-1 flex-1", children: [
-    /* @__PURE__ */ jsx15("span", { className: "font-mono text-[9px] uppercase w-3", style: mk.faint, children: axis }),
-    /* @__PURE__ */ jsx15(
+    /* @__PURE__ */ jsx16("span", { className: "font-mono text-[9px] uppercase w-3", style: mk.faint, children: axis }),
+    /* @__PURE__ */ jsx16(
       "input",
       {
         type: "number",
@@ -1493,7 +1656,7 @@ function CoordinateInput({
     )
   ] });
   return /* @__PURE__ */ jsxs12("div", { className: cn("mk-coordinate-input flex flex-col gap-1.5", className), children: [
-    label && /* @__PURE__ */ jsx15("span", { className: "font-mono text-[10px] font-medium uppercase tracking-[0.06em]", style: mk.label, children: label }),
+    label && /* @__PURE__ */ jsx16("span", { className: "font-mono text-[10px] font-medium uppercase tracking-[0.06em]", style: mk.label, children: label }),
     /* @__PURE__ */ jsxs12("div", { className: "flex gap-1.5", children: [
       field("x", x),
       field("y", y)
@@ -1502,7 +1665,7 @@ function CoordinateInput({
 }
 
 // src/components/preset-picker.tsx
-import { jsx as jsx16, jsxs as jsxs13 } from "react/jsx-runtime";
+import { jsx as jsx17, jsxs as jsxs13 } from "react/jsx-runtime";
 function PresetPicker({
   label,
   presets,
@@ -1512,9 +1675,9 @@ function PresetPicker({
   className
 }) {
   return /* @__PURE__ */ jsxs13("div", { className: cn("mk-preset-picker flex flex-col gap-2", className), children: [
-    label && /* @__PURE__ */ jsx16("span", { className: "font-mono text-[10px] font-medium uppercase tracking-[0.06em]", style: mk.label, children: label }),
+    label && /* @__PURE__ */ jsx17("span", { className: "font-mono text-[10px] font-medium uppercase tracking-[0.06em]", style: mk.label, children: label }),
     /* @__PURE__ */ jsxs13("div", { className: "flex flex-wrap gap-1", children: [
-      presets.map((p) => /* @__PURE__ */ jsx16(
+      presets.map((p) => /* @__PURE__ */ jsx17(
         "button",
         {
           type: "button",
@@ -1529,7 +1692,7 @@ function PresetPicker({
         },
         p.id
       )),
-      onAdd && /* @__PURE__ */ jsx16(
+      onAdd && /* @__PURE__ */ jsx17(
         "button",
         {
           type: "button",
@@ -1544,7 +1707,7 @@ function PresetPicker({
 }
 
 // src/components/field-group.tsx
-import { jsx as jsx17, jsxs as jsxs14 } from "react/jsx-runtime";
+import { jsx as jsx18, jsxs as jsxs14 } from "react/jsx-runtime";
 function FieldGroup({
   label,
   hint,
@@ -1562,8 +1725,8 @@ function FieldGroup({
       ),
       children: [
         (label || hint) && /* @__PURE__ */ jsxs14("div", { className: cn("flex items-center gap-1.5", layout === "row" && "shrink-0"), children: [
-          label && /* @__PURE__ */ jsx17("span", { className: "font-mono text-[10px] font-medium uppercase tracking-[0.06em]", style: mk.label, children: label }),
-          hint && /* @__PURE__ */ jsx17(
+          label && /* @__PURE__ */ jsx18("span", { className: "font-mono text-[10px] font-medium uppercase tracking-[0.06em]", style: mk.label, children: label }),
+          hint && /* @__PURE__ */ jsx18(
             "span",
             {
               className: "px-1 py-0.5 rounded text-[9px] font-medium uppercase leading-none",
@@ -1572,15 +1735,15 @@ function FieldGroup({
             }
           )
         ] }),
-        /* @__PURE__ */ jsx17("div", { className: cn(layout === "row" ? "flex-1 min-w-0 flex justify-end items-center" : void 0), children })
+        /* @__PURE__ */ jsx18("div", { className: cn(layout === "row" ? "flex-1 min-w-0 flex justify-end items-center" : void 0), children })
       ]
     }
   );
 }
 
 // src/components/panel.tsx
-import * as React5 from "react";
-import { Fragment, jsx as jsx18, jsxs as jsxs15 } from "react/jsx-runtime";
+import * as React6 from "react";
+import { Fragment, jsx as jsx19, jsxs as jsxs15 } from "react/jsx-runtime";
 function Panel({
   title = "Panel",
   children,
@@ -1593,9 +1756,9 @@ function Panel({
   className,
   footer
 }) {
-  const [collapsed, setCollapsed] = React5.useState(defaultCollapsed);
-  const [pos, setPos] = React5.useState(defaultPosition);
-  const dragRef = React5.useRef(null);
+  const [collapsed, setCollapsed] = React6.useState(defaultCollapsed);
+  const [pos, setPos] = React6.useState(defaultPosition);
+  const dragRef = React6.useRef(null);
   const startDrag = (e) => {
     if (mode !== "floating") return;
     e.currentTarget.setPointerCapture(e.pointerId);
@@ -1616,24 +1779,23 @@ function Panel({
       "div",
       {
         className: cn(
-          "flex items-center justify-between gap-2 px-2 shrink-0 border-b",
+          "flex items-center justify-between gap-1 px-1 shrink-0 border-b min-h-10",
           mode === "floating" && "cursor-grab active:cursor-grabbing touch-none"
         ),
-        style: { borderColor: "var(--mk-border)", height: "var(--mk-control-height)" },
+        style: { borderColor: "var(--mk-border)" },
         onPointerDown: startDrag,
         onPointerMove: onDrag,
         onPointerUp: endDrag,
         children: [
-          /* @__PURE__ */ jsx18("span", { className: "font-mono text-[10px] font-medium uppercase tracking-[0.08em] truncate", style: mk.faint, children: title }),
-          /* @__PURE__ */ jsxs15("div", { className: "flex items-center gap-1 shrink-0", children: [
-            mode === "floating" && /* @__PURE__ */ jsx18("span", { className: "text-[9px] opacity-30", style: mk.mono, children: "\u283F" }),
-            collapsible && /* @__PURE__ */ jsx18(
-              "button",
+          /* @__PURE__ */ jsx19("span", { className: "font-mono text-[10px] font-medium uppercase tracking-[0.08em] truncate pl-1", style: mk.faint, children: title }),
+          /* @__PURE__ */ jsxs15("div", { className: "flex items-center shrink-0", children: [
+            mode === "floating" && /* @__PURE__ */ jsx19("span", { className: "flex h-9 w-7 items-center justify-center text-[11px] opacity-30 select-none", style: mk.mono, children: "\u283F" }),
+            collapsible && /* @__PURE__ */ jsx19(
+              ChromeIconButton,
               {
-                type: "button",
+                stopPropagation: true,
                 onClick: () => setCollapsed((c) => !c),
-                className: "text-[10px] opacity-50 hover:opacity-80 cursor-pointer px-1",
-                style: mk.mono,
+                "aria-label": collapsed ? "Expand panel" : "Collapse panel",
                 children: collapsed ? "+" : "\u2212"
               }
             )
@@ -1642,15 +1804,15 @@ function Panel({
       }
     ),
     !collapsed && /* @__PURE__ */ jsxs15(Fragment, { children: [
-      /* @__PURE__ */ jsx18("div", { className: "flex-1 overflow-y-auto p-2 flex flex-col gap-1.5 min-h-0", children }),
-      footer && /* @__PURE__ */ jsx18("div", { className: "p-2 border-t shrink-0", style: { borderColor: "var(--mk-border)" }, children: footer })
+      /* @__PURE__ */ jsx19("div", { className: "flex-1 overflow-y-auto p-2 flex flex-col gap-1.5 min-h-0", children }),
+      footer && /* @__PURE__ */ jsx19("div", { className: "p-2 border-t shrink-0", style: { borderColor: "var(--mk-border)" }, children: footer })
     ] })
   ] });
   if (mode === "floating") {
-    return /* @__PURE__ */ jsx18(
+    return /* @__PURE__ */ jsx19(
       "aside",
       {
-        className: cn("mk-panel fixed z-40 flex flex-col rounded-xl border shadow-2xl", className),
+        className: cn("mk-panel fixed z-40 flex flex-col rounded-xl border mk-ring-float", className),
         style: {
           left: pos.x,
           top: pos.y,
@@ -1664,7 +1826,7 @@ function Panel({
       }
     );
   }
-  return /* @__PURE__ */ jsx18(
+  return /* @__PURE__ */ jsx19(
     "aside",
     {
       className: cn("mk-panel flex flex-col shrink-0 border-r h-full", className),
@@ -1681,8 +1843,8 @@ function Panel({
 }
 
 // src/components/drawer.tsx
-import * as React6 from "react";
-import { Fragment as Fragment2, jsx as jsx19, jsxs as jsxs16 } from "react/jsx-runtime";
+import * as React7 from "react";
+import { Fragment as Fragment2, jsx as jsx20, jsxs as jsxs16 } from "react/jsx-runtime";
 function Drawer({
   open,
   onOpenChange,
@@ -1691,7 +1853,7 @@ function Drawer({
   width = 280,
   children
 }) {
-  React6.useEffect(() => {
+  React7.useEffect(() => {
     if (!open) return;
     const onKey = (e) => e.key === "Escape" && onOpenChange(false);
     window.addEventListener("keydown", onKey);
@@ -1700,7 +1862,7 @@ function Drawer({
   if (!open) return null;
   const positionStyles = side === "bottom" ? { left: 0, right: 0, bottom: 0, maxHeight: "70vh" } : side === "left" ? { left: 0, top: 0, bottom: 0, width } : { right: 0, top: 0, bottom: 0, width };
   return /* @__PURE__ */ jsxs16(Fragment2, { children: [
-    /* @__PURE__ */ jsx19(
+    /* @__PURE__ */ jsx20(
       "div",
       {
         className: "fixed inset-0 z-40 bg-black/50",
@@ -1712,7 +1874,7 @@ function Drawer({
       "aside",
       {
         className: cn(
-          "mk-drawer fixed z-50 flex flex-col border shadow-2xl",
+          "mk-drawer fixed z-50 flex flex-col border mk-ring-float",
           side === "bottom" ? "rounded-t-xl border-b-0" : ""
         ),
         style: {
@@ -1724,24 +1886,23 @@ function Drawer({
           /* @__PURE__ */ jsxs16(
             "div",
             {
-              className: "flex items-center justify-between px-3 shrink-0 border-b",
-              style: { borderColor: "var(--mk-border)", height: "var(--mk-control-height)" },
+              className: "flex items-center justify-between gap-2 px-2 shrink-0 border-b min-h-10",
+              style: { borderColor: "var(--mk-border)" },
               children: [
-                title && /* @__PURE__ */ jsx19("span", { className: "font-mono text-[10px] uppercase tracking-[0.08em]", style: mk.faint, children: title }),
-                /* @__PURE__ */ jsx19(
-                  "button",
+                title && /* @__PURE__ */ jsx20("span", { className: "font-mono text-[10px] uppercase tracking-[0.08em] pl-1", style: mk.faint, children: title }),
+                /* @__PURE__ */ jsx20(
+                  ChromeIconButton,
                   {
-                    type: "button",
+                    className: title ? void 0 : "ml-auto",
                     onClick: () => onOpenChange(false),
-                    className: "ml-auto text-[10px] opacity-50 hover:opacity-80 cursor-pointer",
-                    style: mk.mono,
+                    "aria-label": "Close drawer",
                     children: "\u2715"
                   }
                 )
               ]
             }
           ),
-          /* @__PURE__ */ jsx19("div", { className: "flex-1 overflow-y-auto p-3", children })
+          /* @__PURE__ */ jsx20("div", { className: "flex-1 overflow-y-auto p-3", children })
         ]
       }
     )
@@ -1749,8 +1910,8 @@ function Drawer({
 }
 
 // src/components/split-view.tsx
-import * as React7 from "react";
-import { jsx as jsx20, jsxs as jsxs17 } from "react/jsx-runtime";
+import * as React8 from "react";
+import { jsx as jsx21, jsxs as jsxs17 } from "react/jsx-runtime";
 function SplitView({
   left,
   right,
@@ -1760,8 +1921,8 @@ function SplitView({
   className,
   orientation = "horizontal"
 }) {
-  const [ratio, setRatio] = React7.useState(defaultRatio);
-  const containerRef = React7.useRef(null);
+  const [ratio, setRatio] = React8.useState(defaultRatio);
+  const containerRef = React8.useRef(null);
   const startDrag = (e) => {
     const getPos = (ev) => {
       if (!containerRef.current) return;
@@ -1792,8 +1953,8 @@ function SplitView({
       className: cn("mk-split-view flex overflow-hidden rounded-xl border", isH ? "flex-row" : "flex-col", className),
       style: { borderColor: "var(--mk-border)", minHeight: isH ? 200 : 320 },
       children: [
-        /* @__PURE__ */ jsx20("div", { className: "overflow-auto min-w-0 min-h-0", style: { [isH ? "width" : "height"]: `${ratio}%` }, children: left }),
-        /* @__PURE__ */ jsx20(
+        /* @__PURE__ */ jsx21("div", { className: "overflow-auto min-w-0 min-h-0", style: { [isH ? "width" : "height"]: `${ratio}%` }, children: left }),
+        /* @__PURE__ */ jsx21(
           "div",
           {
             role: "separator",
@@ -1804,7 +1965,7 @@ function SplitView({
             onTouchStart: startDrag
           }
         ),
-        /* @__PURE__ */ jsx20("div", { className: "flex-1 overflow-auto min-w-0 min-h-0", children: right })
+        /* @__PURE__ */ jsx21("div", { className: "flex-1 overflow-auto min-w-0 min-h-0", children: right })
       ]
     }
   );
@@ -1812,10 +1973,10 @@ function SplitView({
 
 // src/components/tabs.tsx
 import * as TabsPrimitive from "@radix-ui/react-tabs";
-import { jsx as jsx21, jsxs as jsxs18 } from "react/jsx-runtime";
+import { jsx as jsx22, jsxs as jsxs18 } from "react/jsx-runtime";
 function Tabs({ items, defaultValue, className }) {
   return /* @__PURE__ */ jsxs18(TabsPrimitive.Root, { defaultValue: defaultValue ?? items[0]?.value, className: cn("mk-tabs flex flex-col gap-3", className), children: [
-    /* @__PURE__ */ jsx21(TabsPrimitive.List, { className: "flex gap-1 border-b pb-px", style: { borderColor: "var(--mk-border)" }, children: items.map((item) => /* @__PURE__ */ jsx21(
+    /* @__PURE__ */ jsx22(TabsPrimitive.List, { className: "flex gap-1 border-b pb-px", style: { borderColor: "var(--mk-border)" }, children: items.map((item) => /* @__PURE__ */ jsx22(
       TabsPrimitive.Trigger,
       {
         value: item.value,
@@ -1825,7 +1986,7 @@ function Tabs({ items, defaultValue, className }) {
       },
       item.value
     )) }),
-    items.map((item) => /* @__PURE__ */ jsx21(
+    items.map((item) => /* @__PURE__ */ jsx22(
       TabsPrimitive.Content,
       {
         value: item.value,
@@ -1839,9 +2000,9 @@ function Tabs({ items, defaultValue, className }) {
 
 // src/components/accordion.tsx
 import * as Accordion from "@radix-ui/react-accordion";
-import { jsx as jsx22, jsxs as jsxs19 } from "react/jsx-runtime";
+import { jsx as jsx23, jsxs as jsxs19 } from "react/jsx-runtime";
 function AccordionPanel({ items, defaultOpen, className }) {
-  return /* @__PURE__ */ jsx22(
+  return /* @__PURE__ */ jsx23(
     Accordion.Root,
     {
       type: "multiple",
@@ -1854,9 +2015,9 @@ function AccordionPanel({ items, defaultOpen, className }) {
           className: "rounded-lg overflow-hidden",
           style: { ...mk.surface(4) },
           children: [
-            /* @__PURE__ */ jsx22(Accordion.Header, { children: /* @__PURE__ */ jsxs19(Accordion.Trigger, { className: "flex w-full items-center justify-between px-2.5 h-9 font-mono text-[10px] uppercase tracking-[0.06em] cursor-pointer group", children: [
-              /* @__PURE__ */ jsx22("span", { style: mk.label, children: item.title }),
-              /* @__PURE__ */ jsx22(
+            /* @__PURE__ */ jsx23(Accordion.Header, { children: /* @__PURE__ */ jsxs19(Accordion.Trigger, { className: "flex w-full items-center justify-between px-2.5 h-9 font-mono text-[10px] uppercase tracking-[0.06em] cursor-pointer group", children: [
+              /* @__PURE__ */ jsx23("span", { style: mk.label, children: item.title }),
+              /* @__PURE__ */ jsx23(
                 "span",
                 {
                   className: "flex items-center justify-center w-5 h-5 text-sm opacity-50 group-data-[state=open]:rotate-180 transition-transform shrink-0",
@@ -1865,7 +2026,7 @@ function AccordionPanel({ items, defaultOpen, className }) {
                 }
               )
             ] }) }),
-            /* @__PURE__ */ jsx22(Accordion.Content, { className: "px-2.5 pb-2.5 pt-0 flex flex-col gap-1.5", children: item.content })
+            /* @__PURE__ */ jsx23(Accordion.Content, { className: "px-2.5 pb-2.5 pt-0 flex flex-col gap-1.5", children: item.content })
           ]
         },
         item.id
@@ -1875,10 +2036,10 @@ function AccordionPanel({ items, defaultOpen, className }) {
 }
 
 // src/components/toolbar.tsx
-import * as React8 from "react";
-import { jsx as jsx23 } from "react/jsx-runtime";
+import * as React9 from "react";
+import { jsx as jsx24 } from "react/jsx-runtime";
 function Toolbar({ items, orientation = "horizontal", className }) {
-  return /* @__PURE__ */ jsx23(
+  return /* @__PURE__ */ jsx24(
     "div",
     {
       role: "toolbar",
@@ -1892,7 +2053,7 @@ function Toolbar({ items, orientation = "horizontal", className }) {
         background: "color-mix(in srgb, var(--mk-text) 5%, transparent)"
       },
       children: items.map((item) => {
-        const button = /* @__PURE__ */ jsx23(
+        const button = /* @__PURE__ */ jsx24(
           "button",
           {
             type: "button",
@@ -1910,7 +2071,7 @@ function Toolbar({ items, orientation = "horizontal", className }) {
               background: item.active ? "color-mix(in srgb, var(--mk-text) 12%, transparent)" : "transparent",
               color: item.active ? "var(--mk-text)" : "var(--mk-text-muted)"
             },
-            children: item.icon ?? /* @__PURE__ */ jsx23(
+            children: item.icon ?? /* @__PURE__ */ jsx24(
               "span",
               {
                 className: "font-mono text-[11px] font-medium uppercase leading-none",
@@ -1922,17 +2083,17 @@ function Toolbar({ items, orientation = "horizontal", className }) {
           item.id
         );
         if (item.shortcut) {
-          return /* @__PURE__ */ jsx23(Tooltip, { content: item.label, shortcut: item.shortcut, children: button }, item.id);
+          return /* @__PURE__ */ jsx24(Tooltip, { content: item.label, shortcut: item.shortcut, children: button }, item.id);
         }
-        return /* @__PURE__ */ jsx23(React8.Fragment, { children: button }, item.id);
+        return /* @__PURE__ */ jsx24(React9.Fragment, { children: button }, item.id);
       })
     }
   );
 }
 
 // src/components/dropzone.tsx
-import * as React9 from "react";
-import { Fragment as Fragment4, jsx as jsx24, jsxs as jsxs20 } from "react/jsx-runtime";
+import * as React10 from "react";
+import { Fragment as Fragment4, jsx as jsx25, jsxs as jsxs20 } from "react/jsx-runtime";
 function formatBytes(bytes) {
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
@@ -1948,9 +2109,9 @@ function Dropzone({
   className,
   disabled = false
 }) {
-  const inputRef = React9.useRef(null);
-  const [isDragging, setIsDragging] = React9.useState(false);
-  const [error, setError] = React9.useState(null);
+  const inputRef = React10.useRef(null);
+  const [isDragging, setIsDragging] = React10.useState(false);
+  const [error, setError] = React10.useState(null);
   const validateAndAccept = (file) => {
     setError(null);
     if (maxSize && file.size > maxSize) {
@@ -2009,7 +2170,7 @@ function Dropzone({
           background: isDragging ? "color-mix(in srgb, var(--mk-text) 8%, transparent)" : "color-mix(in srgb, var(--mk-text) 3%, transparent)"
         },
         children: [
-          /* @__PURE__ */ jsx24(
+          /* @__PURE__ */ jsx25(
             "input",
             {
               ref: inputRef,
@@ -2025,7 +2186,7 @@ function Dropzone({
             }
           ),
           preview ? /* @__PURE__ */ jsxs20(Fragment4, { children: [
-            /* @__PURE__ */ jsx24(
+            /* @__PURE__ */ jsx25(
               "img",
               {
                 src: preview,
@@ -2033,12 +2194,12 @@ function Dropzone({
                 className: "absolute inset-0 w-full h-full object-cover"
               }
             ),
-            /* @__PURE__ */ jsx24(
+            /* @__PURE__ */ jsx25(
               "div",
               {
                 className: "absolute inset-0 flex items-end justify-center pb-3 opacity-0 hover:opacity-100 transition-opacity",
                 style: { background: "linear-gradient(transparent 50%, rgba(0,0,0,0.6))" },
-                children: /* @__PURE__ */ jsx24(
+                children: /* @__PURE__ */ jsx25(
                   "span",
                   {
                     className: "font-mono text-[10px] uppercase tracking-wider",
@@ -2049,7 +2210,7 @@ function Dropzone({
               }
             )
           ] }) : /* @__PURE__ */ jsxs20("div", { className: "flex flex-col items-center gap-1 p-4 text-center pointer-events-none", children: [
-            /* @__PURE__ */ jsx24(
+            /* @__PURE__ */ jsx25(
               "span",
               {
                 className: "font-mono text-[10px] font-medium uppercase tracking-[0.06em]",
@@ -2057,7 +2218,7 @@ function Dropzone({
                 children: label
               }
             ),
-            /* @__PURE__ */ jsx24(
+            /* @__PURE__ */ jsx25(
               "span",
               {
                 className: "font-mono text-[9px] uppercase tracking-wider",
@@ -2069,7 +2230,7 @@ function Dropzone({
         ]
       }
     ),
-    error && /* @__PURE__ */ jsx24(
+    error && /* @__PURE__ */ jsx25(
       "p",
       {
         className: "mt-1.5 font-mono text-[9px] uppercase tracking-wider",
@@ -2081,8 +2242,8 @@ function Dropzone({
 }
 
 // src/components/compare-slider.tsx
-import * as React10 from "react";
-import { jsx as jsx25, jsxs as jsxs21 } from "react/jsx-runtime";
+import * as React11 from "react";
+import { jsx as jsx26, jsxs as jsxs21 } from "react/jsx-runtime";
 function CompareSlider({
   beforeSrc,
   afterSrc,
@@ -2093,9 +2254,9 @@ function CompareSlider({
   className,
   aspectRatio = "16 / 9"
 }) {
-  const [internalPosition, setInternalPosition] = React10.useState(50);
-  const [isDragging, setIsDragging] = React10.useState(false);
-  const containerRef = React10.useRef(null);
+  const [internalPosition, setInternalPosition] = React11.useState(50);
+  const [isDragging, setIsDragging] = React11.useState(false);
+  const containerRef = React11.useRef(null);
   const position = controlledPosition ?? internalPosition;
   const setPosition = (next) => {
     const clamped = clamp(next, 0, 100);
@@ -2139,13 +2300,13 @@ function CompareSlider({
       onMouseDown: (e) => startDrag(e.clientX),
       onTouchStart: (e) => startDrag(e.touches[0].clientX),
       children: [
-        /* @__PURE__ */ jsx25("img", { src: afterSrc, alt: afterLabel, className: "absolute inset-0 w-full h-full object-cover", draggable: false }),
-        /* @__PURE__ */ jsx25(
+        /* @__PURE__ */ jsx26("img", { src: afterSrc, alt: afterLabel, className: "absolute inset-0 w-full h-full object-cover", draggable: false }),
+        /* @__PURE__ */ jsx26(
           "div",
           {
             className: "absolute inset-0 overflow-hidden",
             style: { clipPath: `inset(0 ${100 - position}% 0 0)` },
-            children: /* @__PURE__ */ jsx25(
+            children: /* @__PURE__ */ jsx26(
               "img",
               {
                 src: beforeSrc,
@@ -2156,7 +2317,7 @@ function CompareSlider({
             )
           }
         ),
-        /* @__PURE__ */ jsx25(
+        /* @__PURE__ */ jsx26(
           "div",
           {
             className: "absolute inset-y-0 w-px pointer-events-none",
@@ -2167,7 +2328,7 @@ function CompareSlider({
             }
           }
         ),
-        /* @__PURE__ */ jsx25(
+        /* @__PURE__ */ jsx26(
           "div",
           {
             className: "absolute top-1/2 flex items-center justify-center rounded-full pointer-events-none",
@@ -2179,10 +2340,10 @@ function CompareSlider({
               background: "var(--mk-text)",
               boxShadow: isDragging ? "0 0 0 4px var(--mk-accent-muted)" : "0 2px 8px rgba(0,0,0,0.3)"
             },
-            children: /* @__PURE__ */ jsx25("span", { style: { color: "var(--mk-bg)", fontSize: 10, fontFamily: "var(--mk-font-mono)" }, children: "\u2194" })
+            children: /* @__PURE__ */ jsx26("span", { style: { color: "var(--mk-bg)", fontSize: 10, fontFamily: "var(--mk-font-mono)" }, children: "\u2194" })
           }
         ),
-        /* @__PURE__ */ jsx25(
+        /* @__PURE__ */ jsx26(
           "span",
           {
             className: "absolute top-2 left-2 px-1.5 py-0.5 rounded font-mono text-[9px] uppercase tracking-wider pointer-events-none",
@@ -2194,7 +2355,7 @@ function CompareSlider({
             children: beforeLabel
           }
         ),
-        /* @__PURE__ */ jsx25(
+        /* @__PURE__ */ jsx26(
           "span",
           {
             className: "absolute top-2 right-2 px-1.5 py-0.5 rounded font-mono text-[9px] uppercase tracking-wider pointer-events-none",
@@ -2212,7 +2373,7 @@ function CompareSlider({
 }
 
 // src/components/canvas-frame.tsx
-import { jsx as jsx26, jsxs as jsxs22 } from "react/jsx-runtime";
+import { jsx as jsx27, jsxs as jsxs22 } from "react/jsx-runtime";
 function CanvasFrame({
   children,
   aspectRatio = 16 / 9,
@@ -2240,7 +2401,7 @@ function CanvasFrame({
   };
   return /* @__PURE__ */ jsxs22("div", { className: cn("mk-canvas-frame flex flex-col gap-2", className), children: [
     /* @__PURE__ */ jsxs22("div", { className: "flex items-center justify-between gap-2", children: [
-      /* @__PURE__ */ jsx26(
+      /* @__PURE__ */ jsx27(
         "span",
         {
           className: "font-mono text-[10px] font-medium uppercase tracking-[0.06em]",
@@ -2249,7 +2410,7 @@ function CanvasFrame({
         }
       ),
       showZoomControls && onZoomChange && /* @__PURE__ */ jsxs22("div", { className: "flex items-center gap-1", children: [
-        /* @__PURE__ */ jsx26(
+        /* @__PURE__ */ jsx27(
           "button",
           {
             type: "button",
@@ -2275,7 +2436,7 @@ function CanvasFrame({
             ]
           }
         ),
-        /* @__PURE__ */ jsx26(
+        /* @__PURE__ */ jsx27(
           "button",
           {
             type: "button",
@@ -2292,7 +2453,7 @@ function CanvasFrame({
         )
       ] })
     ] }),
-    /* @__PURE__ */ jsx26(
+    /* @__PURE__ */ jsx27(
       "div",
       {
         className: "relative overflow-hidden rounded-xl",
@@ -2300,7 +2461,7 @@ function CanvasFrame({
           border: "1px solid var(--mk-border)",
           ...bgStyle
         },
-        children: /* @__PURE__ */ jsx26(
+        children: /* @__PURE__ */ jsx27(
           "div",
           {
             className: "flex items-center justify-center w-full origin-center transition-transform",
@@ -2308,7 +2469,7 @@ function CanvasFrame({
               aspectRatio: ratioStyle,
               transform: `scale(${zoom})`
             },
-            children: children ?? /* @__PURE__ */ jsx26(
+            children: children ?? /* @__PURE__ */ jsx27(
               "span",
               {
                 className: "font-mono text-[10px] uppercase tracking-wider",
@@ -2324,8 +2485,8 @@ function CanvasFrame({
 }
 
 // src/components/export-button.tsx
-import * as React11 from "react";
-import { jsx as jsx27, jsxs as jsxs23 } from "react/jsx-runtime";
+import * as React12 from "react";
+import { jsx as jsx28, jsxs as jsxs23 } from "react/jsx-runtime";
 var FORMAT_LABELS = {
   png: "PNG",
   jpg: "JPG",
@@ -2338,8 +2499,8 @@ function ExportButton({
   className,
   disabled = false
 }) {
-  const [state, setState] = React11.useState("idle");
-  const [activeFormat, setActiveFormat] = React11.useState(null);
+  const [state, setState] = React12.useState("idle");
+  const [activeFormat, setActiveFormat] = React12.useState(null);
   const handleExport = async (format) => {
     if (disabled || state === "exporting") return;
     setState("exporting");
@@ -2360,10 +2521,10 @@ function ExportButton({
     }
   };
   return /* @__PURE__ */ jsxs23("div", { className: cn("mk-export-button flex flex-col gap-1.5", className), children: [
-    /* @__PURE__ */ jsx27("div", { className: "flex flex-wrap gap-1", children: formats.map((format) => {
+    /* @__PURE__ */ jsx28("div", { className: "flex flex-wrap gap-1", children: formats.map((format) => {
       const isActive = state === "exporting" && activeFormat === format;
       const isSuccess = state === "success" && activeFormat === format;
-      return /* @__PURE__ */ jsx27(
+      return /* @__PURE__ */ jsx28(
         "button",
         {
           type: "button",
@@ -2383,7 +2544,7 @@ function ExportButton({
         format
       );
     }) }),
-    state === "error" && /* @__PURE__ */ jsx27(
+    state === "error" && /* @__PURE__ */ jsx28(
       "span",
       {
         className: "font-mono text-[9px] uppercase tracking-wider",
@@ -2395,7 +2556,7 @@ function ExportButton({
 }
 
 // src/components/layer-list.tsx
-import { jsx as jsx28, jsxs as jsxs24 } from "react/jsx-runtime";
+import { jsx as jsx29, jsxs as jsxs24 } from "react/jsx-runtime";
 function LayerList({
   layers,
   activeId,
@@ -2410,7 +2571,7 @@ function LayerList({
     if (next < 0 || next >= layers.length) return;
     onReorder?.(index, next);
   };
-  return /* @__PURE__ */ jsx28("div", { className: cn("mk-layer-list flex flex-col gap-0.5", className), children: layers.map((layer, index) => {
+  return /* @__PURE__ */ jsx29("div", { className: cn("mk-layer-list flex flex-col gap-0.5", className), children: layers.map((layer, index) => {
     const active = activeId === layer.id;
     return /* @__PURE__ */ jsxs24(
       "div",
@@ -2428,7 +2589,7 @@ function LayerList({
           boxShadow: active ? "inset 0 0 0 1px var(--mk-text-faint)" : void 0
         },
         children: [
-          /* @__PURE__ */ jsx28(
+          /* @__PURE__ */ jsx29(
             "button",
             {
               type: "button",
@@ -2440,8 +2601,8 @@ function LayerList({
               children: layer.visible !== false ? "\u25C9" : "\u25CB"
             }
           ),
-          /* @__PURE__ */ jsx28("span", { className: "flex-1 truncate font-mono text-[10px] uppercase tracking-wide", style: mk.label, children: layer.name }),
-          onToggleLocked && /* @__PURE__ */ jsx28(
+          /* @__PURE__ */ jsx29("span", { className: "flex-1 truncate font-mono text-[10px] uppercase tracking-wide", style: mk.label, children: layer.name }),
+          onToggleLocked && /* @__PURE__ */ jsx29(
             "button",
             {
               type: "button",
@@ -2454,11 +2615,11 @@ function LayerList({
             }
           ),
           onReorder && /* @__PURE__ */ jsxs24("div", { className: "flex flex-col -my-1", children: [
-            /* @__PURE__ */ jsx28("button", { type: "button", className: "text-[8px] leading-none opacity-40 hover:opacity-70", onClick: (e) => {
+            /* @__PURE__ */ jsx29("button", { type: "button", className: "text-[8px] leading-none opacity-40 hover:opacity-70", onClick: (e) => {
               e.stopPropagation();
               move(index, -1);
             }, children: "\u25B2" }),
-            /* @__PURE__ */ jsx28("button", { type: "button", className: "text-[8px] leading-none opacity-40 hover:opacity-70", onClick: (e) => {
+            /* @__PURE__ */ jsx29("button", { type: "button", className: "text-[8px] leading-none opacity-40 hover:opacity-70", onClick: (e) => {
               e.stopPropagation();
               move(index, 1);
             }, children: "\u25BC" })
@@ -2471,8 +2632,8 @@ function LayerList({
 }
 
 // src/components/timeline.tsx
-import * as React12 from "react";
-import { jsx as jsx29, jsxs as jsxs25 } from "react/jsx-runtime";
+import * as React13 from "react";
+import { jsx as jsx30, jsxs as jsxs25 } from "react/jsx-runtime";
 function formatTime(seconds) {
   const mins = Math.floor(seconds / 60);
   const secs = seconds % 60;
@@ -2494,7 +2655,7 @@ function ToolbarBtn({
   accent,
   className
 }) {
-  return /* @__PURE__ */ jsx29(
+  return /* @__PURE__ */ jsx30(
     "button",
     {
       type: "button",
@@ -2519,7 +2680,7 @@ function IconBtn({
   active,
   children
 }) {
-  return /* @__PURE__ */ jsx29(
+  return /* @__PURE__ */ jsx30(
     "button",
     {
       type: "button",
@@ -2555,14 +2716,14 @@ function Timeline({
   showControls = true,
   className
 }) {
-  const trackRef = React12.useRef(null);
-  const draggingRef = React12.useRef(null);
-  const keyframesRef = React12.useRef(keyframes);
-  const onKeyframesChangeRef = React12.useRef(onKeyframesChange);
+  const trackRef = React13.useRef(null);
+  const draggingRef = React13.useRef(null);
+  const keyframesRef = React13.useRef(keyframes);
+  const onKeyframesChangeRef = React13.useRef(onKeyframesChange);
   keyframesRef.current = keyframes;
   onKeyframesChangeRef.current = onKeyframesChange;
   const activeShot = activeShotId ?? shots[0]?.id;
-  const seekFromClientX = React12.useCallback(
+  const seekFromClientX = React13.useCallback(
     (clientX) => {
       if (!trackRef.current || duration <= 0) return;
       const rect = trackRef.current.getBoundingClientRect();
@@ -2571,7 +2732,7 @@ function Timeline({
     },
     [duration, onCurrentTimeChange]
   );
-  React12.useEffect(() => {
+  React13.useEffect(() => {
     const onMove = (e) => {
       if (!draggingRef.current) return;
       if (draggingRef.current === "playhead") {
@@ -2617,10 +2778,10 @@ function Timeline({
             className: "flex items-center gap-2 px-3 py-2 border-b overflow-x-auto",
             style: { borderColor: "var(--mk-border)", background: "color-mix(in srgb, var(--mk-text) 3%, transparent)" },
             children: [
-              /* @__PURE__ */ jsx29(ToolbarBtn, { onClick: () => {
+              /* @__PURE__ */ jsx30(ToolbarBtn, { onClick: () => {
               }, children: "< Sequence" }),
               /* @__PURE__ */ jsxs25("div", { className: "flex items-center gap-1", children: [
-                shots.map((shot) => /* @__PURE__ */ jsx29(
+                shots.map((shot) => /* @__PURE__ */ jsx30(
                   ToolbarBtn,
                   {
                     active: shot.id === activeShot,
@@ -2629,9 +2790,9 @@ function Timeline({
                   },
                   shot.id
                 )),
-                onAddShot && /* @__PURE__ */ jsx29(ToolbarBtn, { onClick: onAddShot, children: "+ Add shot" })
+                onAddShot && /* @__PURE__ */ jsx30(ToolbarBtn, { onClick: onAddShot, children: "+ Add shot" })
               ] }),
-              /* @__PURE__ */ jsx29(
+              /* @__PURE__ */ jsx30(
                 "div",
                 {
                   className: "w-px h-5 shrink-0 mx-0.5",
@@ -2660,40 +2821,40 @@ function Timeline({
                     fontFamily: "var(--mk-font-mono)"
                   },
                   children: [
-                    /* @__PURE__ */ jsx29(ClockIcon, {}),
+                    /* @__PURE__ */ jsx30(ClockIcon, {}),
                     duration,
                     "s"
                   ]
                 }
               ),
               /* @__PURE__ */ jsxs25("div", { className: "flex items-center gap-0.5", children: [
-                /* @__PURE__ */ jsx29(IconBtn, { label: "Go to start", onClick: () => onCurrentTimeChange(0), children: /* @__PURE__ */ jsx29(SkipStartIcon, {}) }),
-                /* @__PURE__ */ jsx29(IconBtn, { label: playing ? "Pause" : "Play", active: playing, onClick: () => onPlayingChange?.(!playing), children: playing ? /* @__PURE__ */ jsx29(PauseIcon, {}) : /* @__PURE__ */ jsx29(PlayIcon, {}) }),
-                /* @__PURE__ */ jsx29(IconBtn, { label: "Loop", active: looping, onClick: () => onLoopingChange?.(!looping), children: /* @__PURE__ */ jsx29(LoopIcon, {}) })
+                /* @__PURE__ */ jsx30(IconBtn, { label: "Go to start", onClick: () => onCurrentTimeChange(0), children: /* @__PURE__ */ jsx30(SkipStartIcon, {}) }),
+                /* @__PURE__ */ jsx30(IconBtn, { label: playing ? "Pause" : "Play", active: playing, onClick: () => onPlayingChange?.(!playing), children: playing ? /* @__PURE__ */ jsx30(PauseIcon, {}) : /* @__PURE__ */ jsx30(PlayIcon, {}) }),
+                /* @__PURE__ */ jsx30(IconBtn, { label: "Loop", active: looping, onClick: () => onLoopingChange?.(!looping), children: /* @__PURE__ */ jsx30(LoopIcon, {}) })
               ] }),
-              /* @__PURE__ */ jsx29(
+              /* @__PURE__ */ jsx30(
                 "div",
                 {
                   className: "w-px h-5 shrink-0 mx-0.5",
                   style: { background: "var(--mk-border)" }
                 }
               ),
-              onPresets && /* @__PURE__ */ jsx29(ToolbarBtn, { onClick: onPresets, children: "Presets \u25BE" }),
-              onEasing && /* @__PURE__ */ jsx29(ToolbarBtn, { onClick: onEasing, children: /* @__PURE__ */ jsxs25("span", { className: "inline-flex items-center gap-1", children: [
-                /* @__PURE__ */ jsx29(EasingIcon, {}),
+              onPresets && /* @__PURE__ */ jsx30(ToolbarBtn, { onClick: onPresets, children: "Presets \u25BE" }),
+              onEasing && /* @__PURE__ */ jsx30(ToolbarBtn, { onClick: onEasing, children: /* @__PURE__ */ jsxs25("span", { className: "inline-flex items-center gap-1", children: [
+                /* @__PURE__ */ jsx30(EasingIcon, {}),
                 "Easing"
               ] }) }),
-              onAddKeyframe && /* @__PURE__ */ jsx29(ToolbarBtn, { accent: true, onClick: onAddKeyframe, children: "+ Add KF" }),
-              /* @__PURE__ */ jsx29("div", { className: "flex-1 min-w-2" }),
-              onClearKeyframes && /* @__PURE__ */ jsx29(ToolbarBtn, { onClick: onClearKeyframes, children: "Clear all KF" })
+              onAddKeyframe && /* @__PURE__ */ jsx30(ToolbarBtn, { accent: true, onClick: onAddKeyframe, children: "+ Add KF" }),
+              /* @__PURE__ */ jsx30("div", { className: "flex-1 min-w-2" }),
+              onClearKeyframes && /* @__PURE__ */ jsx30(ToolbarBtn, { onClick: onClearKeyframes, children: "Clear all KF" })
             ]
           }
         ),
         /* @__PURE__ */ jsxs25("div", { className: "px-4 pt-3 pb-4", children: [
           /* @__PURE__ */ jsxs25("div", { className: "relative h-5 mb-1", children: [
-            /* @__PURE__ */ jsx29("div", { className: "absolute inset-x-0 bottom-0 flex justify-between pointer-events-none", children: Array.from({ length: tickCount + 1 }, (_, i) => {
+            /* @__PURE__ */ jsx30("div", { className: "absolute inset-x-0 bottom-0 flex justify-between pointer-events-none", children: Array.from({ length: tickCount + 1 }, (_, i) => {
               const t = i / tickCount * duration;
-              return /* @__PURE__ */ jsx29(
+              return /* @__PURE__ */ jsx30(
                 "span",
                 {
                   className: "font-mono text-[9px] -translate-x-1/2 first:translate-x-0 last:translate-x-[-100%]",
@@ -2703,12 +2864,12 @@ function Timeline({
                 i
               );
             }) }),
-            /* @__PURE__ */ jsx29(
+            /* @__PURE__ */ jsx30(
               "div",
               {
                 className: "absolute top-0 bottom-0 w-0 pointer-events-none",
                 style: { left: `${playheadPct}%`, transform: "translateX(-50%)" },
-                children: /* @__PURE__ */ jsx29(
+                children: /* @__PURE__ */ jsx30(
                   "div",
                   {
                     className: "w-0 h-0 mx-auto",
@@ -2722,11 +2883,11 @@ function Timeline({
               }
             )
           ] }),
-          /* @__PURE__ */ jsx29("div", { className: "relative h-2 mb-2 flex items-end", children: Array.from({ length: tickCount * 4 + 1 }, (_, i) => /* @__PURE__ */ jsx29(
+          /* @__PURE__ */ jsx30("div", { className: "relative h-2 mb-2 flex items-end", children: Array.from({ length: tickCount * 4 + 1 }, (_, i) => /* @__PURE__ */ jsx30(
             "div",
             {
               className: "flex-1 flex justify-center",
-              children: /* @__PURE__ */ jsx29(
+              children: /* @__PURE__ */ jsx30(
                 "div",
                 {
                   className: "w-px",
@@ -2751,14 +2912,14 @@ function Timeline({
                 seekFromClientX(e.clientX);
               },
               children: [
-                /* @__PURE__ */ jsx29(
+                /* @__PURE__ */ jsx30(
                   "div",
                   {
                     className: "absolute top-1/2 left-3 right-3 h-0.5 -translate-y-1/2 rounded-full pointer-events-none",
                     style: { background: "var(--mk-timeline-accent, #e8722a)" }
                   }
                 ),
-                /* @__PURE__ */ jsx29(
+                /* @__PURE__ */ jsx30(
                   "div",
                   {
                     className: "absolute top-0 bottom-0 w-px pointer-events-none",
@@ -2771,7 +2932,7 @@ function Timeline({
                 ),
                 keyframes.map((kf) => {
                   const pct = timeToPct(kf.time, duration);
-                  return /* @__PURE__ */ jsx29(
+                  return /* @__PURE__ */ jsx30(
                     "button",
                     {
                       type: "button",
@@ -2801,63 +2962,55 @@ function Timeline({
   );
 }
 function PlayIcon() {
-  return /* @__PURE__ */ jsx29("svg", { width: "10", height: "10", viewBox: "0 0 10 10", fill: "currentColor", "aria-hidden": true, children: /* @__PURE__ */ jsx29("path", { d: "M2 1.5L8.5 5 2 8.5V1.5Z" }) });
+  return /* @__PURE__ */ jsx30("svg", { width: "10", height: "10", viewBox: "0 0 10 10", fill: "currentColor", "aria-hidden": true, children: /* @__PURE__ */ jsx30("path", { d: "M2 1.5L8.5 5 2 8.5V1.5Z" }) });
 }
 function PauseIcon() {
   return /* @__PURE__ */ jsxs25("svg", { width: "10", height: "10", viewBox: "0 0 10 10", fill: "currentColor", "aria-hidden": true, children: [
-    /* @__PURE__ */ jsx29("rect", { x: "2", y: "1.5", width: "2", height: "7", rx: "0.5" }),
-    /* @__PURE__ */ jsx29("rect", { x: "6", y: "1.5", width: "2", height: "7", rx: "0.5" })
+    /* @__PURE__ */ jsx30("rect", { x: "2", y: "1.5", width: "2", height: "7", rx: "0.5" }),
+    /* @__PURE__ */ jsx30("rect", { x: "6", y: "1.5", width: "2", height: "7", rx: "0.5" })
   ] });
 }
 function LoopIcon() {
   return /* @__PURE__ */ jsxs25("svg", { width: "12", height: "12", viewBox: "0 0 12 12", fill: "none", stroke: "currentColor", strokeWidth: "1.2", "aria-hidden": true, children: [
-    /* @__PURE__ */ jsx29("path", { d: "M3.5 4H2.5a3.5 3.5 0 0 0 0 7h1", strokeLinecap: "round" }),
-    /* @__PURE__ */ jsx29("path", { d: "M8.5 8H9.5a3.5 3.5 0 0 0 0-7h-1", strokeLinecap: "round" }),
-    /* @__PURE__ */ jsx29("path", { d: "M2 2.5L2.5 4 4 3.5", strokeLinecap: "round", strokeLinejoin: "round" }),
-    /* @__PURE__ */ jsx29("path", { d: "M10 9.5L9.5 8 8 8.5", strokeLinecap: "round", strokeLinejoin: "round" })
+    /* @__PURE__ */ jsx30("path", { d: "M3.5 4H2.5a3.5 3.5 0 0 0 0 7h1", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx30("path", { d: "M8.5 8H9.5a3.5 3.5 0 0 0 0-7h-1", strokeLinecap: "round" }),
+    /* @__PURE__ */ jsx30("path", { d: "M2 2.5L2.5 4 4 3.5", strokeLinecap: "round", strokeLinejoin: "round" }),
+    /* @__PURE__ */ jsx30("path", { d: "M10 9.5L9.5 8 8 8.5", strokeLinecap: "round", strokeLinejoin: "round" })
   ] });
 }
 function SkipStartIcon() {
   return /* @__PURE__ */ jsxs25("svg", { width: "10", height: "10", viewBox: "0 0 10 10", fill: "currentColor", "aria-hidden": true, children: [
-    /* @__PURE__ */ jsx29("rect", { x: "1.5", y: "1.5", width: "1.5", height: "7", rx: "0.3" }),
-    /* @__PURE__ */ jsx29("path", { d: "M4 1.5L8.5 5 4 8.5V1.5Z" })
+    /* @__PURE__ */ jsx30("rect", { x: "1.5", y: "1.5", width: "1.5", height: "7", rx: "0.3" }),
+    /* @__PURE__ */ jsx30("path", { d: "M4 1.5L8.5 5 4 8.5V1.5Z" })
   ] });
 }
 function ClockIcon() {
   return /* @__PURE__ */ jsxs25("svg", { width: "10", height: "10", viewBox: "0 0 10 10", fill: "none", stroke: "currentColor", strokeWidth: "1.1", "aria-hidden": true, children: [
-    /* @__PURE__ */ jsx29("circle", { cx: "5", cy: "5", r: "3.5" }),
-    /* @__PURE__ */ jsx29("path", { d: "M5 3.2V5l1.4 1.4", strokeLinecap: "round" })
+    /* @__PURE__ */ jsx30("circle", { cx: "5", cy: "5", r: "3.5" }),
+    /* @__PURE__ */ jsx30("path", { d: "M5 3.2V5l1.4 1.4", strokeLinecap: "round" })
   ] });
 }
 function EasingIcon() {
-  return /* @__PURE__ */ jsx29("svg", { width: "10", height: "10", viewBox: "0 0 10 10", fill: "none", stroke: "currentColor", strokeWidth: "1.2", "aria-hidden": true, children: /* @__PURE__ */ jsx29("path", { d: "M1.5 8.5C1.5 8.5 3 3 5 3s3.5 5.5 3.5 5.5", strokeLinecap: "round" }) });
+  return /* @__PURE__ */ jsx30("svg", { width: "10", height: "10", viewBox: "0 0 10 10", fill: "none", stroke: "currentColor", strokeWidth: "1.2", "aria-hidden": true, children: /* @__PURE__ */ jsx30("path", { d: "M1.5 8.5C1.5 8.5 3 3 5 3s3.5 5.5 3.5 5.5", strokeLinecap: "round" }) });
 }
 
 // src/components/dialog.tsx
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { jsx as jsx30, jsxs as jsxs26 } from "react/jsx-runtime";
+import { jsx as jsx31, jsxs as jsxs26 } from "react/jsx-runtime";
 function Dialog({ open, onOpenChange, title, description, children, footer }) {
-  return /* @__PURE__ */ jsx30(DialogPrimitive.Root, { open, onOpenChange, children: /* @__PURE__ */ jsxs26(DialogPrimitive.Portal, { children: [
-    /* @__PURE__ */ jsx30(DialogPrimitive.Overlay, { className: "fixed inset-0 z-50 bg-black/60" }),
+  return /* @__PURE__ */ jsx31(DialogPrimitive.Root, { open, onOpenChange, children: /* @__PURE__ */ jsxs26(DialogPrimitive.Portal, { children: [
+    /* @__PURE__ */ jsx31(DialogPrimitive.Overlay, { className: "fixed inset-0 z-50 bg-black/60" }),
     /* @__PURE__ */ jsxs26(
       DialogPrimitive.Content,
       {
-        className: "fixed left-1/2 top-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-xl border p-4 shadow-2xl",
+        className: "fixed left-1/2 top-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-xl border p-4 mk-ring-float",
         style: { background: "var(--mk-surface)", borderColor: "var(--mk-border)" },
         children: [
-          /* @__PURE__ */ jsx30(DialogPrimitive.Title, { className: "font-mono text-sm font-semibold m-0", style: mk.mono, children: title }),
-          description && /* @__PURE__ */ jsx30(DialogPrimitive.Description, { className: "text-xs mt-1.5 mb-3", style: { color: "var(--mk-text-muted)" }, children: description }),
-          children && /* @__PURE__ */ jsx30("div", { className: "my-3", children }),
-          footer && /* @__PURE__ */ jsx30("div", { className: "flex justify-end gap-2 mt-4", children: footer }),
-          /* @__PURE__ */ jsx30(
-            DialogPrimitive.Close,
-            {
-              className: "absolute top-3 right-3 text-[10px] opacity-50 hover:opacity-80 cursor-pointer",
-              style: mk.mono,
-              "aria-label": "Close",
-              children: "\u2715"
-            }
-          )
+          /* @__PURE__ */ jsx31(DialogPrimitive.Title, { className: "font-mono text-sm font-semibold m-0", style: mk.mono, children: title }),
+          description && /* @__PURE__ */ jsx31(DialogPrimitive.Description, { className: "text-xs mt-1.5 mb-3", style: { color: "var(--mk-text-muted)" }, children: description }),
+          children && /* @__PURE__ */ jsx31("div", { className: "my-3", children }),
+          footer && /* @__PURE__ */ jsx31("div", { className: "flex justify-end gap-2 mt-4", children: footer }),
+          /* @__PURE__ */ jsx31(DialogPrimitive.Close, { asChild: true, children: /* @__PURE__ */ jsx31(ChromeIconButton, { "aria-label": "Close dialog", className: "absolute top-2 right-2", children: "\u2715" }) })
         ]
       }
     )
@@ -2866,17 +3019,17 @@ function Dialog({ open, onOpenChange, title, description, children, footer }) {
 
 // src/components/popover.tsx
 import * as PopoverPrimitive from "@radix-ui/react-popover";
-import { jsx as jsx31, jsxs as jsxs27 } from "react/jsx-runtime";
+import { jsx as jsx32, jsxs as jsxs27 } from "react/jsx-runtime";
 function Popover2({ trigger, children, side = "bottom", align = "start", width = 200 }) {
   return /* @__PURE__ */ jsxs27(PopoverPrimitive.Root, { children: [
-    /* @__PURE__ */ jsx31(PopoverPrimitive.Trigger, { asChild: true, children: trigger }),
-    /* @__PURE__ */ jsx31(PopoverPrimitive.Portal, { children: /* @__PURE__ */ jsx31(
+    /* @__PURE__ */ jsx32(PopoverPrimitive.Trigger, { asChild: true, children: trigger }),
+    /* @__PURE__ */ jsx32(PopoverPrimitive.Portal, { children: /* @__PURE__ */ jsx32(
       PopoverPrimitive.Content,
       {
         side,
         align,
         sideOffset: 6,
-        className: "z-50 rounded-xl border p-2 shadow-xl",
+        className: "z-50 rounded-xl border p-2 mk-ring-elevated",
         style: {
           width,
           background: "var(--mk-surface-raised)",
@@ -2888,11 +3041,11 @@ function Popover2({ trigger, children, side = "bottom", align = "start", width =
   ] });
 }
 function PopoverLabel({ children }) {
-  return /* @__PURE__ */ jsx31("span", { className: "block font-mono text-[9px] uppercase tracking-wider mb-2 px-1", style: mk.faint, children });
+  return /* @__PURE__ */ jsx32("span", { className: "block font-mono text-[9px] uppercase tracking-wider mb-2 px-1", style: mk.faint, children });
 }
 
 // src/components/empty-state.tsx
-import { jsx as jsx32, jsxs as jsxs28 } from "react/jsx-runtime";
+import { jsx as jsx33, jsxs as jsxs28 } from "react/jsx-runtime";
 function EmptyState({ title, description, action, icon, className }) {
   return /* @__PURE__ */ jsxs28(
     "div",
@@ -2903,10 +3056,10 @@ function EmptyState({ title, description, action, icon, className }) {
       ),
       style: { borderColor: "var(--mk-border)", ...mk.surface(3) },
       children: [
-        icon && /* @__PURE__ */ jsx32("div", { className: "mb-3 opacity-40", children: icon }),
-        /* @__PURE__ */ jsx32("span", { className: "font-mono text-[10px] font-medium uppercase tracking-[0.08em]", style: mk.label, children: title }),
-        description && /* @__PURE__ */ jsx32("p", { className: "text-[10px] mt-1.5 max-w-xs", style: { color: "var(--mk-text-faint)" }, children: description }),
-        action && /* @__PURE__ */ jsx32("div", { className: "mt-4", children: action })
+        icon && /* @__PURE__ */ jsx33("div", { className: "mb-3 opacity-40", children: icon }),
+        /* @__PURE__ */ jsx33("span", { className: "font-mono text-[10px] font-medium uppercase tracking-[0.08em]", style: mk.label, children: title }),
+        description && /* @__PURE__ */ jsx33("p", { className: "text-[10px] mt-1.5 max-w-xs", style: { color: "var(--mk-text-faint)" }, children: description }),
+        action && /* @__PURE__ */ jsx33("div", { className: "mt-4", children: action })
       ]
     }
   );
@@ -2914,7 +3067,7 @@ function EmptyState({ title, description, action, icon, className }) {
 
 // src/components/progress-bar.tsx
 import * as Progress from "@radix-ui/react-progress";
-import { jsx as jsx33, jsxs as jsxs29 } from "react/jsx-runtime";
+import { jsx as jsx34, jsxs as jsxs29 } from "react/jsx-runtime";
 function ProgressBar({
   value,
   label,
@@ -2925,19 +3078,19 @@ function ProgressBar({
   const clamped = Math.min(100, Math.max(0, value));
   return /* @__PURE__ */ jsxs29("div", { className: cn("mk-progress-bar flex flex-col gap-1.5", className), children: [
     (label || showValue) && /* @__PURE__ */ jsxs29("div", { className: "flex items-center justify-between", children: [
-      label && /* @__PURE__ */ jsx33("span", { className: "font-mono text-[10px] uppercase tracking-[0.06em]", style: mk.label, children: label }),
+      label && /* @__PURE__ */ jsx34("span", { className: "font-mono text-[10px] uppercase tracking-[0.06em]", style: mk.label, children: label }),
       showValue && variant === "default" && /* @__PURE__ */ jsxs29("span", { className: "font-mono text-[9px]", style: mk.faint, children: [
         Math.round(clamped),
         "%"
       ] })
     ] }),
-    /* @__PURE__ */ jsx33(
+    /* @__PURE__ */ jsx34(
       Progress.Root,
       {
         value: variant === "indeterminate" ? void 0 : clamped,
         className: "h-1.5 w-full overflow-hidden rounded-full",
         style: mk.surface(8),
-        children: /* @__PURE__ */ jsx33(
+        children: /* @__PURE__ */ jsx34(
           Progress.Indicator,
           {
             className: cn(
@@ -2956,7 +3109,7 @@ function ProgressBar({
 }
 
 // src/components/status-bar.tsx
-import { jsx as jsx34 } from "react/jsx-runtime";
+import { jsx as jsx35 } from "react/jsx-runtime";
 var variantColor = {
   default: "var(--mk-text-faint)",
   success: "#00cc88",
@@ -2964,7 +3117,7 @@ var variantColor = {
   error: "#ff3366"
 };
 function StatusBar({ items, className }) {
-  return /* @__PURE__ */ jsx34(
+  return /* @__PURE__ */ jsx35(
     "div",
     {
       className: cn(
@@ -2977,16 +3130,16 @@ function StatusBar({ items, className }) {
         background: "var(--mk-surface)",
         color: "var(--mk-text-faint)"
       },
-      children: /* @__PURE__ */ jsx34("div", { className: "flex items-center gap-3 min-w-0", children: items.map((item) => /* @__PURE__ */ jsx34("span", { style: { color: variantColor[item.variant ?? "default"] }, children: item.label }, item.id)) })
+      children: /* @__PURE__ */ jsx35("div", { className: "flex items-center gap-3 min-w-0", children: items.map((item) => /* @__PURE__ */ jsx35("span", { style: { color: variantColor[item.variant ?? "default"] }, children: item.label }, item.id)) })
     }
   );
 }
 
 // src/components/toast.tsx
-import * as React13 from "react";
-import { jsx as jsx35, jsxs as jsxs30 } from "react/jsx-runtime";
+import * as React14 from "react";
+import { jsx as jsx36, jsxs as jsxs30 } from "react/jsx-runtime";
 function Toast({ message, variant = "default", visible, onDismiss, className }) {
-  React13.useEffect(() => {
+  React14.useEffect(() => {
     if (!visible || !onDismiss) return;
     const t = setTimeout(onDismiss, 3e3);
     return () => clearTimeout(t);
@@ -2997,7 +3150,7 @@ function Toast({ message, variant = "default", visible, onDismiss, className }) 
     "div",
     {
       className: cn(
-        "mk-toast fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-3 h-9 rounded-lg border shadow-lg",
+        "mk-toast fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-3 h-9 rounded-lg border mk-ring-elevated",
         className
       ),
       style: {
@@ -3009,8 +3162,8 @@ function Toast({ message, variant = "default", visible, onDismiss, className }) 
       },
       role: "status",
       children: [
-        /* @__PURE__ */ jsx35("span", { className: "uppercase tracking-wider", children: message }),
-        onDismiss && /* @__PURE__ */ jsx35("button", { type: "button", onClick: onDismiss, className: "opacity-50 hover:opacity-80 cursor-pointer", children: "\u2715" })
+        /* @__PURE__ */ jsx36("span", { className: "uppercase tracking-wider", children: message }),
+        onDismiss && /* @__PURE__ */ jsx36("button", { type: "button", onClick: onDismiss, className: "opacity-50 hover:opacity-80 cursor-pointer", children: "\u2715" })
       ]
     }
   );
