@@ -183,9 +183,9 @@ export function DualSlider({
           className="relative flex-1 rounded-lg cursor-pointer touch-none select-none"
           style={{
             height: "var(--mk-control-height)",
-            // 14% track for visible contrast on dark.
+            // 25% track for visible contrast on dark.
             background:
-              "color-mix(in srgb, var(--mk-text) 14%, transparent)",
+              "color-mix(in srgb, var(--mk-text) 25%, transparent)",
           }}
           onPointerDown={(e) => beginDrag(e)}
           onPointerMove={onPointerMove}
@@ -197,9 +197,9 @@ export function DualSlider({
             style={{
               left: `${startPct}%`,
               width: `${endPct - startPct}%`,
-              // 55% fill so the selected range is unambiguous.
+              // 80% fill so the selected range is unambiguous.
               background:
-                "color-mix(in srgb, var(--mk-text) 55%, transparent)",
+                "color-mix(in srgb, var(--mk-text) 80%, transparent)",
             }}
           />
           <div

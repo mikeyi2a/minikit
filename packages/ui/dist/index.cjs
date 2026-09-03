@@ -351,9 +351,8 @@ function Slider({
             className: "relative flex-1 overflow-hidden rounded-lg cursor-pointer touch-none select-none focus-visible:outline focus-visible:outline-offset-[-1px]",
             style: {
               height: "var(--mk-control-height)",
-              // 14% so the track is clearly readable on dark surfaces
-              // (5% was invisible against the page background).
-              background: "color-mix(in srgb, var(--mk-text) 14%, transparent)",
+              // 25% so the track is clearly readable on dark surfaces.
+              background: "color-mix(in srgb, var(--mk-text) 25%, transparent)",
               outlineColor: "var(--mk-text-muted)"
             },
             children: [
@@ -364,7 +363,7 @@ function Slider({
                   style: {
                     left: `${left}%`,
                     transform: "translate(-50%, -50%)",
-                    background: "color-mix(in srgb, var(--mk-text) 22%, transparent)"
+                    background: "color-mix(in srgb, var(--mk-text) 35%, transparent)"
                   }
                 },
                 left
@@ -375,8 +374,8 @@ function Slider({
                   className: "absolute inset-y-0 left-0 pointer-events-none",
                   style: {
                     width: `${displayPct}%`,
-                    // 55% so the fill is unambiguously distinct from the 14% track.
-                    background: "color-mix(in srgb, var(--mk-text) 55%, transparent)",
+                    // 80% so the fill is unambiguously distinct from the 25% track.
+                    background: "color-mix(in srgb, var(--mk-text) 80%, transparent)",
                     transition: isDragging ? "none" : void 0
                   }
                 }
@@ -388,7 +387,7 @@ function Slider({
                     // 6px wide, 100% opacity at rest. The thumb is the
                     // primary affordance — never fade it out.
                     "absolute top-1/2 w-1.5 rounded-full pointer-events-none",
-                    isDragging && "shadow-[0_0_0_4px_color-mix(in_srgb,var(--mk-text)_15%,transparent)]"
+                    isDragging && "shadow-[0_0_0_4px_color-mix(in_srgb,var(--mk-text)_30%,transparent)]"
                   ),
                   style: {
                     left: `${displayPct}%`,
@@ -611,8 +610,8 @@ function DualSlider({
               className: "relative flex-1 rounded-lg cursor-pointer touch-none select-none",
               style: {
                 height: "var(--mk-control-height)",
-                // 14% track for visible contrast on dark.
-                background: "color-mix(in srgb, var(--mk-text) 14%, transparent)"
+                // 25% track for visible contrast on dark.
+                background: "color-mix(in srgb, var(--mk-text) 25%, transparent)"
               },
               onPointerDown: (e) => beginDrag(e),
               onPointerMove,
@@ -626,8 +625,8 @@ function DualSlider({
                     style: {
                       left: `${startPct}%`,
                       width: `${endPct - startPct}%`,
-                      // 55% fill so the selected range is unambiguous.
-                      background: "color-mix(in srgb, var(--mk-text) 55%, transparent)"
+                      // 80% fill so the selected range is unambiguous.
+                      background: "color-mix(in srgb, var(--mk-text) 80%, transparent)"
                     }
                   }
                 ),
