@@ -43,16 +43,11 @@ Usage guidelines
 
 Prerequisites: React 19+, Tailwind CSS 4+.
 
-npm package — 2 steps
+npm package
 
-Step 1: Install
 npm install @mikeyi2a/minikit-ui
 
-Step 2: Import in layout, before globals.css:
-import "@mikeyi2a/minikit-ui/styles.css";
-import "./globals.css";
-
-Set data-theme="tool-dark" on <html>. Done — no manual copying.
+That's it — styles auto-inject, dark aesthetic applies by default. No manual CSS import, no data-theme attribute needed.
 
 CLI — copy-paste into your project
 npx @mikeyi2a/minikit-cli init
@@ -67,35 +62,104 @@ Manual — if not using npm or CLI
 6. Install peer deps if needed (Radix packages listed in source imports)
 
 Dependencies: React 19, Tailwind 4, clsx, tailwind-merge. Optional: Radix UI primitives.`,
-    markdown: '# Installation\n\n## Prerequisites\n\n**React 19+**, **Tailwind CSS 4+**. The npm package relies on Tailwind to generate utility classes from the package source — without it, components fall back to inline styles only (no sizing, no layout).\n\n---\n\n## npm package — 2 steps\n\n### Step 1 — install\n\n```bash\nnpm install @mikeyi2a/minikit-ui\n```\n\n### Step 2 — import the stylesheet
-
-```tsx
-// app/layout.tsx — import before globals.css
-import "@mikeyi2a/minikit-ui/styles.css";
-import "./globals.css";
-
-export default function RootLayout({ children }) {
-  return (
-    <html lang="en" data-theme="tool-dark">
-      <body>{children}</body>
-    </html>
-  );
-}
-```
-
-`styles.css` bundles everything: the Tailwind `@source` registration (so utility classes generate from the package), all CSS custom properties (`--mk-*` tokens), and the inner glow box-shadows. No separate `tailwind.css` import needed.
-
-**That’s it.** No manual copying required.
+    markdown: '# Installation\n\n## Prerequisites\n\n**React 19+**, **Tailwind CSS 4+**. The npm package relies on Tailwind to generate utility classes from the package source — without it, components fall back to inline styles only (no sizing, no layout).\n\n---\n\n## npm package\n\n```bash\nnpm install @mikeyi2a/minikit-ui\n```\n\nStyles auto-inject. The dark aesthetic applies by default — no CSS import, no globals.css modification, no data-theme attribute needed. Override themes with `[data-theme]` selectors.
 
 ---
 
 ## CLI — copy-paste into your project\n\n```bash\nnpx @mikeyi2a/minikit-cli init\nnpx @mikeyi2a/minikit-cli add slider\n```\n\nFetches from the hosted registry and resolves transitive dependencies (e.g. `toolbar` also installs `tooltip`).\n\n---\n\n## Manual — if not using npm or CLI\n\n1. Add Tailwind CSS 4+ to your project\n2. Copy theme tokens from `src/app/globals.css` in the repo, or import `@mikeyi2a/minikit-ui/styles.css`\n3. Copy `src/lib/utils.ts` from the repo\n4. Copy the component file from any component page (click **Show code**)\n5. Set `data-theme="tool-dark"` on `<html>`\n6. Install peer deps if needed (Radix packages listed in source imports)\n\n## Dependencies\n\n**Core:** React 19, Tailwind 4, clsx, tailwind-merge.\n\n**Optional:** Radix UI primitives for accessible Dialog, Select, Tabs, Popover, Checkbox, and other overlays.',
   },
 
-  theming: {
-    plainText: `Theming
+  les. Override tokens to rebrand — no component edits required.
 
-All components use CSS variables. Override tokens to rebrand — no component edits required.
+Token reference
+:root {
+  --mk-bg: #ffffff;
+  --mk-surface: #f5f5f5;
+  --mk-surface-raised: #ebebeb;
+  --mk-border: #e0e0e0;
+  --mk-text: #111111;
+  --mk-text-muted: #666666;
+  --mk-text-faint: #999999;
+  --mk-accent: #0066ff;
+  --mk-radius: 8px;
+  --mk-font-mono: ui-monospace, monospace;
+  --mk-control-height: 32px;
+}
+
+Presets
+- data-theme="tool-dark" — default Minikit aesthetic (camera-controls style)
+- data-theme="light" — light neutral
+- data-theme="dark" — dark neutral
+
+Use the theme switcher in the docs sidebar to preview all three.
+
+Brand override
+[data-theme="my-brand"] {
+  --mk-accent: #ff3366;
+  --mk-surface: #1a1a2e;
+}`,
+    markdown: '# Theming\n\nAll components use CSS variables. Override tokens to rebrand — no component edits required.\n\n## Token reference\n\n```css\n:root {\n  --mk-bg: #ffffff;\n  --mk-surface: #f5f5f5;\n  --mk-surface-raised: #ebebeb;\n  --mk-border: #e0e0e0;\n  --mk-text: #111111;\n  --mk-text-muted: #666666;\n  --mk-text-faint: #999999;\n  --mk-accent: #0066ff;\n  --mk-radius: 8px;\n  --mk-font-mono: ui-monospace, monospace;\n  --mk-control-height: 32px;\n}\n```\n\n## Presets\n\n- `data-theme="tool-dark"` — default Minikit aesthetic (camera-controls style)\n- `data-theme="light"` — light neutral\n- `data-theme="dark"` — dark neutral\n\nUse the theme switcher in the docs sidebar to preview all three.\n\n## Brand override\n\n```css\n[data-theme="my-brand"] {\n  --mk-accent: #ff3366;\n  --mk-surface: #1a1a2e;\n}\n```',
+  },
+
+  "composing-a-tool": {
+    plainText: `Composing a tool
+
+A minimal image tool = file input + preview + adjustments + export. Here's the Minikit composition:
+
+Layout
+┌─────────────┬──────────────────┐
+│  Sidebar    │   CanvasFrame    │
+│  Dropzone   │   (preview)      │
+│  Sliders    │                  │
+│  ExportBtn  │                  │
+└─────────────┴──────────────────┘
+│           StatusBar            │
+└────────────────────────────────┘
+
+Components used
+- Sidebar — docked control column
+- Dropzone — load image
+- Slider — brightness, contrast
+- CanvasFrame — output preview
+- ExportButton — PNG / copy
+
+Live example: /image-tool
+
+Floating variant
+For overlay controls, swap Sidebar for Panel mode="floating". See the Floating Tool example at /floating-tool.`,
+    markdown: '# Composing a tool\n\nA minimal image tool = file input + preview + adjustments + export. Here\'s the Minikit composition:\n\n## Layout\n\n```\n┌─────────────┬──────────────────┐\n│  Sidebar    │   CanvasFrame    │\n│  Dropzone   │   (preview)      │\n│  Sliders    │                  │\n│  ExportBtn  │                  │\n└─────────────┴──────────────────┘\n│           StatusBar            │\n└────────────────────────────────┘\n```\n\n## Components used\n\n- [Sidebar](/sidebar) — docked control column\n- [Dropzone](/dropzone) — load image\n- [Slider](/slider) — brightness, contrast\n- [CanvasFrame](/canvas-frame) — output preview\n- [ExportButton](/export-button) — PNG / copy\n\n## Live example\n\n[Open the Image Tool demo →](/image-tool)\n\n## Floating variant\n\nFor overlay controls, swap Sidebar for [Panel mode="floating"](/panel). See the [Floating Tool](/floating-tool) example.',
+  },
+
+  "llms-txt": {
+    plainText: `llms.txt
+
+llms.txt is a machine-readable guide for AI coding agents. It describes every component, when to use it, and how to compose a mini tool.
+
+Location
+- Repo root: llms.txt
+- Web: /llms.txt
+
+Usage with Cursor / Claude
+Point your agent at the file or paste its contents into context when building a tool. It includes composition recipes like:
+
+Image tool → Sidebar + Dropzone + Slider + CanvasFrame + ExportButton`,
+    markdown: '# llms.txt\n\n`llms.txt` is a machine-readable guide for AI coding agents. It describes every component, when to use it, and how to compose a mini tool.\n\n## Location\n\n- Repo root: `llms.txt`\n- Web: [/llms.txt](/llms.txt)\n\n## Usage with Cursor / Claude\n\nPoint your agent at the file or paste its contents into context when building a tool. It includes composition recipes like:\n\n```\nImage tool → Sidebar + Dropzone + Slider + CanvasFrame + ExportButton\n```',
+  },
+};
+
+export function getOverviewCopyContent(slug: DocSlug): OverviewCopyContent {
+  const meta = DOC_META[slug];
+  const content = COPY[slug];
+
+  return {
+    plainText: `${meta.title}\n\n${meta.description}\n\n${content.plainText.replace(/^[^\n]+\n\n/, "")}`,
+    markdown: `# ${meta.title}\n\n${meta.description}\n\n${content.markdown.replace(/^# .+\n\n/, "")}`,
+  };
+}
+ — copy-paste into your project\n\n```bash\nnpx @mikeyi2a/minikit-cli init\nnpx @mikeyi2a/minikit-cli add slider\n```\n\nFetches from the hosted registry and resolves transitive dependencies (e.g. `toolbar` also installs `tooltip`).\n\n---\n\n## Manual — if not using npm or CLI\n\n1. Add Tailwind CSS 4+ to your project\n2. Copy theme tokens from `src/app/globals.css` in the repo, or import `@mikeyi2a/minikit-ui/styles.css`\n3. Copy `src/lib/utils.ts` from the repo\n4. Copy the component file from any component page (click **Show code**)\n5. Set `data-theme="tool-dark"` on `<html>`\n6. Install peer deps if needed (Radix packages listed in source imports)\n\n## Dependencies\n\n**Core:** React 19, Tailwind 4, clsx, tailwind-merge.\n\n**Optional:** Radix UI primitives for accessible Dialog, Select, Tabs, Popover, Checkbox, and other overlays.',
+  },
+
+  les. Override tokens to rebrand — no component edits required.
 
 Token reference
 :root {

@@ -1,3 +1,10 @@
+// Auto-inject styles on first import — zero config needed
+// Bundlers (Vite, Next.js, webpack) extract and bundle this automatically.
+// The init fallback covers edge cases where CSS imports aren't processed.
+import "./styles/init";
+// Bundlers extract this; if stripped, init.ts injects a <link> fallback
+import "../styles/minikit.css";
+
 export { cn, clamp, stepValue, formatValue } from "./lib/utils";
 export { mk } from "./lib/mk-styles";
 export { SegmentedControl } from "./components/segmented-control";

@@ -2,6 +2,17 @@ import { ClassValue } from 'clsx';
 import * as React from 'react';
 import { CSSProperties } from 'react';
 
+/**
+ * Link-tag fallback: injects the stylesheet if the CSS import wasn't
+ * processed by the bundler (rare, but covers plain HTML + ESM scenarios).
+ *
+ * Guarded by a global flag so it only fires once regardless of how many
+ * components trigger this import.
+ */
+declare global {
+    var __MINIKIT_INJECTED__: boolean | undefined;
+}
+
 declare function cn(...inputs: ClassValue[]): string;
 declare function clamp(value: number, min: number, max: number): number;
 declare function stepValue(value: number, step: number): number;
