@@ -29,6 +29,8 @@ export function SegmentedControl<T extends string = string>({
       className={cn("mk-segmented-control flex gap-1 p-1 rounded-xl", className)}
       style={{
         background: "color-mix(in srgb, var(--mk-text) 5%, transparent)",
+        boxShadow:
+          "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 8%, transparent), inset 0 0 8px 0 color-mix(in srgb, var(--mk-text) 4%, transparent)",
       }}
     >
       {items.map((item) => {
@@ -50,8 +52,11 @@ export function SegmentedControl<T extends string = string>({
             )}
             style={{
               fontFamily: "var(--mk-font-mono)",
-              background: isActive ? "color-mix(in srgb, var(--mk-surface) 72%, black)" : "transparent",
-              color: isActive ? "var(--mk-text)" : "var(--mk-text-faint)",
+              background: isActive ? "var(--mk-text)" : "transparent",
+              color: isActive ? "var(--mk-bg)" : "var(--mk-text-faint)",
+              boxShadow: isActive
+                ? "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 30%, transparent), inset 0 0 6px 0 color-mix(in srgb, var(--mk-text) 12%, transparent)"
+                : undefined,
             }}
           >
             {item.label}
