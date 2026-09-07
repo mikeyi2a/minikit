@@ -19,7 +19,7 @@ const BASE: PropDoc[] = [
 
 const DOCS: Partial<Record<ComponentId, ComponentDoc>> = {
   slider: {
-    whenToUse: "Primary control for numeric parameters — opacity, blur, exposure, dimensions. Supports label, hint chip, ticks, and inline numeric readout.",
+    whenToUse: "Primary control for numeric parameters — opacity, blur, exposure, dimensions. Default is a smooth slider; opt into discrete ticks for values that have natural stops (opacity 0–100 in steps of 10, preset sizes, exposure thirds).",
     props: [
       { name: "value", type: "number", description: "Current value (controlled)." },
       { name: "onValueChange", type: "(value: number) => void", description: "Called when value changes." },
@@ -29,8 +29,8 @@ const DOCS: Partial<Record<ComponentId, ComponentDoc>> = {
       { name: "label", type: "string", description: "Label shown inside the track." },
       { name: "hint", type: "string", description: "Hint chip next to label (e.g. Drag)." },
       { name: "showValue", type: "boolean", default: "true", description: "Show numeric input." },
-      { name: "tickCount", type: "number", default: "9", description: "Number of tick marks." },
-      { name: "snapToTicks", type: "boolean", default: "true when tickCount > 0", description: "Soft magnetic snap to tick positions while dragging." },
+      { name: "tickCount", type: "number", default: "0", description: "Number of tick marks. Default 0 (smooth slider). Set e.g. 5, 9, 11 for discrete stops. Use when the value has natural stops; skip for free-form controls (zoom, rotation)." },
+      { name: "snapToTicks", type: "boolean", default: "false", description: "Magnetic snap to tick positions on drag-end. Only applies when tickCount > 0." },
       { name: "disabled", type: "boolean", default: "false", description: "Disable interaction." },
       ...BASE,
     ],

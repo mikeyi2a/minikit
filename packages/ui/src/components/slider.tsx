@@ -18,7 +18,22 @@ export interface SliderProps {
   max?: number;
   step?: number;
   showValue?: boolean;
+  /**
+   * Number of tick marks rendered on the track, AND the number of snap stops
+   * when `snapToTicks` is on. Default `0` (no ticks, smooth slider). Set to a
+   * positive integer (e.g. 5, 9, 11) to add ticks. Use ticks when the value
+   * space has natural discrete stops — opacity (0–100 in steps of 10), preset
+   * widths, exposure thirds — anything users would expect to land on a notch.
+   * Don't use ticks for free-form controls (zoom 0.5–3x, rotation 0–360,
+   * continuous adjustments where every value is "valid").
+   */
   tickCount?: number;
+  /**
+   * When true, the thumb snaps to the nearest tick on drag-end. Only takes
+   * effect when `tickCount > 0`. Default `false` — even with ticks visible,
+   * dragging produces a smooth value. Set to `true` to combine visible ticks
+   * with snap-to-tick behavior.
+   */
   snapToTicks?: boolean;
   className?: string;
   disabled?: boolean;
@@ -33,8 +48,8 @@ export function Slider({
   max = 100,
   step = 1,
   showValue = true,
-  tickCount = 9,
-  snapToTicks = tickCount > 0,
+  tickCount = 0,
+  snapToTicks = false,
   className,
   disabled = false,
 }: {

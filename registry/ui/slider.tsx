@@ -28,8 +28,8 @@ export function Slider({
   max = 100,
   step = 1,
   showValue = true,
-  tickCount = 9,
-  snapToTicks = tickCount > 0,
+  tickCount = 0,
+  snapToTicks = false,
   className,
   disabled = false,
 }: SliderProps) {
