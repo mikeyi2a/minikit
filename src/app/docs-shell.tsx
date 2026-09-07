@@ -39,10 +39,7 @@ export default function DocsShellLayout({ children }: { children: React.ReactNod
   const preview = COMPONENT_META.filter((c) => c.category === "preview");
 
   React.useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-    return () => {
-      delete document.documentElement.dataset.theme;
-    };
+    document.body.dataset.theme = theme;
   }, [theme]);
 
   // Scroll main content only — sidebar keeps its position.
