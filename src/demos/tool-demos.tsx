@@ -11,6 +11,7 @@ import {
   ExportButton,
   Slider,
   Sidebar,
+  SidebarSection,
   SegmentedControl,
   Timeline,
   type ExportFormat,
@@ -201,33 +202,41 @@ export function ImageToolDemo() {
       style={{ border: "1px solid var(--mk-border)", height: 420 }}
     >
       <Sidebar title="Image Tool" width={194}>
-        <Dropzone
-          preview={preview}
-          onFileAccept={(file) => {
-            if (preview) URL.revokeObjectURL(preview);
-            setPreview(URL.createObjectURL(file));
-          }}
-        />
-        <Slider
-          label="Bright"
-          value={brightness}
-          onValueChange={setBrightness}
-          min={0}
-          max={200}
-        />
-        <Slider
-          label="Contrast"
-          value={contrast}
-          onValueChange={setContrast}
-          min={0}
-          max={200}
-        />
-        <ExportButton
-          formats={["png", "clipboard"]}
-          onExport={async () => {
-            await new Promise((r) => setTimeout(r, 600));
-          }}
-        />
+        <SidebarSection>
+          <Dropzone
+            preview={preview}
+            onFileAccept={(file) => {
+              if (preview) URL.revokeObjectURL(preview);
+              setPreview(URL.createObjectURL(file));
+            }}
+          />
+        </SidebarSection>
+
+        <SidebarSection label="Adjust">
+          <Slider
+            label="Bright"
+            value={brightness}
+            onValueChange={setBrightness}
+            min={0}
+            max={200}
+          />
+          <Slider
+            label="Contrast"
+            value={contrast}
+            onValueChange={setContrast}
+            min={0}
+            max={200}
+          />
+        </SidebarSection>
+
+        <SidebarSection label="Export">
+          <ExportButton
+            formats={["png", "clipboard"]}
+            onExport={async () => {
+              await new Promise((r) => setTimeout(r, 600));
+            }}
+          />
+        </SidebarSection>
       </Sidebar>
 
       <div className="flex-1 p-4 min-w-0" style={{ background: "var(--mk-bg)" }}>

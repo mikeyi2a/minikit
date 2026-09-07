@@ -14,6 +14,8 @@ export { NumberStepper } from "./components/number-stepper";
 export { ColorPicker } from "./components/color-picker";
 export { Badge } from "./components/badge";
 export { Sidebar } from "./components/sidebar";
+export { SidebarSection } from "./components/sidebar-section";
+export type { SidebarSectionProps } from "./components/sidebar-section";
 export { Tooltip } from "./components/tooltip";
 export { Toggle } from "./components/toggle";
 export { Select } from "./components/select";

@@ -18,6 +18,8 @@ export type { BadgeProps } from "./badge";
 
 export { Sidebar } from "./sidebar";
 export type { SidebarProps } from "./sidebar";
+export { SidebarSection } from "./sidebar-section";
+export type { SidebarSectionProps } from "./sidebar-section";
 
 export { Tooltip } from "./tooltip";
 export type { TooltipProps } from "./tooltip";

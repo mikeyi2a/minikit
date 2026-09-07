@@ -117,6 +117,37 @@ interface SidebarProps {
 }
 declare function Sidebar({ title, side, width, collapsible, defaultCollapsed, header, footer, children, className, }: SidebarProps): React.JSX.Element;
 
+interface SidebarSectionProps {
+    /**
+     * Section label — rendered as a mono uppercase faint label above the content.
+     * Omit if this is the first unnamed group (e.g. a single row of controls).
+     */
+    label?: string;
+    children: React.ReactNode;
+    className?: string;
+}
+/**
+ * SidebarSection — groups related controls with tight internal spacing and
+ * a wider visual break from adjacent sections.
+ *
+ * Vertical rhythm rules:
+ *   - Internal gap:  4px  (gap-1)  — tight within a group
+ *   - Section gap:  10px  (gap-2.5) — breathing room between groups
+ *   - Label margin: 4px  (mb-1)   — tight below the label
+ *   - Label style:   mono, 9px, uppercase, tracking-wider, faint color
+ *
+ * Nesting:
+ *   <SidebarSection label="Adjustments">
+ *     <Slider ... />    ← gap-1 (4px)
+ *     <Slider ... />    ← gap-1 (4px)
+ *   </SidebarSection>
+ *   ← gap-2.5 (10px) between sections
+ *   <SidebarSection label="Export">
+ *     <ExportButton ... />
+ *   </SidebarSection>
+ */
+declare function SidebarSection({ label, children, className }: SidebarSectionProps): React.JSX.Element;
+
 interface TooltipProps {
     content: React.ReactNode;
     shortcut?: string;
@@ -472,4 +503,4 @@ interface ToastProps {
 }
 declare function Toast({ message, variant, visible, onDismiss, className }: ToastProps): React.JSX.Element | null;
 
-export { AccordionPanel, Badge, Button, CanvasFrame, Checkbox, ColorPicker, CompareSlider, CoordinateInput, Dialog, Drawer, Dropzone, DualSlider, EmptyState, ExportButton, FieldGroup, IconButton, LayerList, NumberStepper, Panel, Popover, PopoverLabel, PresetPicker, ProgressBar, RadioGroup, SegmentedControl, Select, Sidebar, Slider, SplitView, StatusBar, Tabs, TextInput, Timeline, Toast, Toggle, Toolbar, Tooltip, clamp, cn, formatValue, mk, stepValue };
+export { AccordionPanel, Badge, Button, CanvasFrame, Checkbox, ColorPicker, CompareSlider, CoordinateInput, Dialog, Drawer, Dropzone, DualSlider, EmptyState, ExportButton, FieldGroup, IconButton, LayerList, NumberStepper, Panel, Popover, PopoverLabel, PresetPicker, ProgressBar, RadioGroup, SegmentedControl, Select, Sidebar, SidebarSection, type SidebarSectionProps, Slider, SplitView, StatusBar, Tabs, TextInput, Timeline, Toast, Toggle, Toolbar, Tooltip, clamp, cn, formatValue, mk, stepValue };
