@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { cn } from "../lib/utils";
+import { mk } from "../lib/mk-styles";
 
 export interface TextInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
   label?: string;
@@ -47,10 +48,8 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(func
           size === "sm" ? "h-7" : "h-9",
         )}
         style={{
-          background: "color-mix(in srgb, var(--mk-text) 5%, transparent)",
+          ...mk.inputSurface(5),
           border: "1px solid var(--mk-border)",
-          boxShadow:
-            "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 8%, transparent), inset 0 0 8px 0 color-mix(in srgb, var(--mk-text) 4%, transparent)",
         }}
       >
         {leadingAddon && (

@@ -1,0 +1,27 @@
+@import "tailwindcss";
+@import "@mikeyi2a/minikit-ui/tailwind.css";
+
+/* consumer theme tokens — match the docs site's data-theme="tool-dark" */
+:root {
+  --mk-bg: #0a0a0b;
+  --mk-surface: #0e0e10;
+  --mk-surface-raised: #161618;
+  --mk-border: rgba(255, 255, 255, 0.08);
+  --mk-text: rgba(255, 255, 255, 0.92);
+  --mk-text-muted: rgba(255, 255, 255, 0.55);
+  --mk-text-faint: rgba(255, 255, 255, 0.35);
+  --mk-accent: #ffffff;
+  --mk-accent-muted: rgba(255, 255, 255, 0.1);
+  --mk-font: system-ui, -apple-system, sans-serif;
+  --mk-font-mono: ui-monospace, "SF Mono", "Cascadia Code", monospace;
+  --mk-control-height: 32px;
+  --mk-radius: 8px;
+  --mk-radius-sm: 6px;
+}
+
+html, body { background: #000; }
+body {
+  font-family: var(--mk-font);
+  color: var(--mk-text);
+  margin: 0;
+}

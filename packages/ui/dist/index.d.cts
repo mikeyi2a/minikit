@@ -10,6 +10,8 @@ declare function formatValue(value: number, step?: number): string;
 /** Shared inline tokens used across Minikit default theme */
 declare const mk: {
     surface: (alpha?: number) => CSSProperties;
+    /** Input field surface — inset border, no glow. Visually distinct from interactive (button-like) surfaces. */
+    inputSurface: (alpha?: number) => CSSProperties;
     /** Inner glow for light surfaces (e.g. white thumb, active toggle). */
     lightGlow: CSSProperties;
     mono: CSSProperties;

@@ -23,13 +23,16 @@ function formatValue(value, step) {
 var mk = {
   surface: (alpha = 5) => ({
     background: `color-mix(in srgb, var(--mk-text) ${alpha}%, transparent)`,
-    // Subtle inner glow on all four edges. The ring + glow use values
-    // STRONGER than the surface alpha so they're visible on top of the
-    // background tint (otherwise they'd blend in and disappear).
+    // Subtle inner glow — hairline border + barely-visible 2px inset halo.
     boxShadow: [
-      `inset 0 0 0 1px color-mix(in srgb, var(--mk-text) ${Math.max(25, alpha + 12)}%, transparent)`,
-      `inset 0 0 8px 0 color-mix(in srgb, var(--mk-text) ${Math.max(15, Math.round(alpha * 0.75))}%, transparent)`
+      `inset 0 0 0 0.5px color-mix(in srgb, var(--mk-text) 20%, transparent)`,
+      `inset 0 0 2px 0 color-mix(in srgb, var(--mk-text) 5%, transparent)`
     ].join(", ")
+  }),
+  /** Input field surface — inset border, no glow. Visually distinct from interactive (button-like) surfaces. */
+  inputSurface: (alpha = 5) => ({
+    background: `color-mix(in srgb, var(--mk-text) ${alpha}%, transparent)`,
+    boxShadow: `inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 12%, transparent)`
   }),
   /** Inner glow for light surfaces (e.g. white thumb, active toggle). */
   lightGlow: {
@@ -1529,9 +1532,8 @@ var TextInput = React5.forwardRef(function TextInput2({ label, hint, error, lead
               size === "sm" ? "h-7" : "h-9"
             ),
             style: {
-              background: "color-mix(in srgb, var(--mk-text) 5%, transparent)",
-              border: "1px solid var(--mk-border)",
-              boxShadow: "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 8%, transparent), inset 0 0 8px 0 color-mix(in srgb, var(--mk-text) 4%, transparent)"
+              ...mk.inputSurface(5),
+              border: "1px solid var(--mk-border)"
             },
             children: [
               leadingAddon && /* @__PURE__ */ jsx13(

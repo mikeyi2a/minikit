@@ -24,7 +24,7 @@ export function TextInput({ label, size = "sm", className, ...props }: TextInput
         )}
         style={{
           ...mk.mono,
-          ...mk.surface(5),
+          ...mk.inputSurface(5),
           color: "var(--mk-text-muted)",
           outlineColor: "var(--mk-text-muted)",
         }}

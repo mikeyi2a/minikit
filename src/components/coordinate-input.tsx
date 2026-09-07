@@ -45,7 +45,7 @@ export function CoordinateInput({
           }
         }}
         className="flex-1 h-8 rounded-lg px-1.5 font-mono text-[10px] text-center focus:outline-none"
-        style={{ ...mk.mono, ...mk.surface(5), color: "var(--mk-text-muted)" }}
+        style={{ ...mk.mono, ...mk.inputSurface(5), color: "var(--mk-text-muted)" }}
       />
     </div>
   );
