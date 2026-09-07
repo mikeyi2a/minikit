@@ -43,16 +43,12 @@ Usage guidelines
 
 Prerequisites: React 19+, Tailwind CSS 4+.
 
-npm package — 3 steps
+npm package — 2 steps
 
 Step 1: Install
 npm install @mikeyi2a/minikit-ui
 
-Step 2: Add to globals.css (both imports, in this order):
-@import "tailwindcss";
-@import "@mikeyi2a/minikit-ui/tailwind.css";
-
-Step 3: Import theme in layout, before globals.css:
+Step 2: Import in layout, before globals.css:
 import "@mikeyi2a/minikit-ui/styles.css";
 import "./globals.css";
 
@@ -71,7 +67,29 @@ Manual — if not using npm or CLI
 6. Install peer deps if needed (Radix packages listed in source imports)
 
 Dependencies: React 19, Tailwind 4, clsx, tailwind-merge. Optional: Radix UI primitives.`,
-    markdown: '# Installation\n\n## Prerequisites\n\n**React 19+**, **Tailwind CSS 4+**. The npm package relies on Tailwind to generate utility classes from the package source — without it, components fall back to inline styles only (no sizing, no layout).\n\n---\n\n## npm package — 3 steps\n\n### Step 1 — install\n\n```bash\nnpm install @mikeyi2a/minikit-ui\n```\n\n### Step 2 — add to globals.css\n\nCopy both lines into your `globals.css`, in this order:\n\n```css\n/* app/globals.css */\n@import "tailwindcss";\n@import "@mikeyi2a/minikit-ui/tailwind.css";\n```\n\nThe second line registers the package\'s utility classes with your Tailwind build. Without it, components render with inline-style fallback only — no flex layout, no sizing, no typography.\n\n### Step 3 — import the theme in your layout\n\n```tsx\n// app/layout.tsx — import before globals.css\nimport "@mikeyi2a/minikit-ui/styles.css";\nimport "./globals.css";\n\nexport default function RootLayout({ children }) {\n  return (\n    <html lang="en" data-theme="tool-dark">\n      <body>{children}</body>\n    </html>\n  );\n}\n```\n\n**That\'s it.** No manual copying required.\n\n---\n\n## CLI — copy-paste into your project\n\n```bash\nnpx @mikeyi2a/minikit-cli init\nnpx @mikeyi2a/minikit-cli add slider\n```\n\nFetches from the hosted registry and resolves transitive dependencies (e.g. `toolbar` also installs `tooltip`).\n\n---\n\n## Manual — if not using npm or CLI\n\n1. Add Tailwind CSS 4+ to your project\n2. Copy theme tokens from `src/app/globals.css` in the repo, or import `@mikeyi2a/minikit-ui/styles.css`\n3. Copy `src/lib/utils.ts` from the repo\n4. Copy the component file from any component page (click **Show code**)\n5. Set `data-theme="tool-dark"` on `<html>`\n6. Install peer deps if needed (Radix packages listed in source imports)\n\n## Dependencies\n\n**Core:** React 19, Tailwind 4, clsx, tailwind-merge.\n\n**Optional:** Radix UI primitives for accessible Dialog, Select, Tabs, Popover, Checkbox, and other overlays.',
+    markdown: '# Installation\n\n## Prerequisites\n\n**React 19+**, **Tailwind CSS 4+**. The npm package relies on Tailwind to generate utility classes from the package source — without it, components fall back to inline styles only (no sizing, no layout).\n\n---\n\n## npm package — 2 steps\n\n### Step 1 — install\n\n```bash\nnpm install @mikeyi2a/minikit-ui\n```\n\n### Step 2 — import the stylesheet
+
+```tsx
+// app/layout.tsx — import before globals.css
+import "@mikeyi2a/minikit-ui/styles.css";
+import "./globals.css";
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en" data-theme="tool-dark">
+      <body>{children}</body>
+    </html>
+  );
+}
+```
+
+`styles.css` bundles everything: the Tailwind `@source` registration (so utility classes generate from the package), all CSS custom properties (`--mk-*` tokens), and the inner glow box-shadows. No separate `tailwind.css` import needed.
+
+**That’s it.** No manual copying required.
+
+---
+
+## CLI — copy-paste into your project\n\n```bash\nnpx @mikeyi2a/minikit-cli init\nnpx @mikeyi2a/minikit-cli add slider\n```\n\nFetches from the hosted registry and resolves transitive dependencies (e.g. `toolbar` also installs `tooltip`).\n\n---\n\n## Manual — if not using npm or CLI\n\n1. Add Tailwind CSS 4+ to your project\n2. Copy theme tokens from `src/app/globals.css` in the repo, or import `@mikeyi2a/minikit-ui/styles.css`\n3. Copy `src/lib/utils.ts` from the repo\n4. Copy the component file from any component page (click **Show code**)\n5. Set `data-theme="tool-dark"` on `<html>`\n6. Install peer deps if needed (Radix packages listed in source imports)\n\n## Dependencies\n\n**Core:** React 19, Tailwind 4, clsx, tailwind-merge.\n\n**Optional:** Radix UI primitives for accessible Dialog, Select, Tabs, Popover, Checkbox, and other overlays.',
   },
 
   theming: {
