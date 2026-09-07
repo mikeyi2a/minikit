@@ -4,12 +4,10 @@ import type { CSSProperties } from "react";
 export const mk = {
   surface: (alpha = 5): CSSProperties => ({
     background: `color-mix(in srgb, var(--mk-text) ${alpha}%, transparent)`,
-    // Subtle inner glow on all four edges. The ring + glow use values
-    // STRONGER than the surface alpha so they're visible on top of the
-    // background tint (otherwise they'd blend in and disappear).
+    // Subtle inner glow on all four edges — hairline ring at 25% white + 6px halo at 8%.
     boxShadow: [
-      `inset 0 0 0 1px color-mix(in srgb, var(--mk-text) ${Math.max(25, alpha + 12)}%, transparent)`,
-      `inset 0 0 8px 0 color-mix(in srgb, var(--mk-text) ${Math.max(15, Math.round(alpha * 0.75))}%, transparent)`,
+      `inset 0 0 0 0.5px color-mix(in srgb, var(--mk-text) 25%, transparent)`,
+      `inset 0 0 6px 0 color-mix(in srgb, var(--mk-text) 8%, transparent)`,
     ].join(", "),
   }),
   /** Inner glow for light surfaces (e.g. white thumb, active toggle). */

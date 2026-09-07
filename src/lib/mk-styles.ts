@@ -6,10 +6,10 @@
 export const mk = {
   surface: (alpha: number = 5): React.CSSProperties => ({
     background: `color-mix(in srgb, var(--mk-text) ${alpha}%, transparent)`,
-    // Subtle inner glow on all four edges — 1px ring at 40% white + 8px halo at 20%.
+    // Subtle inner glow on all four edges — hairline ring at 25% white + 6px halo at 8%.
     boxShadow: [
-      `inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 40%, transparent)`,
-      `inset 0 0 8px 0 color-mix(in srgb, var(--mk-text) 20%, transparent)`,
+      `inset 0 0 0 0.5px color-mix(in srgb, var(--mk-text) 25%, transparent)`,
+      `inset 0 0 6px 0 color-mix(in srgb, var(--mk-text) 8%, transparent)`,
     ].join(", "),
   }),
   /** Inner glow for light surfaces (e.g. white thumb, active toggle). */
