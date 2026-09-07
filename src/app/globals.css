@@ -3,32 +3,30 @@
 
 /* ── Minikit theme tokens (override these to rebrand) ── */
 
-/* Default: tool-dark aesthetic — no data-theme attribute or class needed */
-:root,
-.tool-dark {
-  --mk-bg: #0a0a0b;
-  --mk-surface: #0e0e10;
-  --mk-surface-raised: #161618;
-  --mk-border: rgba(255, 255, 255, 0.08);
-  --mk-text: rgba(255, 255, 255, 0.92);
-  --mk-text-muted: rgba(255, 255, 255, 0.55);
-  --mk-text-faint: rgba(255, 255, 255, 0.35);
-  --mk-accent: #ffffff;
-  --mk-accent-muted: rgba(255, 255, 255, 0.1);
+/* Default: light base (used when no data-theme is set on any ancestor) */
+:root {
+  --mk-bg: #ffffff;
+  --mk-surface: #f5f5f5;
+  --mk-surface-raised: #ebebeb;
+  --mk-border: #e0e0e0;
+  --mk-text: #111111;
+  --mk-text-muted: #666666;
+  --mk-text-faint: #999999;
+  --mk-accent: #0066ff;
+  --mk-accent-muted: color-mix(in srgb, var(--mk-accent) 20%, transparent);
   --mk-radius: 8px;
   --mk-radius-sm: 6px;
   --mk-font: system-ui, -apple-system, sans-serif;
   --mk-font-mono: ui-monospace, "SF Mono", "Cascadia Code", monospace;
   --mk-control-height: 32px;
   --mk-transition: 150ms ease;
-  /* Ring elevation (1px halos — no blur shadows) */
   --mk-ring: 0 0 0 1px var(--mk-border);
   --mk-ring-elevated: 0 0 0 1px var(--mk-border), 0 0 0 1px color-mix(in srgb, var(--mk-text) 12%, transparent);
   --mk-ring-float: 0 0 0 1px var(--mk-border), 0 0 0 1px color-mix(in srgb, var(--mk-text) 16%, transparent), 0 0 0 3px color-mix(in srgb, var(--mk-bg) 50%, transparent);
   --mk-ring-inset: inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 14%, transparent);
 }
 
-/* Neutral dark (overrides tool-dark defaults when explicitly set) */
+/* Neutral dark (overrides light when explicitly set) */
 [data-theme="dark"] {
   --mk-bg: #0f0f0f;
   --mk-surface: #1a1a1a;
@@ -41,8 +39,7 @@
   --mk-accent-muted: color-mix(in srgb, var(--mk-accent) 20%, transparent);
 }
 
-/* Light (overrides :root defaults when explicitly set) */
-:root,
+/* Light (overrides neutral dark when explicitly set) */
 [data-theme="light"] {
   --mk-bg: #ffffff;
   --mk-surface: #f5f5f5;
@@ -53,6 +50,22 @@
   --mk-text-faint: #999999;
   --mk-accent: #0066ff;
   --mk-accent-muted: color-mix(in srgb, var(--mk-accent) 20%, transparent);
+}
+
+/* Tool dark — comes LAST so it wins by default when no data-theme is set,
+   and is reachable via either html data-theme="tool-dark" (from the root layout)
+   or body data-theme="tool-dark" (from the docs shell theme switcher). */
+:root:not([data-theme]),
+[data-theme="tool-dark"] {
+  --mk-bg: #0a0a0b;
+  --mk-surface: #0e0e10;
+  --mk-surface-raised: #161618;
+  --mk-border: rgba(255, 255, 255, 0.08);
+  --mk-text: rgba(255, 255, 255, 0.92);
+  --mk-text-muted: rgba(255, 255, 255, 0.55);
+  --mk-text-faint: rgba(255, 255, 255, 0.35);
+  --mk-accent: #ffffff;
+  --mk-accent-muted: rgba(255, 255, 255, 0.1);
 }
 
 * {

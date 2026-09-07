@@ -222,9 +222,11 @@ export function DualSlider({
               transform: "translate(-50%, -50%)",
               background: "var(--mk-text)",
               opacity: 1,
-              // Same inner glow as the slider thumb.
+              // Inner glow + outer ring on the active thumb.
               boxShadow:
-                "inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 4px 0 rgba(255, 255, 255, 0.15)",
+                activeHandle === "start"
+                  ? "inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 4px 0 rgba(255, 255, 255, 0.15), 0 0 0 4px color-mix(in srgb, var(--mk-text) 25%, transparent)"
+                  : "inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 4px 0 rgba(255, 255, 255, 0.15)",
             }}
             onPointerDown={(e) => {
               e.stopPropagation();
@@ -245,9 +247,11 @@ export function DualSlider({
               transform: "translate(-50%, -50%)",
               background: "var(--mk-text)",
               opacity: 1,
-              // Same inner glow as the slider thumb.
+              // Inner glow + outer ring on the active thumb.
               boxShadow:
-                "inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 4px 0 rgba(255, 255, 255, 0.15)",
+                activeHandle === "end"
+                  ? "inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 4px 0 rgba(255, 255, 255, 0.15), 0 0 0 4px color-mix(in srgb, var(--mk-text) 25%, transparent)"
+                  : "inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 4px 0 rgba(255, 255, 255, 0.15)",
             }}
             onPointerDown={(e) => {
               e.stopPropagation();

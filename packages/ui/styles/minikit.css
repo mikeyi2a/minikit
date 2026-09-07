@@ -26,7 +26,7 @@
 
 /* ── Minikit theme tokens (override these to rebrand) ── */
 
-/* Light theme (base — overridden to dark by :root default below) */
+/* Default: light base (used when no data-theme is set on any ancestor) */
 :root {
   --mk-bg: #ffffff;
   --mk-surface: #f5f5f5;
@@ -45,7 +45,7 @@
   --mk-transition: 150ms ease;
 }
 
-/* Neutral dark (overrides :root when explicitly set) */
+/* Neutral dark (overrides light when explicitly set) */
 [data-theme="dark"] {
   --mk-bg: #0f0f0f;
   --mk-surface: #1a1a1a;
@@ -58,8 +58,7 @@
   --mk-accent-muted: color-mix(in srgb, var(--mk-accent) 20%, transparent);
 }
 
-/* Light (overrides :root when explicitly set) */
-:root,
+/* Light (overrides neutral dark when explicitly set) */
 [data-theme="light"] {
   --mk-bg: #ffffff;
   --mk-surface: #f5f5f5;
@@ -72,10 +71,11 @@
   --mk-accent-muted: color-mix(in srgb, var(--mk-accent) 20%, transparent);
 }
 
-/* Default: tool-dark aesthetic — no data-theme attribute or class needed.
-   Comes last so it wins over bare :root default above. */
-:root,
-.tool-dark {
+/* Tool dark — comes LAST so it wins by default when no data-theme is set.
+   Reachable via html data-theme="tool-dark" (root layout) or body data-theme
+   (theme switcher). */
+:root:not([data-theme]),
+[data-theme="tool-dark"] {
   --mk-bg: #0a0a0b;
   --mk-surface: #0e0e10;
   --mk-surface-raised: #161618;

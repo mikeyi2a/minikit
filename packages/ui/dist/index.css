@@ -36,7 +36,6 @@
   --mk-accent: #0066ff;
   --mk-accent-muted: color-mix(in srgb, var(--mk-accent) 20%, transparent);
 }
-:root,
 [data-theme=light] {
   --mk-bg: #ffffff;
   --mk-surface: #f5f5f5;
@@ -48,8 +47,8 @@
   --mk-accent: #0066ff;
   --mk-accent-muted: color-mix(in srgb, var(--mk-accent) 20%, transparent);
 }
-:root,
-.tool-dark {
+:root:not([data-theme]),
+[data-theme=tool-dark] {
   --mk-bg: #0a0a0b;
   --mk-surface: #0e0e10;
   --mk-surface-raised: #161618;

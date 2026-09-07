@@ -409,8 +409,7 @@ function Slider({
                   className: cn(
                     // 6px wide, 100% opacity at rest. The thumb is the
                     // primary affordance — never fade it out.
-                    "absolute top-1/2 w-1.5 rounded-full pointer-events-none",
-                    isDragging && "shadow-[0_0_0_4px_color-mix(in_srgb,var(--mk-text)_30%,transparent)]"
+                    "absolute top-1/2 w-1.5 rounded-full pointer-events-none"
                   ),
                   style: {
                     left: `${displayPct}%`,
@@ -418,8 +417,8 @@ function Slider({
                     transform: "translate(-50%, -50%)",
                     background: "var(--mk-text)",
                     opacity: 1,
-                    // Same uniform inner glow as the track and fill.
-                    boxShadow: "inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 4px 0 rgba(255, 255, 255, 0.15)",
+                    // Inner glow + outer active ring that grows when dragging.
+                    boxShadow: isDragging ? "inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 4px 0 rgba(255, 255, 255, 0.15), 0 0 0 4px color-mix(in srgb, var(--mk-text) 25%, transparent)" : "inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 4px 0 rgba(255, 255, 255, 0.15)",
                     transition: isDragging ? "none" : void 0
                   }
                 }
@@ -427,10 +426,11 @@ function Slider({
               label && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "absolute inset-y-0 left-2.5 flex items-center pointer-events-none", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
                 "span",
                 {
-                  className: "font-mono text-[10px] font-medium uppercase tracking-[0.06em] flex items-center",
+                  className: "font-mono text-[10px] font-semibold uppercase tracking-[0.06em] flex items-center",
                   style: {
-                    color: "var(--mk-text-muted)",
-                    fontFamily: "var(--mk-font-mono)"
+                    color: "var(--mk-text)",
+                    fontFamily: "var(--mk-font-mono)",
+                    textShadow: "0 0 6px color-mix(in srgb, var(--mk-bg) 60%, transparent)"
                   },
                   children: [
                     label,
@@ -439,8 +439,8 @@ function Slider({
                       {
                         className: "ml-1.5 px-1 py-0.5 rounded text-[9px] font-medium tracking-normal leading-none",
                         style: {
-                          background: "color-mix(in srgb, var(--mk-text) 10%, transparent)",
-                          color: "var(--mk-text-faint)"
+                          background: "color-mix(in srgb, var(--mk-text) 14%, transparent)",
+                          color: "var(--mk-text)"
                         },
                         children: hint
                       }
@@ -675,8 +675,8 @@ function DualSlider({
                       transform: "translate(-50%, -50%)",
                       background: "var(--mk-text)",
                       opacity: 1,
-                      // Same inner glow as the slider thumb.
-                      boxShadow: "inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 4px 0 rgba(255, 255, 255, 0.15)"
+                      // Inner glow + outer ring on the active thumb.
+                      boxShadow: activeHandle === "start" ? "inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 4px 0 rgba(255, 255, 255, 0.15), 0 0 0 4px color-mix(in srgb, var(--mk-text) 25%, transparent)" : "inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 4px 0 rgba(255, 255, 255, 0.15)"
                     },
                     onPointerDown: (e) => {
                       e.stopPropagation();
@@ -700,8 +700,8 @@ function DualSlider({
                       transform: "translate(-50%, -50%)",
                       background: "var(--mk-text)",
                       opacity: 1,
-                      // Same inner glow as the slider thumb.
-                      boxShadow: "inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 4px 0 rgba(255, 255, 255, 0.15)"
+                      // Inner glow + outer ring on the active thumb.
+                      boxShadow: activeHandle === "end" ? "inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 4px 0 rgba(255, 255, 255, 0.15), 0 0 0 4px color-mix(in srgb, var(--mk-text) 25%, transparent)" : "inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 4px 0 rgba(255, 255, 255, 0.15)"
                     },
                     onPointerDown: (e) => {
                       e.stopPropagation();
