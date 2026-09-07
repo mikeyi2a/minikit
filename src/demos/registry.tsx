@@ -11,6 +11,7 @@ import {
   ExportButtonDemo,
   ImageToolDemo,
   TimelineDemo,
+  SidebarDemo,
 } from "@/demos/tool-demos";
 import {
   PanelDemo,
@@ -152,18 +153,6 @@ const TooltipDemo: React.FC = () => (
   </span>
 );
 
-const SidebarDemo: React.FC = () => (
-  <div
-    className="w-56 h-64 rounded-lg p-3 text-xs font-mono"
-    style={{
-      background: "var(--mk-surface)",
-      borderColor: "var(--mk-border)",
-      color: "var(--mk-text-muted)",
-    }}
-  >
-    Sidebar container
-  </div>
-);
 
 const PanelPreviewDemo: React.FC = () => (
   <div

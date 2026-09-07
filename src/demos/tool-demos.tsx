@@ -184,6 +184,87 @@ export function ExportButtonDemo() {
   );
 }
 
+export function SidebarDemo() {
+  const [active, setActive] = React.useState("select");
+  const [size, setSize] = React.useState("M");
+  const [quality, setQuality] = React.useState<[number, number]>([70, 100]);
+
+  return (
+    <div
+      className="flex rounded-xl overflow-hidden w-full max-w-2xl"
+      style={{ border: "1px solid var(--mk-border)", height: 380 }}
+    >
+      <Sidebar title="Export" width={192} collapsible>
+        <SidebarSection>
+          <Dropzone
+            preview={null}
+            onFileAccept={() => {}}
+          />
+        </SidebarSection>
+
+        <SidebarSection label="Format">
+          <SegmentedControl
+            items={[
+              { value: "S", label: "S" },
+              { value: "M", label: "M" },
+              { value: "L", label: "L" },
+            ]}
+            value={size}
+            onValueChange={setSize}
+          />
+        </SidebarSection>
+
+        <SidebarSection label="Quality">
+          <DualSlider
+            label="Range %"
+            value={quality}
+            onValueChange={setQuality}
+            min={0}
+            max={100}
+          />
+        </SidebarSection>
+
+        <SidebarSection label="Tool">
+          <Toolbar
+            orientation="vertical"
+            items={[
+              { id: "select", label: "Select", icon: "↖", shortcut: "V", active: active === "select", onClick: () => setActive("select") },
+              { id: "draw", label: "Draw", icon: "✎", shortcut: "B", active: active === "draw", onClick: () => setActive("draw") },
+              { id: "erase", label: "Erase", icon: "◻", shortcut: "E", active: active === "erase", onClick: () => setActive("erase") },
+            ]}
+          />
+        </SidebarSection>
+
+        <SidebarSection>
+          <ExportButton
+            formats={["png", "jpg", "clipboard"]}
+            onExport={async () => {
+              await new Promise((r) => setTimeout(r, 600));
+            }}
+          />
+        </SidebarSection>
+      </Sidebar>
+
+      <div className="flex-1 p-4 min-w-0 flex flex-col items-center justify-center" style={{ background: "var(--mk-bg)" }}>
+        <div
+          className="w-40 h-40 rounded-xl flex items-center justify-center"
+          style={{
+            background: "linear-gradient(135deg, var(--mk-text) 10%, transparent)",
+            border: "1px solid var(--mk-border)",
+          }}
+        >
+          <span
+            className="font-mono text-[10px] uppercase tracking-wider"
+            style={{ color: "var(--mk-text-faint)", fontFamily: "var(--mk-font-mono)" }}
+          >
+            Drop image
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function ImageToolDemo() {
   const [preview, setPreview] = React.useState<string | null>(null);
   const [brightness, setBrightness] = React.useState(100);
