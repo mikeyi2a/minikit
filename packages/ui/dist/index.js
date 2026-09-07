@@ -89,10 +89,10 @@ function SegmentedControl({
             ),
             style: {
               fontFamily: "var(--mk-font-mono)",
-              background: isActive ? "color-mix(in srgb, var(--mk-surface) 72%, black)" : "transparent",
-              color: isActive ? "var(--mk-text)" : "var(--mk-text-faint)",
+              background: isActive ? "var(--mk-text)" : "transparent",
+              color: isActive ? "var(--mk-bg)" : "var(--mk-text-faint)",
               // Subtle inner glow on the active button to give it depth.
-              boxShadow: isActive ? "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 18%, transparent), inset 0 0 6px 0 color-mix(in srgb, var(--mk-text) 8%, transparent)" : void 0
+              boxShadow: isActive ? "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 30%, transparent), inset 0 0 6px 0 color-mix(in srgb, var(--mk-text) 12%, transparent)" : void 0
             },
             children: item.label
           },
@@ -1834,7 +1834,7 @@ function Panel({
       "div",
       {
         className: cn(
-          "flex items-center justify-between gap-1 px-1 shrink-0 border-b min-h-10",
+          "flex items-center justify-between gap-1 px-1 shrink-0 border-b min-h-10 rounded-t-xl",
           mode === "floating" && "cursor-grab active:cursor-grabbing touch-none"
         ),
         style: { borderColor: "var(--mk-border)" },
@@ -1860,14 +1860,14 @@ function Panel({
     ),
     !collapsed && /* @__PURE__ */ jsxs16(Fragment, { children: [
       /* @__PURE__ */ jsx20("div", { className: "flex-1 overflow-y-auto p-2 flex flex-col gap-1.5 min-h-0", children }),
-      footer && /* @__PURE__ */ jsx20("div", { className: "p-2 border-t shrink-0", style: { borderColor: "var(--mk-border)" }, children: footer })
+      footer && /* @__PURE__ */ jsx20("div", { className: "p-2 border-t shrink-0 rounded-b-xl", style: { borderColor: "var(--mk-border)" }, children: footer })
     ] })
   ] });
   if (mode === "floating") {
     return /* @__PURE__ */ jsx20(
       "aside",
       {
-        className: cn("mk-panel fixed z-40 flex flex-col rounded-xl border mk-ring-float", className),
+        className: cn("mk-panel fixed z-40 flex flex-col rounded-xl border mk-ring-float overflow-hidden", className),
         style: {
           left: pos.x,
           top: pos.y,
