@@ -59,7 +59,7 @@ export function Panel({
     <>
       <div
         className={cn(
-          "flex items-center justify-between gap-1 px-1 shrink-0 border-b min-h-10",
+          "flex items-center justify-between gap-1 px-1 shrink-0 border-b min-h-10 rounded-t-xl",
           mode === "floating" && "cursor-grab active:cursor-grabbing touch-none",
         )}
         style={{ borderColor: "var(--mk-border)" }}
@@ -92,7 +92,7 @@ export function Panel({
         <>
           <div className="flex-1 overflow-y-auto p-2 flex flex-col gap-1.5 min-h-0">{children}</div>
           {footer && (
-            <div className="p-2 border-t shrink-0" style={{ borderColor: "var(--mk-border)" }}>
+            <div className="p-2 border-t shrink-0 rounded-b-xl" style={{ borderColor: "var(--mk-border)" }}>
               {footer}
             </div>
           )}
@@ -104,7 +104,7 @@ export function Panel({
   if (mode === "floating") {
     return (
       <aside
-        className={cn("mk-panel fixed z-40 flex flex-col rounded-xl border mk-ring-float", className)}
+        className={cn("mk-panel fixed z-40 flex flex-col rounded-xl border mk-ring-float overflow-hidden", className)}
         style={{
           left: pos.x,
           top: pos.y,
