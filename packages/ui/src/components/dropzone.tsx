@@ -96,6 +96,8 @@ export function Dropzone({
           background: isDragging
             ? "color-mix(in srgb, var(--mk-text) 8%, transparent)"
             : "color-mix(in srgb, var(--mk-text) 3%, transparent)",
+          boxShadow:
+            "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 6%, transparent), inset 0 0 10px 0 color-mix(in srgb, var(--mk-text) 3%, transparent)",
         }}
       >
         <input

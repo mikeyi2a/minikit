@@ -186,6 +186,9 @@ export function DualSlider({
             // 8% track for visible contrast on dark.
             background:
               "color-mix(in srgb, var(--mk-text) 8%, transparent)",
+            // Uniform inner glow on all four edges.
+            boxShadow:
+              "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 10%, transparent), inset 0 0 8px 0 color-mix(in srgb, var(--mk-text) 6%, transparent)",
           }}
           onPointerDown={(e) => beginDrag(e)}
           onPointerMove={onPointerMove}
@@ -200,6 +203,9 @@ export function DualSlider({
               // 35% fill so the selected range is unambiguous.
               background:
                 "color-mix(in srgb, var(--mk-text) 35%, transparent)",
+              // Same inner glow as the track.
+              boxShadow:
+                "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 10%, transparent), inset 0 0 8px 0 color-mix(in srgb, var(--mk-text) 6%, transparent)",
             }}
           />
           <div
@@ -216,6 +222,9 @@ export function DualSlider({
               transform: "translate(-50%, -50%)",
               background: "var(--mk-text)",
               opacity: 1,
+              // Same inner glow as the slider thumb.
+              boxShadow:
+                "inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 4px 0 rgba(255, 255, 255, 0.15)",
             }}
             onPointerDown={(e) => {
               e.stopPropagation();
@@ -236,6 +245,9 @@ export function DualSlider({
               transform: "translate(-50%, -50%)",
               background: "var(--mk-text)",
               opacity: 1,
+              // Same inner glow as the slider thumb.
+              boxShadow:
+                "inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 4px 0 rgba(255, 255, 255, 0.15)",
             }}
             onPointerDown={(e) => {
               e.stopPropagation();

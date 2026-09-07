@@ -49,6 +49,8 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(func
         style={{
           background: "color-mix(in srgb, var(--mk-text) 5%, transparent)",
           border: "1px solid var(--mk-border)",
+          boxShadow:
+            "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 8%, transparent), inset 0 0 8px 0 color-mix(in srgb, var(--mk-text) 4%, transparent)",
         }}
       >
         {leadingAddon && (

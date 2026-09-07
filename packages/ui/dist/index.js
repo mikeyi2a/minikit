@@ -22,8 +22,18 @@ function formatValue(value, step) {
 // src/lib/mk-styles.ts
 var mk = {
   surface: (alpha = 5) => ({
-    background: `color-mix(in srgb, var(--mk-text) ${alpha}%, transparent)`
+    background: `color-mix(in srgb, var(--mk-text) ${alpha}%, transparent)`,
+    // Subtle inner glow on all four edges — applied by default to every
+    // surface. Reads as "lit from within" on dark backgrounds.
+    boxShadow: [
+      `inset 0 0 0 1px color-mix(in srgb, var(--mk-text) ${Math.max(8, alpha)}%, transparent)`,
+      `inset 0 0 8px 0 color-mix(in srgb, var(--mk-text) ${Math.max(4, Math.round(alpha / 2))}%, transparent)`
+    ].join(", ")
   }),
+  /** Inner glow for light surfaces (e.g. white thumb, active toggle). */
+  lightGlow: {
+    boxShadow: "inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 4px 0 rgba(255, 255, 255, 0.15)"
+  },
   mono: { fontFamily: "var(--mk-font-mono)" },
   label: {
     fontFamily: "var(--mk-font-mono)",
@@ -276,6 +286,9 @@ function Slider({
               height: "var(--mk-control-height)",
               // 8% track — subtle, dark, not drawing attention to the empty state.
               background: "color-mix(in srgb, var(--mk-text) 8%, transparent)",
+              // Soft uniform inner glow on all four edges. Subtle — like the
+              // surface is lit from within rather than a 3D bevel.
+              boxShadow: "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 10%, transparent), inset 0 0 8px 0 color-mix(in srgb, var(--mk-text) 6%, transparent)",
               outlineColor: "var(--mk-text-muted)"
             },
             children: [
@@ -299,6 +312,8 @@ function Slider({
                     width: `${displayPct}%`,
                     // 35% fill — darker, more subtle selected range.
                     background: "color-mix(in srgb, var(--mk-text) 35%, transparent)",
+                    // Same uniform inner glow as the track.
+                    boxShadow: "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 10%, transparent), inset 0 0 8px 0 color-mix(in srgb, var(--mk-text) 6%, transparent)",
                     transition: isDragging ? "none" : void 0
                   }
                 }
@@ -310,7 +325,7 @@ function Slider({
                     // 6px wide, 100% opacity at rest. The thumb is the
                     // primary affordance — never fade it out.
                     "absolute top-1/2 w-1.5 rounded-full pointer-events-none",
-                    isDragging && "shadow-[0_0_0_4px_color-mix(in_srgb,var(--mk-text)_10%,transparent)]"
+                    isDragging && "shadow-[0_0_0_4px_color-mix(in_srgb,var(--mk-text)_30%,transparent)]"
                   ),
                   style: {
                     left: `${displayPct}%`,
@@ -318,6 +333,8 @@ function Slider({
                     transform: "translate(-50%, -50%)",
                     background: "var(--mk-text)",
                     opacity: 1,
+                    // Same uniform inner glow as the track and fill.
+                    boxShadow: "inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 4px 0 rgba(255, 255, 255, 0.15)",
                     transition: isDragging ? "none" : void 0
                   }
                 }
@@ -534,7 +551,9 @@ function DualSlider({
               style: {
                 height: "var(--mk-control-height)",
                 // 8% track for visible contrast on dark.
-                background: "color-mix(in srgb, var(--mk-text) 8%, transparent)"
+                background: "color-mix(in srgb, var(--mk-text) 8%, transparent)",
+                // Uniform inner glow on all four edges.
+                boxShadow: "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 10%, transparent), inset 0 0 8px 0 color-mix(in srgb, var(--mk-text) 6%, transparent)"
               },
               onPointerDown: (e) => beginDrag(e),
               onPointerMove,
@@ -549,7 +568,9 @@ function DualSlider({
                       left: `${startPct}%`,
                       width: `${endPct - startPct}%`,
                       // 35% fill so the selected range is unambiguous.
-                      background: "color-mix(in srgb, var(--mk-text) 35%, transparent)"
+                      background: "color-mix(in srgb, var(--mk-text) 35%, transparent)",
+                      // Same inner glow as the track.
+                      boxShadow: "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 10%, transparent), inset 0 0 8px 0 color-mix(in srgb, var(--mk-text) 6%, transparent)"
                     }
                   }
                 ),
@@ -568,7 +589,9 @@ function DualSlider({
                       height: "calc(var(--mk-control-height) - 8px)",
                       transform: "translate(-50%, -50%)",
                       background: "var(--mk-text)",
-                      opacity: 1
+                      opacity: 1,
+                      // Same inner glow as the slider thumb.
+                      boxShadow: "inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 4px 0 rgba(255, 255, 255, 0.15)"
                     },
                     onPointerDown: (e) => {
                       e.stopPropagation();
@@ -591,7 +614,9 @@ function DualSlider({
                       height: "calc(var(--mk-control-height) - 8px)",
                       transform: "translate(-50%, -50%)",
                       background: "var(--mk-text)",
-                      opacity: 1
+                      opacity: 1,
+                      // Same inner glow as the slider thumb.
+                      boxShadow: "inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 4px 0 rgba(255, 255, 255, 0.15)"
                     },
                     onPointerDown: (e) => {
                       e.stopPropagation();
@@ -659,7 +684,8 @@ function NumberStepper({
             className: "flex items-center rounded-lg overflow-hidden",
             style: {
               background: "color-mix(in srgb, var(--mk-text) 5%, transparent)",
-              height: "var(--mk-control-height)"
+              height: "var(--mk-control-height)",
+              boxShadow: "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 8%, transparent), inset 0 0 8px 0 color-mix(in srgb, var(--mk-text) 4%, transparent)"
             },
             children: [
               /* @__PURE__ */ jsx4(
@@ -1081,11 +1107,13 @@ function Badge({
   const variantStyles = {
     default: {
       background: "color-mix(in srgb, var(--mk-text) 10%, transparent)",
-      color: "var(--mk-text-muted)"
+      color: "var(--mk-text-muted)",
+      boxShadow: "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 12%, transparent), inset 0 0 6px 0 color-mix(in srgb, var(--mk-text) 6%, transparent)"
     },
     accent: {
       background: "var(--mk-accent-muted)",
-      color: "var(--mk-accent)"
+      color: "var(--mk-accent)",
+      boxShadow: "inset 0 0 0 1px color-mix(in srgb, var(--mk-accent) 20%, transparent), inset 0 0 6px 0 color-mix(in srgb, var(--mk-accent) 12%, transparent)"
     },
     muted: {
       background: "transparent",
@@ -1493,7 +1521,8 @@ var TextInput = React5.forwardRef(function TextInput2({ label, hint, error, lead
             ),
             style: {
               background: "color-mix(in srgb, var(--mk-text) 5%, transparent)",
-              border: "1px solid var(--mk-border)"
+              border: "1px solid var(--mk-border)",
+              boxShadow: "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 8%, transparent), inset 0 0 8px 0 color-mix(in srgb, var(--mk-text) 4%, transparent)"
             },
             children: [
               leadingAddon && /* @__PURE__ */ jsx13(
@@ -2166,7 +2195,8 @@ function Dropzone({
         style: {
           minHeight: preview ? 160 : 120,
           borderColor: isDragging ? "var(--mk-text-muted)" : "var(--mk-border)",
-          background: isDragging ? "color-mix(in srgb, var(--mk-text) 8%, transparent)" : "color-mix(in srgb, var(--mk-text) 3%, transparent)"
+          background: isDragging ? "color-mix(in srgb, var(--mk-text) 8%, transparent)" : "color-mix(in srgb, var(--mk-text) 3%, transparent)",
+          boxShadow: "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 6%, transparent), inset 0 0 10px 0 color-mix(in srgb, var(--mk-text) 3%, transparent)"
         },
         children: [
           /* @__PURE__ */ jsx25(

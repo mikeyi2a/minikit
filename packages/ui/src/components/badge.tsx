@@ -19,10 +19,14 @@ export function Badge({
     default: {
       background: "color-mix(in srgb, var(--mk-text) 10%, transparent)",
       color: "var(--mk-text-muted)",
+      boxShadow:
+        "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 12%, transparent), inset 0 0 6px 0 color-mix(in srgb, var(--mk-text) 6%, transparent)",
     },
     accent: {
       background: "var(--mk-accent-muted)",
       color: "var(--mk-accent)",
+      boxShadow:
+        "inset 0 0 0 1px color-mix(in srgb, var(--mk-accent) 20%, transparent), inset 0 0 6px 0 color-mix(in srgb, var(--mk-accent) 12%, transparent)",
     },
     muted: {
       background: "transparent",

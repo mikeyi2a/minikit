@@ -4,7 +4,18 @@ import type { CSSProperties } from "react";
 export const mk = {
   surface: (alpha = 5): CSSProperties => ({
     background: `color-mix(in srgb, var(--mk-text) ${alpha}%, transparent)`,
+    // Subtle inner glow on all four edges — applied by default to every
+    // surface. Reads as "lit from within" on dark backgrounds.
+    boxShadow: [
+      `inset 0 0 0 1px color-mix(in srgb, var(--mk-text) ${Math.max(8, alpha)}%, transparent)`,
+      `inset 0 0 8px 0 color-mix(in srgb, var(--mk-text) ${Math.max(4, Math.round(alpha / 2))}%, transparent)`,
+    ].join(", "),
   }),
+  /** Inner glow for light surfaces (e.g. white thumb, active toggle). */
+  lightGlow: {
+    boxShadow:
+      "inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 4px 0 rgba(255, 255, 255, 0.15)",
+  } as CSSProperties,
   mono: { fontFamily: "var(--mk-font-mono)" } as CSSProperties,
   label: {
     fontFamily: "var(--mk-font-mono)",

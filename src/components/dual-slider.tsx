@@ -156,6 +156,8 @@ export function DualSlider({
           style={{
             height: "var(--mk-control-height)",
             background: "color-mix(in srgb, var(--mk-text) 8%, transparent)",
+            boxShadow:
+              "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 10%, transparent), inset 0 0 8px 0 color-mix(in srgb, var(--mk-text) 6%, transparent)",
           }}
           onPointerDown={(e) => beginDrag(e)}
           onPointerMove={onPointerMove}
@@ -169,6 +171,8 @@ export function DualSlider({
               left: `${startPct}%`,
               width: `${endPct - startPct}%`,
               background: "color-mix(in srgb, var(--mk-text) 35%, transparent)",
+              boxShadow:
+                "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 10%, transparent), inset 0 0 8px 0 color-mix(in srgb, var(--mk-text) 6%, transparent)",
             }}
           />
 
@@ -187,6 +191,8 @@ export function DualSlider({
               transform: "translate(-50%, -50%)",
               background: "var(--mk-text)",
               opacity: 1,
+              boxShadow:
+                "inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 4px 0 rgba(255, 255, 255, 0.15)",
             }}
             onPointerDown={(e) => {
               e.stopPropagation();
@@ -209,6 +215,8 @@ export function DualSlider({
               transform: "translate(-50%, -50%)",
               background: "var(--mk-text)",
               opacity: 1,
+              boxShadow:
+                "inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 0 4px 0 rgba(255, 255, 255, 0.15)",
             }}
             onPointerDown={(e) => {
               e.stopPropagation();

@@ -51,6 +51,8 @@ export function NumberStepper({
         style={{
           background: "color-mix(in srgb, var(--mk-text) 5%, transparent)",
           height: "var(--mk-control-height)",
+          boxShadow:
+            "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 8%, transparent), inset 0 0 8px 0 color-mix(in srgb, var(--mk-text) 4%, transparent)",
         }}
       >
         <button
