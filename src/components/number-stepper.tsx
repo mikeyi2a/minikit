@@ -1,6 +1,7 @@
 "use client";
 
 import { cn, clamp, stepValue, formatValue } from "@/lib/utils";
+import { mk } from "@/lib/mk-styles";
 
 export interface NumberStepperProps {
   label?: string;
@@ -49,7 +50,7 @@ export function NumberStepper({
       <div
         className="flex items-center rounded-lg overflow-hidden"
         style={{
-          background: "color-mix(in srgb, var(--mk-text) 5%, transparent)",
+          ...mk.inputSurface(5),
           height: "var(--mk-control-height)",
         }}
       >
