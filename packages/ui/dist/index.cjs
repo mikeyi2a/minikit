@@ -1371,7 +1371,7 @@ function Tooltip({
           fontFamily: "var(--mk-font-mono)",
           fontSize: "10px",
           color: "var(--mk-text-muted)",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.25)"
+          boxShadow: "0 4px 12px rgba(0,0,0,0.25), inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 8%, transparent), inset 0 0 4px 0 color-mix(in srgb, var(--mk-text) 4%, transparent)"
         },
         children: [
           /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)("span", { className: "flex items-center gap-2", children: [
@@ -1429,7 +1429,12 @@ function Toggle({ label, checked, onCheckedChange, disabled, className }) {
               "data-[state=checked]:border-[var(--mk-accent)] data-[state=checked]:bg-[var(--mk-accent)]",
               "focus-visible:outline focus-visible:outline-offset-2"
             ),
-            style: { outlineColor: "var(--mk-text-muted)" },
+            style: {
+              outlineColor: "var(--mk-text-muted)",
+              // Inner glow — gives the track the same dimensional treatment as
+              // every other surface in the system.
+              boxShadow: "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 12%, transparent), inset 0 0 4px 0 color-mix(in srgb, var(--mk-text) 6%, transparent)"
+            },
             children: /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
               Switch.Thumb,
               {
@@ -2406,7 +2411,8 @@ function CompareSlider({
       className: cn("mk-compare-slider relative overflow-hidden rounded-xl select-none touch-none", className),
       style: {
         aspectRatio,
-        border: "1px solid var(--mk-border)"
+        border: "1px solid var(--mk-border)",
+        boxShadow: "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 8%, transparent), inset 0 0 12px 0 color-mix(in srgb, var(--mk-text) 4%, transparent)"
       },
       onMouseDown: (e) => startDrag(e.clientX),
       onTouchStart: (e) => startDrag(e.touches[0].clientX),
@@ -3272,7 +3278,9 @@ function Toast({ message, variant = "default", visible, onDismiss, className }) 
         background: "var(--mk-surface-raised)",
         borderColor,
         color: "var(--mk-text-muted)",
-        fontSize: "10px"
+        fontSize: "10px",
+        // Inner glow consistent with the rest of the system.
+        boxShadow: "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 10%, transparent), inset 0 0 8px 0 color-mix(in srgb, var(--mk-text) 5%, transparent)"
       },
       role: "status",
       children: [

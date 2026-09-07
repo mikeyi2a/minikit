@@ -38,7 +38,13 @@ export function Toggle({ label, checked, onCheckedChange, disabled, className }:
           "data-[state=checked]:border-[var(--mk-accent)] data-[state=checked]:bg-[var(--mk-accent)]",
           "focus-visible:outline focus-visible:outline-offset-2",
         )}
-        style={{ outlineColor: "var(--mk-text-muted)" }}
+        style={{
+          outlineColor: "var(--mk-text-muted)",
+          // Inner glow — gives the track the same dimensional treatment as
+          // every other surface in the system.
+          boxShadow:
+            "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 12%, transparent), inset 0 0 4px 0 color-mix(in srgb, var(--mk-text) 6%, transparent)",
+        }}
       >
         <Switch.Thumb
           className={cn(

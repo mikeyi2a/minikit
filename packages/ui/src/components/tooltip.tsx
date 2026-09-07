@@ -38,7 +38,8 @@ export function Tooltip({
               fontFamily: "var(--mk-font-mono)",
               fontSize: "10px",
               color: "var(--mk-text-muted)",
-              boxShadow: "0 4px 12px rgba(0,0,0,0.25)",
+              boxShadow:
+                "0 4px 12px rgba(0,0,0,0.25), inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 8%, transparent), inset 0 0 4px 0 color-mix(in srgb, var(--mk-text) 4%, transparent)",
             }}
           >
             <span className="flex items-center gap-2">

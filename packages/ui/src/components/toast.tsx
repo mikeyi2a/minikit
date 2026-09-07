@@ -36,6 +36,9 @@ export function Toast({ message, variant = "default", visible, onDismiss, classN
         borderColor,
         color: "var(--mk-text-muted)",
         fontSize: "10px",
+        // Inner glow consistent with the rest of the system.
+        boxShadow:
+          "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 10%, transparent), inset 0 0 8px 0 color-mix(in srgb, var(--mk-text) 5%, transparent)",
       }}
       role="status"
     >
