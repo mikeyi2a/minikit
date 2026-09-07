@@ -142,7 +142,8 @@ function SegmentedControl({
       role: "tablist",
       className: cn("mk-segmented-control flex gap-1 p-1 rounded-xl", className),
       style: {
-        background: "color-mix(in srgb, var(--mk-text) 5%, transparent)"
+        background: "color-mix(in srgb, var(--mk-text) 5%, transparent)",
+        boxShadow: "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 8%, transparent), inset 0 0 8px 0 color-mix(in srgb, var(--mk-text) 4%, transparent)"
       },
       children: items.map((item) => {
         const isActive = item.value === value;
@@ -162,7 +163,9 @@ function SegmentedControl({
             style: {
               fontFamily: "var(--mk-font-mono)",
               background: isActive ? "color-mix(in srgb, var(--mk-surface) 72%, black)" : "transparent",
-              color: isActive ? "var(--mk-text)" : "var(--mk-text-faint)"
+              color: isActive ? "var(--mk-text)" : "var(--mk-text-faint)",
+              // Subtle inner glow on the active button to give it depth.
+              boxShadow: isActive ? "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 18%, transparent), inset 0 0 6px 0 color-mix(in srgb, var(--mk-text) 8%, transparent)" : void 0
             },
             children: item.label
           },
@@ -2155,7 +2158,8 @@ function Toolbar({ items, orientation = "horizontal", className }) {
         className
       ),
       style: {
-        background: "color-mix(in srgb, var(--mk-text) 5%, transparent)"
+        background: "color-mix(in srgb, var(--mk-text) 5%, transparent)",
+        boxShadow: "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 8%, transparent), inset 0 0 8px 0 color-mix(in srgb, var(--mk-text) 4%, transparent)"
       },
       children: items.map((item) => {
         const button = /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(
@@ -2174,7 +2178,8 @@ function Toolbar({ items, orientation = "horizontal", className }) {
             ),
             style: {
               background: item.active ? "color-mix(in srgb, var(--mk-text) 12%, transparent)" : "transparent",
-              color: item.active ? "var(--mk-text)" : "var(--mk-text-muted)"
+              color: item.active ? "var(--mk-text)" : "var(--mk-text-muted)",
+              boxShadow: item.active ? "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 18%, transparent), inset 0 0 6px 0 color-mix(in srgb, var(--mk-text) 8%, transparent)" : void 0
             },
             children: item.icon ?? /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(
               "span",
@@ -2643,7 +2648,10 @@ function ExportButton({
           style: {
             fontFamily: "var(--mk-font-mono)",
             background: format === formats[0] ? "color-mix(in srgb, var(--mk-text) 12%, transparent)" : "color-mix(in srgb, var(--mk-text) 5%, transparent)",
-            color: isSuccess ? "#00cc88" : "var(--mk-text-muted)"
+            color: isSuccess ? "#00cc88" : "var(--mk-text-muted)",
+            // Inner glow — primary action gets a stronger ring, secondary
+            // gets the standard subtle halo.
+            boxShadow: format === formats[0] ? "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 18%, transparent), inset 0 0 8px 0 color-mix(in srgb, var(--mk-text) 8%, transparent)" : "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 8%, transparent), inset 0 0 6px 0 color-mix(in srgb, var(--mk-text) 4%, transparent)"
           },
           children: isActive ? "\u2026" : isSuccess ? "Done" : FORMAT_LABELS[format]
         },

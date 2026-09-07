@@ -74,6 +74,12 @@ export function ExportButton({
                     ? "color-mix(in srgb, var(--mk-text) 12%, transparent)"
                     : "color-mix(in srgb, var(--mk-text) 5%, transparent)",
                 color: isSuccess ? "#00cc88" : "var(--mk-text-muted)",
+                // Inner glow — primary action gets a stronger ring, secondary
+                // gets the standard subtle halo.
+                boxShadow:
+                  format === formats[0]
+                    ? "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 18%, transparent), inset 0 0 8px 0 color-mix(in srgb, var(--mk-text) 8%, transparent)"
+                    : "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 8%, transparent), inset 0 0 6px 0 color-mix(in srgb, var(--mk-text) 4%, transparent)",
               }}
             >
               {isActive ? "…" : isSuccess ? "Done" : FORMAT_LABELS[format]}

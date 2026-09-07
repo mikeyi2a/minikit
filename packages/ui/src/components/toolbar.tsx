@@ -32,6 +32,8 @@ export function Toolbar({ items, orientation = "horizontal", className }: Toolba
       )}
       style={{
         background: "color-mix(in srgb, var(--mk-text) 5%, transparent)",
+        boxShadow:
+          "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 8%, transparent), inset 0 0 8px 0 color-mix(in srgb, var(--mk-text) 4%, transparent)",
       }}
     >
       {items.map((item) => {
@@ -54,6 +56,9 @@ export function Toolbar({ items, orientation = "horizontal", className }: Toolba
                 ? "color-mix(in srgb, var(--mk-text) 12%, transparent)"
                 : "transparent",
               color: item.active ? "var(--mk-text)" : "var(--mk-text-muted)",
+              boxShadow: item.active
+                ? "inset 0 0 0 1px color-mix(in srgb, var(--mk-text) 18%, transparent), inset 0 0 6px 0 color-mix(in srgb, var(--mk-text) 8%, transparent)"
+                : undefined,
             }}
           >
             {item.icon ?? (
