@@ -59,7 +59,7 @@ export function Panel({
     <>
       <div
         className={cn(
-          "flex items-center justify-between gap-1 px-1 shrink-0 border-b min-h-10 rounded-t-xl",
+          "flex items-center justify-between gap-1 px-1 shrink-0 border-b rounded-t-xl",
           mode === "floating" && "cursor-grab active:cursor-grabbing touch-none",
         )}
         style={{ borderColor: "var(--mk-border)" }}

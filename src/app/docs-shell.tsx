@@ -7,13 +7,14 @@ import { cn } from "@/lib/utils";
 import { OVERVIEW_NAV } from "@/docs/nav";
 import { COMPONENT_META, type ComponentId } from "@/demos/registry-meta";
 import { resolvePageMeta } from "@/app/page-meta";
+import { SegmentedControl } from "@/components/segmented-control";
 
 type Theme = "tool-dark" | "light" | "dark";
 
-const THEMES: { id: Theme; label: string }[] = [
-  { id: "tool-dark", label: "Tool Dark" },
-  { id: "light", label: "Light" },
-  { id: "dark", label: "Dark" },
+const THEMES: { value: Theme; label: string }[] = [
+  { value: "tool-dark", label: "Tool Dark" },
+  { value: "light", label: "Light" },
+  { value: "dark", label: "Dark" },
 ];
 
 const TOP_BAR_CLASS = "shrink-0 h-[4.5rem] px-4 border-b flex items-center";
@@ -131,30 +132,10 @@ export default function DocsShellLayout({ children }: { children: React.ReactNod
           )}
         </div>
 
-        <div className="shrink-0 p-3 border-t space-y-2" style={{ borderColor: "var(--mk-border)" }}>
-          <span className="block text-[9px] uppercase tracking-wider mb-1.5" style={{ color: "var(--mk-text-faint)", fontFamily: "var(--mk-font-mono)" }}>
-            Theme
+        <div className="shrink-0 p-3 border-t" style={{ borderColor: "var(--mk-border)" }}>
+          <span className="block text-[9px] uppercase tracking-wider" style={{ color: "var(--mk-text-faint)", fontFamily: "var(--mk-font-mono)" }}>
+            v0.1.7
           </span>
-          <div className="flex flex-col gap-1">
-            {THEMES.map((t) => (
-              <button
-                key={t.id}
-                type="button"
-                onClick={() => setTheme(t.id)}
-                className={cn(
-                  "text-left px-2 py-1 rounded-md text-[10px] font-mono uppercase tracking-wide cursor-pointer transition-colors",
-                  theme === t.id ? "opacity-100" : "opacity-50 hover:opacity-75",
-                )}
-                style={{
-                  fontFamily: "var(--mk-font-mono)",
-                  background: theme === t.id ? "color-mix(in srgb, var(--mk-text) 8%, transparent)" : "transparent",
-                  color: "var(--mk-text-muted)",
-                }}
-              >
-                {t.label}
-              </button>
-            ))}
-          </div>
         </div>
       </nav>
 
@@ -173,16 +154,24 @@ export default function DocsShellLayout({ children }: { children: React.ReactNod
               </p>
             )}
           </div>
-          <span
-            className="shrink-0 text-[10px] font-mono uppercase tracking-wider px-2 py-1 rounded-md"
-            style={{
-              color: "var(--mk-text-faint)",
-              background: "color-mix(in srgb, var(--mk-text) 5%, transparent)",
-              fontFamily: "var(--mk-font-mono)",
-            }}
-          >
-            {pageMeta.pathLabel}
-          </span>
+          <div className="shrink-0 flex items-center gap-3">
+            <SegmentedControl
+              size="sm"
+              items={THEMES}
+              value={theme}
+              onValueChange={(v) => setTheme(v as Theme)}
+            />
+            <span
+              className="text-[10px] font-mono uppercase tracking-wider px-2 py-1 rounded-md"
+              style={{
+                color: "var(--mk-text-faint)",
+                background: "color-mix(in srgb, var(--mk-text) 5%, transparent)",
+                fontFamily: "var(--mk-font-mono)",
+              }}
+            >
+              {pageMeta.pathLabel}
+            </span>
+          </div>
         </header>
 
         <div
