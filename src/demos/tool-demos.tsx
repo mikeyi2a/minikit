@@ -192,7 +192,7 @@ export function SidebarDemo() {
   return (
     <div
       className="flex rounded-xl overflow-hidden w-full max-w-2xl"
-      style={{ border: "1px solid var(--mk-border)", height: 380 }}
+      style={{ border: "1px solid var(--mk-border)", height: 560 }}
     >
       <Sidebar title="Export" width={192} collapsible>
         <SidebarSection>
